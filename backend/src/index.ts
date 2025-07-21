@@ -14,6 +14,20 @@ app.get('/', (_req, res) => {
   res.send('🚀 API con JWT en TS funcionando!');
 });
 
+app.get('/protected', (req, res) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader?.split(' ')[1]; // Extraer después de "Bearer"
+
+  if (!token) return res.status(401).json({ error: 'Token faltante' });
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    res.json({ message: 'Acceso permitido', user: decoded });
+  } catch (err) {
+    res.status(403).json({ error: 'Token inválido o expirado' });
+  }
+});
+
 app.post('/login', (req, res) => {
   try {
     const { username, password } = req.body;
