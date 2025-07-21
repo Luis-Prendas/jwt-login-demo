@@ -2,15 +2,22 @@ import { useState, useEffect } from 'react';
 import { userLogin } from '../services/Login';
 import { isTokenValid } from '../utils/jwt';
 
+interface UserData {
+  username: string;
+}
+
 export function useAuth() {
   const [token, setToken] = useState<string | null>(() => sessionStorage.getItem('token'));
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => isTokenValid(token));
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => isTokenValid(token) ? true : false);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Revalidar si el token cambia
   useEffect(() => {
-    setIsAuthenticated(isTokenValid(token));
+    const decodedToken = isTokenValid(token);
+    setIsAuthenticated(decodedToken ? true : false);
+    setUserData(decodedToken ? { username: decodedToken.username } : null);
   }, [token]);
 
   const login = async (username: string, password: string): Promise<boolean> => {
@@ -42,6 +49,7 @@ export function useAuth() {
     isAuthenticated,
     loading,
     error,
+    userData,
     login,
     logout
   };
