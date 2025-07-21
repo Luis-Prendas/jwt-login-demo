@@ -48,7 +48,7 @@ export default function Login() {
 
         {error && (
           <div className="flex justify-center items-center p-4 border border-red-800 bg-red-200 rounded-lg">
-            <p className="text-red-800 font-semibold">⚠️Error⚠️</p>
+            <p className="text-red-800 font-semibold">⚠️{error}⚠️</p>
           </div>
         )}
       </section>

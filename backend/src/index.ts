@@ -2,6 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 
+const DB = {
+  users: [
+    { username: 'admin', password: 'admin' },
+    { username: 'simil', password: 'user' },
+    { username: 'guest', password: 'guest' }
+  ]
+}
+
 const SECRET_KEY = '455654701';
 
 const app = express();
@@ -33,7 +41,9 @@ app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
     // Validación básica
-    if (username !== 'admin' || password !== 'admin') {
+    const user = DB.users.find(user => user.username === username && user.password === password);
+
+    if (!user) {
       throw new Error('Invalid credentials');
     }
 
