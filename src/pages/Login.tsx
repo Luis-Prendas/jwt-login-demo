@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
+import InfoButton from "../components/InfoButton";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -37,13 +38,16 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2 p-4 border border-[#f0f0f0]/20 rounded-lg">
           <input required type="text" name="username" placeholder="Username" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
           <input required type="password" name="password" placeholder="Password" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
-          <button
-            type="submit"
-            className={`bg-[#f0f0f0] text-[#333] rounded-lg px-4 py-2 w-full cursor-pointer mt-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            disabled={loading}
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
+          <div className="flex gap-2 w-full">
+            <button
+              type="submit"
+              className={`bg-[#f0f0f0] text-[#333] rounded-lg px-4 py-2 w-full cursor-pointer mt-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={loading}
+            >
+              {loading ? 'Logging in...' : 'Login'}
+            </button>
+            <InfoButton />
+          </div>
         </form>
 
         {error && (
