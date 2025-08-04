@@ -4,6 +4,9 @@ interface JwtPayload {
   exp: number;
   iat: number;
   username: string;
+  balance: {
+    rafflePoints: number;
+  };
 }
 
 export const isTokenValid = (token: string | null): JwtPayload | false => {
@@ -17,4 +20,8 @@ export const isTokenValid = (token: string | null): JwtPayload | false => {
   } catch (err) {
     return false;
   }
+};
+
+export const decodeToken = (token: string): JwtPayload => {
+  return jwtDecode<JwtPayload>(token);
 };

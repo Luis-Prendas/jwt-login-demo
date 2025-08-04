@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { useAuth } from "./useAuth";
-import { addPoints } from "../services/AddPoints";
+import { addPoints } from '../services/AddPoints';
+import { useState } from 'react';
+import { useAuthStore } from '../storage/cstorage';
 
 export function useAddPoints() {
-  const { isAuthenticated, token, fetchUserData } = useAuth();
+  const token = useAuthStore(state => state.token);
+  const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+  const fetchUserData = useAuthStore(state => state.fetchUserData);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,7 +27,6 @@ export function useAddPoints() {
       }
 
       await fetchUserData();
-
     } catch (err) {
       setError((err as Error).message);
     } finally {

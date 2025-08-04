@@ -1,11 +1,20 @@
 import { useNavigate } from "react-router";
-import { useAuth } from "../hooks/useAuth";
 import { useAddPoints } from "../hooks/useAddPoints";
+import { useEffect } from "react";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Dashboard() {
-  const { logout, userData, fetchUserData, loading } = useAuth();
-  const { addPointsUser, loading: addingPointsLoading, error: addingPointsError } = useAddPoints();
   const navigate = useNavigate();
+
+  // Zustand selectors
+  const { logout, fetchUserData, userData, loading } = useAuth();
+
+  // Custom hook para agregar puntos
+  const {
+    addPointsUser,
+    loading: addingPointsLoading,
+    error: addingPointsError
+  } = useAddPoints();
 
   const handleLogout = () => {
     logout();
@@ -14,30 +23,31 @@ export default function Dashboard() {
 
   const handleUserInfo = () => {
     fetchUserData();
-  }
+  };
 
   const handleAddPoints = () => {
     addPointsUser(100);
-    fetchUserData();
   };
 
+  useEffect(() => {
+    if (!userData) {
+      fetchUserData();
+    }
+  }, []);
+  
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <section>
-        <h1 className="text-5xl font-bold">Dashboard Page : {userData ? <span>{userData.username}</span> : <span>username</span>}</h1>
+        <h1 className="text-5xl font-bold">
+          Dashboard Page : {userData ? <span>{userData.username}</span> : <span>username</span>}
+        </h1>
       </section>
 
       <section className="text-lg font-bold">
         <ul className="flex flex-col items-center">
-          <li>
-            <a href="/" className="text-blue-300 hover:underline">Go to Home</a>
-          </li>
-          <li>
-            <a href="/login" className="text-blue-300 hover:underline">Go to Login</a>
-          </li>
-          <li>
-            <a href="/fut-draft" className="text-blue-300 hover:underline">Go to FUT Draft</a>
-          </li>
+          <li><a href="/" className="text-blue-300 hover:underline">Go to Home</a></li>
+          <li><a href="/login" className="text-blue-300 hover:underline">Go to Login</a></li>
+          <li><a href="/fut-draft" className="text-blue-300 hover:underline">Go to FUT Draft</a></li>
         </ul>
       </section>
 
@@ -58,10 +68,7 @@ export default function Dashboard() {
             <div className="bg-gray-800 text-white p-4 rounded-lg h-[132px]">
               <h2 className="text-xl font-bold">User Data</h2>
               <p><strong>Username:</strong> {userData.username}</p>
-              <p><strong>Password:</strong> {userData.password}</p>
-              <p><strong>Balance:</strong>
-                {addingPointsLoading ? ' Updating...' : ` ${userData.balance.rafflePoints} Points`}
-              </p>
+              <p><strong>Balance:</strong> {userData.balance.rafflePoints} Points</p>
             </div>
           )
         )}
