@@ -3,6 +3,7 @@ import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import { ProtectedRoute } from '../components/ProtectedRoute';
+import FutDraft from '../pages/FutDraft';
 
 export default function AppRouter() {
   return (
@@ -16,6 +17,14 @@ export default function AppRouter() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/fut-draft"
+            element={
+              <ProtectedRoute>
+                <FutDraft />
               </ProtectedRoute>
             }
           />

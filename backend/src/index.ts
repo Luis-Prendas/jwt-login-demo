@@ -3,10 +3,14 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 
 const DB = {
-  users: [
-    { username: 'admin', password: 'admin' },
-    { username: 'simil', password: 'user' },
-    { username: 'guest', password: 'guest' }
+  "users": [
+    {
+      "username": "simil",
+      "password": "simil",
+      "balance": {
+        "rafflePoints": 100
+      }
+    }
   ]
 }
 
@@ -47,7 +51,7 @@ app.post('/login', (req, res) => {
       throw new Error('Invalid credentials');
     }
 
-    const payload = { username };
+    const payload = user;
     const options = { expiresIn: '1h' as const };
     // 10 seconds for testing purposes
     // const options = { expiresIn: '10s' as const };
@@ -63,6 +67,44 @@ app.post('/login', (req, res) => {
       console.error(`❌ Error al generar el token: ${String(error)}`);
     }
     res.status(401).json({ error: 'Unauthorized' });
+  }
+});
+
+app.get('/user', (req, res) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader?.split(' ')[1]; // Extraer después de "Bearer"
+
+  if (!token) return res.status(401).json({ error: 'Token faltante' });
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const username = typeof decoded === 'object' && 'username' in decoded ? (decoded as jwt.JwtPayload).username : undefined;
+    const user = DB.users.find(user => user.username === username);
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    res.json({ user });
+  } catch (err) {
+    res.status(403).json({ error: 'Token inválido o expirado' });
+  }
+});
+
+app.post('/add-points', (req, res) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader?.split(' ')[1]; // Extraer después de "Bearer"
+
+  if (!token) return res.status(401).json({ error: 'Token faltante' });
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    const username = typeof decoded === 'object' && 'username' in decoded ? (decoded as jwt.JwtPayload).username : undefined;
+    const user = DB.users.find(user => user.username === username);
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    // Agregar puntos al usuario
+    user.balance.rafflePoints += req.body.points || 0;
+    res.json({ message: 'Puntos agregados exitosamente', user });
+  } catch (err) {
+    res.status(403).json({ error: 'Token inválido o expirado' });
   }
 });
 

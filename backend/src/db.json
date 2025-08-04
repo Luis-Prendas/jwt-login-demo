@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "username": "simil",
+      "password": "simil",
+      "balance": {
+        "rafflePoints": 0
+      }
+    }
+  ]
+}

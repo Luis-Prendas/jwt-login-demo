@@ -1,48 +1,75 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { userLogin } from '../services/Login';
 import { isTokenValid } from '../utils/jwt';
+import { userInfo } from '../services/UserInformatio';
 
 interface UserData {
   username: string;
+  password: string;
+  balance: {
+    rafflePoints: number;
+  };
 }
 
 export function useAuth() {
   const [token, setToken] = useState<string | null>(() => sessionStorage.getItem('token'));
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => isTokenValid(token) ? true : false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!isTokenValid(token));
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Revalidar si el token cambia
   useEffect(() => {
-    const decodedToken = isTokenValid(token);
-    setIsAuthenticated(decodedToken ? true : false);
-    setUserData(decodedToken ? { username: decodedToken.username } : null);
+    setIsAuthenticated(!!isTokenValid(token));
   }, [token]);
 
   const login = async (username: string, password: string): Promise<boolean> => {
     setLoading(true);
     setError(null);
 
-    const receivedToken = await userLogin({ username, password });
+    try {
+      const receivedToken = await userLogin({ username, password });
 
-    if (!receivedToken) {
-      setError('Login failed');
-      setLoading(false);
+      if (!receivedToken) {
+        throw new Error('Credenciales inválidas');
+      }
+
+      sessionStorage.setItem('token', receivedToken);
+      setToken(receivedToken);
+      return true;
+    } catch (err) {
+      setError((err as Error).message || 'Error al iniciar sesión');
       return false;
+    } finally {
+      setLoading(false);
     }
-
-    sessionStorage.setItem('token', receivedToken);
-    setToken(receivedToken);
-    setLoading(false);
-    return true;
   };
 
-  const logout = () => {
+  const logout = (): void => {
     sessionStorage.removeItem('token');
     setToken(null);
     setIsAuthenticated(false);
+    setUserData(null);
   };
+
+  const fetchUserData = useCallback(async () => {
+    if (!token) return;
+
+    setLoading(true);
+    try {
+      const user = await userInfo(token);
+      setUserData(user);
+    } catch (err) {
+      setError('Error al obtener datos del usuario');
+    } finally {
+      setLoading(false);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      void fetchUserData();
+    }
+  }, [isAuthenticated, fetchUserData]);
 
   return {
     token,
@@ -51,6 +78,7 @@ export function useAuth() {
     error,
     userData,
     login,
-    logout
+    logout,
+    fetchUserData
   };
 }
