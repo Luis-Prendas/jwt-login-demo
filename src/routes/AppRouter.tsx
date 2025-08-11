@@ -10,13 +10,21 @@ import Room from '../pages/Room';
 export default function AppRouter() {
   return (
     <Router>
-      <div className="w-full min-h-screen pb-40 flex items-center justify-center">
+      <div className="w-full min-h-screen flex items-center justify-center">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
             path="/room"
+            element={
+              <ProtectedRoute>
+                <Room />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/room/:roomId" // 👈 dinámica
             element={
               <ProtectedRoute>
                 <Room />

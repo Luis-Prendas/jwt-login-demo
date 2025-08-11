@@ -14,6 +14,12 @@ export function roomHandler(io: Server, socket: Socket) {
 
   // Unirse a sala
   socket.on('joinRoom', (roomId, callback) => {
+    const room = io.sockets.adapter.rooms.get(roomId);
+    if (!room) {
+      callback(`Room ${roomId} does not exist`);
+      return;
+    }
+
     socket.join(roomId);
     callback(`Joined room ${roomId}`);
     socket.to(roomId).emit('userJoined', socket.id);
@@ -22,7 +28,8 @@ export function roomHandler(io: Server, socket: Socket) {
   // Mensaje en sala
   socket.on('chatMessage', ({ roomId, message }) => {
     io.to(roomId).emit('chatMessage', {
-      user: (socket as any).user?.username || socket.id,
+      id: socket.id,
+      user: (socket as any).user?.username,
       message
     });
   });
