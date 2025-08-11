@@ -5,6 +5,7 @@ import Dashboard from '../pages/Dashboard';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import FutDraft from '../pages/FutDraft';
 import Register from '../pages/Register';
+import Room from '../pages/Room';
 
 export default function AppRouter() {
   return (
@@ -14,6 +15,14 @@ export default function AppRouter() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route
+            path="/room"
+            element={
+              <ProtectedRoute>
+                <Room />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={

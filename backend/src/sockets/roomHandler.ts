@@ -1,0 +1,29 @@
+import { Server, Socket } from 'socket.io';
+import { nanoid } from 'nanoid';
+
+export function roomHandler(io: Server, socket: Socket) {
+  console.log(`User connected: ${socket.id}, username: ${(socket as any).user?.username}`);
+
+  // Crear sala
+  socket.on('createRoom', (_, callback) => {
+    const roomId = nanoid(8);
+    socket.join(roomId);
+    callback(roomId);
+    console.log(`Room created: ${roomId} by ${socket.id}`);
+  });
+
+  // Unirse a sala
+  socket.on('joinRoom', (roomId, callback) => {
+    socket.join(roomId);
+    callback(`Joined room ${roomId}`);
+    socket.to(roomId).emit('userJoined', socket.id);
+  });
+
+  // Mensaje en sala
+  socket.on('chatMessage', ({ roomId, message }) => {
+    io.to(roomId).emit('chatMessage', {
+      user: (socket as any).user?.username || socket.id,
+      message
+    });
+  });
+}
