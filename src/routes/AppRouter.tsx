@@ -6,6 +6,7 @@ import { ProtectedRoute } from '../components/ProtectedRoute';
 import FutDraft from '../pages/FutDraft';
 import Register from '../pages/Register';
 import Room from '../pages/Room';
+import DevTools from '../pages/DevTools';
 
 export default function AppRouter() {
   return (
@@ -43,6 +44,14 @@ export default function AppRouter() {
           element={
             <ProtectedRoute>
               <FutDraft />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/dev-tools"
+          element={
+            <ProtectedRoute>
+              <DevTools />
             </ProtectedRoute>
           }
         />

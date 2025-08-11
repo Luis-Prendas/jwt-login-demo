@@ -9,7 +9,7 @@ export const login = (req: Request, res: Response) => {
 
   if (!user) return res.status(401).json({ error: 'Credenciales inválidas' });
 
-  const payload = { username: user.username, balance: user.balance };
+  const payload = { username: user.username, balance: user.balance, role: user.role, uuid: user.uuid, mail: user.mail };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
 
   res.json({ token });
@@ -28,6 +28,7 @@ export const register = (req: Request, res: Response) => {
     username,
     password,
     mail,
+    role: 'user',
     balance: { rafflePoints: 0 }
   };
   DB.users.push(newUser);

@@ -3,7 +3,10 @@ import { jwtDecode } from "jwt-decode";
 interface JwtPayload {
   exp: number;
   iat: number;
+  uuid: string;
+  mail: string;
   username: string;
+  role: 'user' | 'admin';
   balance: {
     rafflePoints: number;
   };

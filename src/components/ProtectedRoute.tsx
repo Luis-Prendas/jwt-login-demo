@@ -7,7 +7,7 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, userData } = useAuth();
   const navigate = useNavigate();
 
   if (!isAuthenticated) {
@@ -19,6 +19,8 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     navigate('/login');
   };
 
+  console.log(userData);
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-start">
       <nav className="w-screen bg-black p-4 flex items-center gap-4 justify-between">
@@ -26,6 +28,9 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
         <ul className="flex justify-center items-center gap-4">
           <li><a href="/dashboard" className="text-blue-300 hover:underline">Inicio</a></li>
           <li><a href="/room" className="text-blue-300 hover:underline">Salas</a></li>
+          {userData?.role === 'admin' && (
+            <li><a href="/dev-tools" className="text-blue-300 hover:underline">Dev Tools</a></li>
+          )}
         </ul>
         <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
           Cerrar sesión
