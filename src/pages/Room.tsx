@@ -18,7 +18,6 @@ export default function Room() {
     socketRef.current = socket;
 
     socket.emit("joinRoom", roomId, (msg: string) => {
-      console.log(msg);
       if (msg.startsWith("Joined")) {
         console.log(`✅ Entraste a la sala ${roomId}`);
       } else {
@@ -27,17 +26,12 @@ export default function Room() {
       }
     });
 
-    socket.on("connect_error", (err) => {
-      console.error("❌ Error de conexión:", err.message);
-      navigate("/");
-    });
-
     // Escuchar mensajes nuevos
     socket.on("chatMessage", (data: { id: string, user: string; message: string }) => {
       setMessages((prev) => [...prev, data]);
     });
 
-    // Opcional: escuchar usuarios que entran para mostrar mensaje
+    // Escuchar usuarios que entran para mostrar mensaje
     socket.on("userJoined", (data: { id: string; user: string }) => {
       console.log(data)
       setMessages((prev) => [...prev, { id: '000', user: "system", message: `Usuario ${data.user} se unió.` }]);
@@ -97,7 +91,7 @@ export default function Room() {
               placeholder="Type your message..."
               autoComplete="off"
             />
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg">Enviar</button>
+            <button type="submit" className="main_btn">Enviar</button>
           </form>
         </div>
       </section>

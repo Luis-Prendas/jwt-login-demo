@@ -1,3 +1,8 @@
+export interface DB {
+  users: User[];
+  rooms: Room[];
+}
+
 export interface User {
   uuid: string;
   mail: string;
@@ -9,7 +14,13 @@ export interface User {
   };
 }
 
-export const DB: { users: User[] } = {
+export interface Room {
+  uuid: string;
+  name: string;
+  capacity: number;
+}
+
+export const DB: DB = {
   users: [
     {
       uuid: '1',
@@ -18,6 +29,31 @@ export const DB: { users: User[] } = {
       password: 'simil',
       role: 'admin',
       balance: { rafflePoints: 100 }
+    },
+    {
+      uuid: '2',
+      mail: 'user@example.com',
+      username: 'asd',
+      password: 'asd',
+      role: 'user',
+      balance: { rafflePoints: 50 }
+    }
+  ],
+  rooms: [
+    {
+      uuid: 'room1',
+      name: 'Room 1',
+      capacity: 1
+    },
+    {
+      uuid: 'room2',
+      name: 'Room 2',
+      capacity: 1
+    },
+    {
+      uuid: 'room3',
+      name: 'Room 3',
+      capacity: 1
     }
   ]
 };

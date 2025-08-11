@@ -22,7 +22,7 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-start">
       <nav className="w-screen bg-black p-4 flex items-center gap-4 justify-between">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <h1 className="text-2xl font-bold">Who is Who</h1>
         <ul className="flex justify-center items-center gap-4">
           <li><a href="/dashboard" className="text-blue-300 hover:underline">Inicio</a></li>
           <li><a href="/create-room" className="text-blue-300 hover:underline">Salas</a></li>
