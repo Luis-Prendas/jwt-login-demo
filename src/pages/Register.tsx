@@ -15,7 +15,7 @@ export default function Register() {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <section>
-        <h1 className="text-5xl font-bold">Login Page</h1>
+        <h1 className="text-5xl font-bold">Register Page</h1>
       </section>
 
       <section className="text-lg font-bold">
@@ -40,7 +40,7 @@ export default function Register() {
               className={`bg-[#f0f0f0] text-[#333] rounded-lg px-4 py-2 w-full cursor-pointer mt-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={loading}
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? 'Registering...' : 'Register'}
             </button>
           </div>
         </form>
