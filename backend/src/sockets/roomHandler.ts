@@ -22,7 +22,10 @@ export function roomHandler(io: Server, socket: Socket) {
 
     socket.join(roomId);
     callback(`Joined room ${roomId}`);
-    socket.to(roomId).emit('userJoined', socket.id);
+    socket.to(roomId).emit('userJoined', {
+      id: socket.id,
+      user: (socket as any).user?.username
+    });
   });
 
   // Mensaje en sala

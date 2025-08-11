@@ -55,8 +55,8 @@ export default function Room() {
     });
 
     // Opcional: escuchar usuarios que entran para mostrar mensaje
-    socket.on("userJoined", (userId: string) => {
-      setMessages((prev) => [...prev, { id: '000', user: "system", message: `Usuario ${userId} se unió.` }]);
+    socket.on("userJoined", (data: { id: string; user: string }) => {
+      setMessages((prev) => [...prev, { id: '000', user: "system", message: `Usuario ${data.user} se unió.` }]);
     });
 
     return () => {
