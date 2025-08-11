@@ -20,3 +20,7 @@ body {
 .your_text {
   @apply bg-gray-800 text-left mr-auto;
 }
+
+.main_btn {
+  @apply px-4 py-2 bg-sky-700 rounded-lg hover:bg-sky-600 transition-all ease-in-out cursor-pointer;
+}

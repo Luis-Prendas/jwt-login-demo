@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { useAddPoints } from "../hooks/useAddPoints";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
+import ProtectedAdminRoute from "../components/ProtectedAdminRoute";
 
 export default function DevTools() {
   const navigate = useNavigate();
@@ -37,11 +38,13 @@ export default function DevTools() {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center gap-4">
-      <button onClick={handleLogout} className="px-4 py-2 bg-sky-700 rounded-lg min-w-[100px] hover:bg-sky-600 transition-all ease-in-out cursor-pointer">Logout</button>
-      <button onClick={handleUserInfo} className="px-4 py-2 bg-sky-700 rounded-lg min-w-[100px] hover:bg-sky-600 transition-all ease-in-out cursor-pointer">Fetch User Info</button>
-      <button onClick={handleAddPoints} className="px-4 py-2 bg-sky-700 rounded-lg min-w-[100px] hover:bg-sky-600 transition-all ease-in-out cursor-pointer">Add Points</button>
-      <button onClick={handleAllUsersInfo} className="px-4 py-2 bg-sky-700 rounded-lg min-w-[100px] hover:bg-sky-600 transition-all ease-in-out cursor-pointer">Fetch All Users</button>
-    </div>
+    <ProtectedAdminRoute>
+      <div className="flex flex-col justify-center items-center gap-4">
+        <button onClick={handleLogout} className="main_btn">Logout</button>
+        <button onClick={handleUserInfo} className="main_btn">Fetch User Info</button>
+        <button onClick={handleAddPoints} className="main_btn">Add Points</button>
+        <button onClick={handleAllUsersInfo} className="main_btn">Fetch All Users</button>
+      </div>
+    </ProtectedAdminRoute>
   )
 }

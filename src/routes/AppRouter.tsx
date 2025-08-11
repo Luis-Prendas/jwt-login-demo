@@ -5,8 +5,9 @@ import Dashboard from '../pages/Dashboard';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import FutDraft from '../pages/FutDraft';
 import Register from '../pages/Register';
-import Room from '../pages/Room';
 import DevTools from '../pages/DevTools';
+import CreateRoom from '../pages/CreateRoom';
+import Room from '../pages/Room';
 
 export default function AppRouter() {
   return (
@@ -16,10 +17,10 @@ export default function AppRouter() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route
-          path="/room"
+          path="/create-room"
           element={
             <ProtectedRoute>
-              <Room />
+              <CreateRoom />
             </ProtectedRoute>
           }
         />
