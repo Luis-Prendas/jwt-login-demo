@@ -23,9 +23,6 @@ export default function Room() {
     })
   };
 
-  console.log('messages:', messages);
-  console.log('socketRef:', socketRef.current);
-
   useEffect(() => {
     if (!roomId) return;
 
@@ -35,7 +32,6 @@ export default function Room() {
     socketRef.current = socket;
 
     socket.emit("joinRoom", roomId, (msg: string) => {
-      console.log(msg);
       if (msg.startsWith("Joined")) {
         console.log(`✅ Entraste a la sala ${roomId}`);
       } else {

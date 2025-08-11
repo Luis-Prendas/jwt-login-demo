@@ -9,7 +9,7 @@ export function roomHandler(io: Server, socket: Socket) {
     const roomId = nanoid(8);
     socket.join(roomId);
     callback(roomId);
-    console.log(`Room created: ${roomId} by ${socket.id}`);
+    console.log(`Room created: ${roomId} by ${(socket as any).user?.username}`);
   });
 
   // Unirse a sala

@@ -31,7 +31,6 @@ export default function Dashboard() {
 
   const handleAllUsersInfo = async () => {
     const users = await fetchAllUsers();
-
     console.log(users);
   };
 
