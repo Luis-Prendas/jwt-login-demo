@@ -2,12 +2,24 @@ import { Server, Socket } from 'socket.io';
 import { DB } from '../db/mockDB';
 
 export function roomHandler(io: Server, socket: Socket) {
+  const broadcastRooms = (io: Server) => {
+    const roomsList = DB.rooms.map(e => {
+      const roomUsers = io.sockets.adapter.rooms.get(e.uuid);
+      return {
+        ...e,
+        isFull: roomUsers ? roomUsers.size >= e.capacity : false
+      };
+    });
+    io.emit("roomsUpdated", roomsList); // 👈 evento global
+  }
+
   // Unirse a sala
   socket.on('joinRoom', (roomId, callback) => {
     const room = DB.rooms.find(room => room.uuid === roomId);
 
     // Verificar si la sala existe.
     if (!room) {
+      broadcastRooms(io);
       callback(`Room ${roomId} does not exist`);
       return;
     }

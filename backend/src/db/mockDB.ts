@@ -37,23 +37,31 @@ export const DB: DB = {
       password: 'asd',
       role: 'user',
       balance: { rafflePoints: 50 }
+    },
+    {
+      uuid: '3',
+      mail: 'user3@example.com',
+      username: 'qwe',
+      password: 'qwe',
+      role: 'user',
+      balance: { rafflePoints: 30 }
     }
   ],
   rooms: [
     {
       uuid: 'room1',
       name: 'Room 1',
-      capacity: 1
+      capacity: 2
     },
     {
       uuid: 'room2',
       name: 'Room 2',
-      capacity: 1
+      capacity: 2
     },
     {
       uuid: 'room3',
       name: 'Room 3',
-      capacity: 1
+      capacity: 2
     }
   ]
 };

@@ -11,9 +11,9 @@ export default function CreateRoom() {
     const socket = io(import.meta.env.VITE_SOCKET_URL, { auth: { token } });
     socketRef.current = socket;
 
-    // Escuchar actualizaciones en tiempo real
-    socket.on("roomsUpdated", (roomsList: { uuid: string; name: string; capacity: number, isFull: boolean }[]) => {
-      setRooms(roomsList);
+    // Escuchar cambios en tiempo real
+    socket.on("roomsUpdated", (updatedRooms) => {
+      setRooms(updatedRooms);
     });
 
     // Al conectar, pedir la lista inicial
@@ -25,7 +25,7 @@ export default function CreateRoom() {
       socket.disconnect();
       socketRef.current = null;
     };
-  }, [token]);
+  }, [token, rooms]);
 
   return (
     <div className="flex flex-col items-center gap-4">
