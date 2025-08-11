@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:4000';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4040';
 
 export async function userInfo(token: string): Promise<any> {
   try {
@@ -18,6 +18,28 @@ export async function userInfo(token: string): Promise<any> {
     return data.user;
   } catch (error) {
     console.error(`❌ Error en userInfo: ${error}`);
+    return null;
+  }
+}
+
+export async function allUsersInfo(token: string): Promise<any> {
+  try {
+    const response = await fetch(`${BASE_URL}/users`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch all users info');
+    }
+
+    const data = await response.json();
+    return data.users;
+  } catch (error) {
+    console.error(`❌ Error en allUsersInfo: ${error}`);
     return null;
   }
 }

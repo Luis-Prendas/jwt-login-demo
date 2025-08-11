@@ -18,6 +18,7 @@ interface AuthState {
   error: string | null;
   isAuthenticated: boolean;
 
+  setLoading: (loading: boolean) => void;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   fetchUserData: () => Promise<void>;
@@ -32,6 +33,10 @@ export const useAuthStore = create<AuthState>()(
       loading: false,
       error: null,
       isAuthenticated: false,
+
+      setLoading: (loading) => {
+        set({ loading });
+      },
 
       setToken: (token) => {
         if (token && isTokenValid(token)) {
@@ -107,6 +112,7 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: state.isAuthenticated,
         loading: false,
         error: null,
+        setLoading: state.setLoading,
         login: state.login,
         logout: state.logout,
         fetchUserData: state.fetchUserData,

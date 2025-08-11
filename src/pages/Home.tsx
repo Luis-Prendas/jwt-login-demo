@@ -24,6 +24,11 @@ export default function Home() {
             </a>
           </li>
           <li>
+            <a href="/register" className="text-blue-300 hover:underline">
+              Go to Register
+            </a>
+          </li>
+          <li>
             <a href="/dashboard" className="text-blue-300 hover:underline">
               Go to Dashboard
             </a>

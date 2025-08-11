@@ -7,7 +7,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
 
   // Zustand selectors
-  const { logout, fetchUserData, userData, loading } = useAuth();
+  const { logout, fetchUserData, userData, loading, fetchAllUsers } = useAuth();
 
   // Custom hook para agregar puntos
   const {
@@ -29,12 +29,18 @@ export default function Dashboard() {
     addPointsUser(100);
   };
 
+  const handleAllUsersInfo = async () => {
+    const users = await fetchAllUsers();
+
+    console.log(users);
+  };
+
   useEffect(() => {
     if (!userData) {
       fetchUserData();
     }
   }, []);
-  
+
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <section>
@@ -58,6 +64,7 @@ export default function Dashboard() {
           {addingPointsError && <span className="text-red-500"> - {addingPointsError}</span>}
         </button>
         <button onClick={handleUserInfo} className="bg-[#f0f0f0] text-[#333] rounded-lg px-4 py-2 w-full cursor-pointer mt-2">User Info</button>
+        <button onClick={handleAllUsersInfo} className="bg-[#f0f0f0] text-[#333] rounded-lg px-4 py-2 w-full cursor-pointer mt-2">All users information</button>
       </section>
 
       <section>
