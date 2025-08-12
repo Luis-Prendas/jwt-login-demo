@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import { useAuth } from "../hooks/useAuth";
 import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router";
 
 export default function CreateRoom() {
   const { token } = useAuth();
@@ -35,7 +36,7 @@ export default function CreateRoom() {
           {room.isFull ? (
             <span className="secondary_btn line-through opacity-30 cursor-not-allowed">{room.name}</span>
           ) : (
-            <a href={`/room/${room.uuid}`} className="main_btn">{room.name}</a>
+            <Link to={`/room/${room.uuid}`} className="main_btn">{room.name}</Link>
           )}
         </div>
       ))}

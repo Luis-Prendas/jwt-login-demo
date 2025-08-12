@@ -26,7 +26,7 @@ export const DB: DataBase = {
       username: 'dani',
       password: 'dani',
       nickname: 'Dani',
-      role: 'user',
+      role: 'admin',
       balance: { rafflePoints: 30 }
     }
   ],

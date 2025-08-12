@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
 
 interface ProtectedRouteProps {
@@ -18,19 +18,19 @@ export function MainLayout({ children }: ProtectedRouteProps) {
     <div className="w-full min-h-screen flex flex-col items-center justify-start">
       <nav className="w-screen bg-black p-4 flex items-center gap-4 justify-between">
         <h1 className="text-2xl font-bold">
-          <a href="/">Luis.Dev</a>
+          <Link to="/">Luis.Dev</Link>
         </h1>
         {isAuthenticated ? (
           <>
             <ul className="flex justify-center items-center gap-4">
-              <li><a href="/" className="text-blue-300 hover:underline">Inicio</a></li>
-              <li><a href="/dashboard" className="text-blue-300 hover:underline">Dashboard</a></li>
-              <li><a href="/create-room" className="text-blue-300 hover:underline">Salas</a></li>
-              <li><a href="/register" className="text-blue-300 hover:underline">Registro</a></li>
+              <li><Link to="/" className="text-blue-300 hover:underline">Inicio</Link></li>
+              <li><Link to="/dashboard" className="text-blue-300 hover:underline">Dashboard</Link></li>
+              <li><Link to="/create-room" className="text-blue-300 hover:underline">Salas</Link></li>
+              <li><Link to="/register" className="text-blue-300 hover:underline">Registro</Link></li>
               {userData?.role === 'admin' && (
                 <>
-                  <li><a href="/dev-tools" className="text-blue-300 hover:underline">Herramientas</a></li>
-                  <li><a href="/user-management" className="text-blue-300 hover:underline">Lista de usuarios</a></li>
+                  <li><Link to="/dev-tools" className="text-blue-300 hover:underline">Herramientas</Link></li>
+                  <li><Link to="/user-management" className="text-blue-300 hover:underline">Lista de usuarios</Link></li>
                 </>
               )}
             </ul>
@@ -40,12 +40,12 @@ export function MainLayout({ children }: ProtectedRouteProps) {
           </>
         ) : (
           <div className='flex gap-4'>
-            <a className="secondary_btn" href="/register">
+            <Link to="/register" className="secondary_btn">
               Registro
-            </a>
-            <a className="main_btn" href="/login">
+            </Link>
+            <Link to="/login" className="main_btn">
               Iniciar sesión
-            </a>
+            </Link>
           </div>
         )}
       </nav>
