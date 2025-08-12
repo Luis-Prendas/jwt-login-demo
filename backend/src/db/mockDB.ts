@@ -1,27 +1,6 @@
-export interface DB {
-  users: User[];
-  rooms: Room[];
-}
+import { DataBase } from "../types/UserManagement";
 
-export interface User {
-  uuid: string;
-  mail: string;
-  username: string;
-  password: string;
-  nickname: string;
-  role: 'user' | 'admin' | 'developer' | 'moderator';
-  balance: {
-    rafflePoints: number;
-  };
-}
-
-export interface Room {
-  uuid: string;
-  name: string;
-  capacity: number;
-}
-
-export const DB: DB = {
+export const DB: DataBase = {
   users: [
     {
       uuid: '1',

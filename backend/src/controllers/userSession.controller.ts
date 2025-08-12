@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { DB, User } from '../db/mockDB';
+import { DB } from '../db/mockDB';
 import { SECRET_KEY } from '../config/env';
+import { User } from '../types/UserManagement';
 
 export const login = (req: Request, res: Response) => {
   const { username, password } = req.body;
@@ -28,6 +29,7 @@ export const register = (req: Request, res: Response) => {
     username,
     password,
     mail,
+    nickname: username,
     role: 'user',
     balance: { rafflePoints: 0 }
   };
