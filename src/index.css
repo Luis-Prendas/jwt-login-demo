@@ -24,3 +24,7 @@ body {
 .main_btn {
   @apply px-4 py-2 bg-sky-700 rounded-lg hover:bg-sky-600 transition-all ease-in-out cursor-pointer;
 }
+
+.secondary_btn {
+  @apply px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-all ease-in-out cursor-pointer
+}

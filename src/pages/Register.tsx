@@ -15,32 +15,21 @@ export default function Register() {
   return (
     <div className="flex flex-col items-center justify-center gap-4">
       <section>
-        <h1 className="text-5xl font-bold">Register Page</h1>
-      </section>
-
-      <section className="text-lg font-bold">
-        <ul className="flex flex-col items-center">
-          <li>
-            <a href="/" className="text-blue-300 hover:underline">Go to Home</a>
-          </li>
-          <li>
-            <a href="/dashboard" className="text-blue-300 hover:underline">Go to Dashboard</a>
-          </li>
-        </ul>
+        <h1 className="text-5xl font-bold">Registrarse</h1>
       </section>
 
       <section className="flex flex-col gap-4">
         <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2 p-4 border border-[#f0f0f0]/20 rounded-lg">
-          <input required type="email" name="mail" placeholder="Mail" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
-          <input required type="text" name="username" placeholder="Username" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
-          <input required type="password" name="password" placeholder="Password" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
+          <input required type="email" name="mail" placeholder="Correo" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
+          <input required type="text" name="username" placeholder="Nombre de usuario" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
+          <input required type="password" name="password" placeholder="Contraseña" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
           <div className="flex gap-2 w-full">
             <button
               type="submit"
               className={`bg-[#f0f0f0] text-[#333] rounded-lg px-4 py-2 w-full cursor-pointer mt-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={loading}
             >
-              {loading ? 'Registering...' : 'Register'}
+              {loading ? 'Registrando...' : 'Registrar'}
             </button>
           </div>
         </form>
