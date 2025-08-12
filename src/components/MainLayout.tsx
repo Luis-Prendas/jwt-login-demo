@@ -28,7 +28,10 @@ export function MainLayout({ children }: ProtectedRouteProps) {
               <li><a href="/create-room" className="text-blue-300 hover:underline">Salas</a></li>
               <li><a href="/register" className="text-blue-300 hover:underline">Registro</a></li>
               {userData?.role === 'admin' && (
-                <li><a href="/dev-tools" className="text-blue-300 hover:underline">Dev Tools</a></li>
+                <>
+                  <li><a href="/dev-tools" className="text-blue-300 hover:underline">Herramientas</a></li>
+                  <li><a href="/user-management" className="text-blue-300 hover:underline">Lista de usuarios</a></li>
+                </>
               )}
             </ul>
             <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">

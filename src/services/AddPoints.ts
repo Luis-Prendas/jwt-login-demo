@@ -1,6 +1,6 @@
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-export async function addPoints(token: string, points: number) {
+export async function addPoints(token: string, points: number): Promise<string | null> {
   const response = await fetch(`${BASE_URL}/add-points`, {
     method: 'POST',
     headers: {

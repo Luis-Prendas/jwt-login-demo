@@ -1,6 +1,8 @@
+import type { UserData } from "../types/UserManagement";
+
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4040';
 
-export async function userInfo(token: string): Promise<any> {
+export async function userInfo(token: string): Promise<UserData | null> {
   try {
     const response = await fetch(`${BASE_URL}/user`, {
       method: 'GET',
@@ -22,7 +24,7 @@ export async function userInfo(token: string): Promise<any> {
   }
 }
 
-export async function allUsersInfo(token: string): Promise<any> {
+export async function allUsersInfo(token: string): Promise<UserData[] | null> {
   try {
     const response = await fetch(`${BASE_URL}/users`, {
       method: 'GET',

@@ -1,6 +1,7 @@
-import { userRegister, type RegisterData } from "../services/Register";
+import { userRegister } from "../services/Register";
 import { allUsersInfo } from "../services/UserInformatio";
 import { useAuthStore } from "../storage/cstorage";
+import type { RegisterData, UserData } from "../types/UserManagement";
 
 export function useAuth() {
   const {
@@ -16,9 +17,9 @@ export function useAuth() {
     setToken,
   } = useAuthStore();
 
-  const fetchAllUsers = async () => {
+  const fetchAllUsers = async (): Promise<UserData[] | null> => {
     setLoading(true);
-    if (!token) return;
+    if (!token) return null;
 
     const users = await allUsersInfo(token);
     setLoading(false);
@@ -33,8 +34,6 @@ export function useAuth() {
     setLoading(false);
     return newUser;
   };
-
-  // Podrías agregar lógica adicional aquí si hace falta
 
   return {
     token,

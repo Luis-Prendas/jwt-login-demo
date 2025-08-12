@@ -9,6 +9,7 @@ import DevTools from '../pages/DevTools';
 import CreateRoom from '../pages/CreateRoom';
 import Room from '../pages/Room';
 import { MainLayout } from '../components/MainLayout';
+import UserManagement from '../pages/UserManagement';
 
 export default function AppRouter() {
   return (
@@ -55,6 +56,14 @@ export default function AppRouter() {
             element={
               <ProtectedRoute>
                 <DevTools />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/user-management"
+            element={
+              <ProtectedRoute>
+                <UserManagement />
               </ProtectedRoute>
             }
           />

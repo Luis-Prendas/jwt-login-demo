@@ -22,8 +22,8 @@ export function useAddPoints() {
 
       const response = await addPoints(token!, points);
 
-      if (!response || response.error) {
-        throw new Error(response?.error || 'Failed to add points');
+      if (!response) {
+        throw new Error('Failed to add points');
       }
 
       await fetchUserData();

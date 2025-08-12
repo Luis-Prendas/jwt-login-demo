@@ -1,0 +1,30 @@
+export interface UserData {
+  uuid: string;
+  mail: string;
+  username: string;
+  password: string;
+  nickname: string;
+  role: 'user' | 'admin' | 'developer' | 'moderator';
+  balance: {
+    rafflePoints: number;
+  };
+}
+
+export interface UserBasicData {
+  uuid: string;
+  mail: string;
+  username: string;
+  nickname: string;
+  role: 'user' | 'admin' | 'developer' | 'moderator';
+}
+
+export interface RegisterData {
+  mail: string;
+  username: string;
+  password: string;
+}
+
+export interface UserLogin {
+  username: string;
+  password: string;
+}

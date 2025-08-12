@@ -1,10 +1,6 @@
-export interface RegisterData {
-  mail: string;
-  username: string;
-  password: string;
-}
+import type { RegisterData } from "../types/UserManagement";
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4040';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6666';
 
 export async function userRegister(data: RegisterData): Promise<string | null> {
   try {

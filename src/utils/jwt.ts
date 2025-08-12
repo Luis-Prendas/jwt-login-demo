@@ -1,18 +1,13 @@
 import { jwtDecode } from "jwt-decode";
+import type { UserBasicData } from "../types/UserManagement";
 
 interface JwtPayload {
   exp: number;
   iat: number;
-  uuid: string;
-  mail: string;
-  username: string;
-  role: 'user' | 'admin';
-  balance: {
-    rafflePoints: number;
-  };
+  user: UserBasicData;
 }
 
-export const isTokenValid = (token: string | null): JwtPayload | false => {
+export const isTokenValid = (token: string): JwtPayload | false => {
   if (!token) return false;
 
   try {

@@ -3,20 +3,11 @@ import { persist } from 'zustand/middleware';
 import { userLogin } from '../services/Login';
 import { isTokenValid, decodeToken } from '../utils/jwt';
 import { userInfo } from '../services/UserInformatio';
-
-interface UserData {
-  uuid: string;
-  mail: string;
-  username: string;
-  role: 'user' | 'admin';
-  balance: {
-    rafflePoints: number;
-  };
-}
+import type { UserBasicData } from '../types/UserManagement';
 
 interface AuthState {
   token: string | null;
-  userData: UserData | null;
+  userData: UserBasicData | null;
   loading: boolean;
   error: string | null;
   isAuthenticated: boolean;
@@ -48,11 +39,11 @@ export const useAuthStore = create<AuthState>()(
             token,
             isAuthenticated: true,
             userData: {
-              uuid: decoded.uuid,
-              mail: decoded.mail,
-              username: decoded.username,
-              role: decoded.role,
-              balance: decoded.balance,
+              uuid: decoded.user.uuid,
+              mail: decoded.user.mail,
+              username: decoded.user.username,
+              nickname: decoded.user.nickname,
+              role: decoded.user.role,
             },
           });
         } else {

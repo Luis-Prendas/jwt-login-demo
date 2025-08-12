@@ -8,6 +8,7 @@ export interface User {
   mail: string;
   username: string;
   password: string;
+  nickname: string;
   role: 'user' | 'admin' | 'developer' | 'moderator';
   balance: {
     rafflePoints: number;
@@ -27,22 +28,25 @@ export const DB: DB = {
       mail: 'simil@example.com',
       username: 'simil',
       password: 'simil',
+      nickname: 'Simil',
       role: 'admin',
       balance: { rafflePoints: 100 }
     },
     {
       uuid: '2',
       mail: 'user@example.com',
-      username: 'asd',
-      password: 'asd',
+      username: 'luis',
+      password: 'luis',
+      nickname: 'Luis',
       role: 'user',
       balance: { rafflePoints: 50 }
     },
     {
       uuid: '3',
       mail: 'user3@example.com',
-      username: 'qwe',
-      password: 'qwe',
+      username: 'dani',
+      password: 'dani',
+      nickname: 'Dani',
       role: 'user',
       balance: { rafflePoints: 30 }
     }
