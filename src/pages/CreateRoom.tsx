@@ -29,22 +29,16 @@ export default function CreateRoom() {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      {rooms.length > 0 && (
-        <section className="flex flex-col justify-center items-center gap-4 p-4 border border-[#f0f0f0]/20 rounded-lg">
-          <h3 className="text-xl font-bold">Salas Activas</h3>
-          <ul className="flex flex-col gap-2">
-            {rooms.map((room) => (
-              <li key={room.uuid} className="border border-[#f0f0f0]/20 p-2 rounded-lg">
-                {room.isFull ? (
-                  <span className="line-through opacity-30 cursor-not-allowed">{room.name}</span>
-                ) : (
-                  <a href={`/room/${room.uuid}`} className="font-semibold">{room.name}</a>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      <h1 className="text-5xl font-bold">Salas Activas</h1>
+      {rooms.length > 0 && rooms.map((room) => (
+        <div key={room.uuid} className="flex gap-4">
+          {room.isFull ? (
+            <span className="secondary_btn line-through opacity-30 cursor-not-allowed">{room.name}</span>
+          ) : (
+            <a href={`/room/${room.uuid}`} className="main_btn">{room.name}</a>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
-import InfoButton from "../components/InfoButton";
 
 export default function Login() {
   const navigate = useNavigate();

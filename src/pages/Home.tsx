@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 export default function Home() {
   return (
     <div className="flex items-center justify-center">

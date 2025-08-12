@@ -8,7 +8,7 @@ export interface User {
   mail: string;
   username: string;
   password: string;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'developer' | 'moderator';
   balance: {
     rafflePoints: number;
   };
