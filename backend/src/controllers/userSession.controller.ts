@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { DB } from '../db/mockDB';
 import { SECRET_KEY } from '../config/env';
-import { User } from '../types/UserManagement';
+import { User, UserBasicData } from '../types/UserManagement';
 
 export const login = (req: Request, res: Response) => {
   const { username, password } = req.body;
@@ -10,8 +10,15 @@ export const login = (req: Request, res: Response) => {
 
   if (!user) return res.status(401).json({ error: 'Credenciales inválidas' });
 
-  const payload = { username: user.username, balance: user.balance, role: user.role, uuid: user.uuid, mail: user.mail };
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+  const payload: UserBasicData = {
+    username: user.username,
+    role: user.role,
+    uuid: user.uuid,
+    nickname: user.nickname,
+    mail: user.mail
+  };
+
+  const token = jwt.sign({user: payload}, SECRET_KEY, { expiresIn: '1h' });
 
   res.json({ token });
 };

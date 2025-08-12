@@ -63,10 +63,15 @@ export const useAuthStore = create<AuthState>()(
             set({ error: 'Login failed', loading: false });
             return false;
           }
+
+          console.log(`Received token: ${receivedToken}`);
+          
           get().setToken(receivedToken);
+          console.log(`Received token: ${receivedToken}`);
           set({ loading: false });
           return true;
         } catch (error) {
+          console.log(`Error en login: ${error}`);
           set({ error: 'Login error', loading: false });
           return false;
         }

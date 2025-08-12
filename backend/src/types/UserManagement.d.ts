@@ -15,6 +15,14 @@ export interface User {
   };
 }
 
+export interface UserBasicData {
+  uuid: string;
+  mail: string;
+  username: string;
+  nickname: string;
+  role: 'user' | 'admin' | 'developer' | 'moderator';
+}
+
 export interface Room {
   uuid: string;
   name: string;
