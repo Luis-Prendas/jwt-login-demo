@@ -33,25 +33,32 @@ export function MainLayout() {
   }, [location.pathname]);
 
   return (
-    <div className="w-full min-h-screen flex flex-col">
-      <nav className="w-full bg-[#181818] border-b border-white/10 shadow-lg p-4 flex justify-between">
-        <h1 className="text-2xl font-bold">
-          <Link to="/">Luis.Dev</Link>
-        </h1>
+    <div className="w-full min-h-screen flex">
+      <aside className="bg-[#181818] w-[300px] border-b border-white/10 shadow-lg flex flex-col justify-between">
+        <div className='w-full px-4 py-2'>
+          <h1 className="text-2xl font-bold">
+            <Link to="/">Luis.Dev</Link>
+          </h1>
+        </div>
         {isAuthenticated ? (
           <>
-            <ul className="flex gap-4">
-              {tabs && tabs.map(tab => (
-                <li key={tab.uuid}>
-                  <Link to={tab.route} className={tab.uuid === selectedTab?.uuid ? 'font-bold' : ''}>
-                    {tab.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded">
-              Cerrar sesión
-            </button>
+            <div className='w-full h-full p-2'>
+              <ul className="flex w-full flex-col justify-center items-start">
+                {tabs && tabs.map(tab => (
+                  <li key={tab.uuid} className='w-full'>
+                    <Link to={tab.route} className={`flex gap-2 items-center hover:bg-[#2f2f2f] w-full p-2 justify-start rounded-lg ${tab.uuid === selectedTab?.uuid && 'bg-[#232323]'}`}>
+                      {tab.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className='w-full p-2'>
+              <button onClick={handleLogout} className="secondary_btn">
+                Cerrar sesión
+              </button>
+            </div>
           </>
         ) : (
           <div className="flex gap-4">
@@ -59,7 +66,7 @@ export function MainLayout() {
             <Link to="/login" className="main_btn">Iniciar sesión</Link>
           </div>
         )}
-      </nav>
+      </aside>
       <section className="w-3/4 p-4 mx-auto">
         <Outlet />
       </section>
