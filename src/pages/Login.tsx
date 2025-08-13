@@ -40,9 +40,9 @@ export default function Login() {
         </form>
 
         {error && (
-          <div className="rounded-lg bg-yellow-600 shadow-lg max-w-[230px] p-4 gap-2 flex items-start justify-center">
-            <IoAlertCircleOutline className="text-2xl w-12 text-yellow-950" />
-            <p className="text-yellow-950 font-semibold text-balance">
+          <div className="rounded-lg relative bg-[#303030] shadow-lg max-w-[230px] p-4 gap-2 flex items-center justify-center border border-white/10">
+            <IoAlertCircleOutline className="text-8xl text-yellow-700/20 absolute" />
+            <p className="text-yellow-500 font-semibold text-balance text-center">
               Las credenciales son incorrectas o el usuario no existe.
             </p>
           </div>

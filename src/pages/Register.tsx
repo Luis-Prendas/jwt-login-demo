@@ -1,4 +1,5 @@
 import { useAuth } from "../hooks/useAuth";
+import { IoAlertCircleOutline } from "react-icons/io5";
 
 export default function Register() {
   const { createUser, loading, error } = useAuth();
@@ -19,14 +20,14 @@ export default function Register() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2 p-4 border border-[#f0f0f0]/20 rounded-lg">
-          <input required type="email" name="mail" placeholder="Correo" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
-          <input required type="text" name="username" placeholder="Nombre de usuario" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
-          <input required type="password" name="password" placeholder="Contraseña" className="border border-[#f0f0f0]/20 p-2 rounded-lg" />
+        <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 p-4 border border-white/10 bg-[#303030] rounded-lg">
+          <input required type="email" name="mail" placeholder="Correo" className="border-b shadow-lg bg-[#2b2b2b] border-white/10 p-2 rounded-lg" />
+          <input required type="text" name="username" placeholder="Nombre de usuario" className="border-b shadow-lg bg-[#2b2b2b] border-white/10 p-2 rounded-lg" />
+          <input required type="password" name="password" placeholder="Contraseña" className="border-b shadow-lg bg-[#2b2b2b] border-white/10 p-2 rounded-lg" />
           <div className="flex gap-2 w-full">
             <button
               type="submit"
-              className={`bg-[#f0f0f0] text-[#333] rounded-lg px-4 py-2 w-full cursor-pointer mt-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`main_btn w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={loading}
             >
               {loading ? 'Registrando...' : 'Registrar'}
@@ -35,8 +36,11 @@ export default function Register() {
         </form>
 
         {error && (
-          <div className="flex justify-center items-center p-4 border border-red-800 bg-red-200 rounded-lg">
-            <p className="text-red-800 font-semibold">⚠️{error}⚠️</p>
+          <div className="rounded-lg relative bg-[#303030] shadow-lg max-w-[230px] p-4 gap-2 flex items-center justify-center border border-white/10">
+            <IoAlertCircleOutline className="text-8xl text-yellow-700/20 absolute" />
+            <p className="text-yellow-500 font-semibold text-balance text-center">
+              Las credenciales son incorrectas o el usuario no existe.
+            </p>
           </div>
         )}
       </section>
