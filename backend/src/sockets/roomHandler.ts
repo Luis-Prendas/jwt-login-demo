@@ -35,7 +35,9 @@ export function roomHandler(io: Server, socket: Socket) {
     callback(`Joined room ${roomId}`);
     socket.to(roomId).emit('userJoined', {
       id: socket.id,
-      user: (socket as any).user?.username
+      uuid: (socket as any).user.user.uuid,
+      username: (socket as any).user.user.username,
+      nickname: (socket as any).user.user.nickname,
     });
   });
 
@@ -43,7 +45,9 @@ export function roomHandler(io: Server, socket: Socket) {
   socket.on('chatMessage', ({ roomId, message }) => {
     io.to(roomId).emit('chatMessage', {
       id: socket.id,
-      user: (socket as any).user?.username,
+      uuid: (socket as any).user.user.uuid,
+      username: (socket as any).user.user.username,
+      nickname: (socket as any).user.user.nickname,
       message
     });
   });

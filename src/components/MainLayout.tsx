@@ -16,7 +16,7 @@ export function MainLayout({ children }: ProtectedRouteProps) {
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-start">
-      <nav className="w-screen bg-black p-4 flex items-center gap-4 justify-between">
+      <nav className="w-screen bg-[#181818] border-b border-white/10 shadow-lg p-4 flex items-center gap-4 justify-between">
         <h1 className="text-2xl font-bold">
           <Link to="/">Luis.Dev</Link>
         </h1>
