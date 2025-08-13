@@ -5,6 +5,7 @@ import { Server } from 'socket.io';
 import { PORT } from './config/env';
 import userSessionRoutes from './routes/userSession';
 import userRoutes from './routes/user';
+import tabsMenuRoutes from './routes/tabsMenu';
 import { socketAuth } from './middlewares/socketAuth';
 import { roomHandler } from './sockets/roomHandler';
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.get('/', (_req, res) => res.send('🚀 API con JWT en TS funcionando!'));
 app.use('/', userSessionRoutes);
 app.use('/', userRoutes);
+app.use('/', tabsMenuRoutes);
 
 // Lógica de sockets
 io.on('connection', (socket) => {

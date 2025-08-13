@@ -1,14 +1,36 @@
 import { Link, Outlet, useNavigate } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
+import { useEffect } from 'react';
+import { useTabsMenu } from '../hooks/useTabsMenu';
 
 export function MainLayout() {
-  const { isAuthenticated, logout, userData } = useAuth();
+  const { isAuthenticated, logout, token } = useAuth();
+  const { tabs, selectedTab, fetchTabs, setSelectedTab } = useTabsMenu()
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isAuthenticated && token) {
+        await fetchTabs(token);
+      }
+    };
+    fetchData();
+  }, [isAuthenticated, token]);
+
+  useEffect(() => {
+    if (!tabs || tabs.length === 0) return;
+
+    const currentTab = tabs.find(tab => tab.route === location.pathname);
+
+    if (currentTab) {
+      setSelectedTab(currentTab.uuid);
+    }
+  }, [location.pathname]);
 
   return (
     <div className="w-full min-h-screen flex flex-col">
@@ -19,15 +41,13 @@ export function MainLayout() {
         {isAuthenticated ? (
           <>
             <ul className="flex gap-4">
-              <li><Link to="/">Inicio</Link></li>
-              <li><Link to="/dashboard">Dashboard</Link></li>
-              <li><Link to="/create-room">Salas</Link></li>
-              {userData?.role === 'admin' && (
-                <>
-                  <li><Link to="/dev-tools">Herramientas</Link></li>
-                  <li><Link to="/user-management">Usuarios</Link></li>
-                </>
-              )}
+              {tabs && tabs.map(tab => (
+                <li key={tab.uuid}>
+                  <Link to={tab.route} className={tab.uuid === selectedTab?.uuid ? 'font-bold' : ''}>
+                    {tab.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
             <button onClick={handleLogout} className="bg-red-500 px-4 py-2 rounded">
               Cerrar sesión

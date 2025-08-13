@@ -28,3 +28,13 @@ export interface UserLogin {
   username: string;
   password: string;
 }
+
+export interface TabMenuOption {
+  uuid: string;
+  label: string;
+  icon: string;
+  route: string;
+  authRequired: boolean;
+  rolesAllowed: ('user' | 'admin' | 'developer' | 'moderator')[];
+  selectedTab: boolean;
+}

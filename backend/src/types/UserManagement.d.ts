@@ -1,6 +1,7 @@
 export interface DataBase {
   users: User[];
   rooms: Room[];
+  tabsMenuOptions: TabMenuOption[];
 }
 
 export interface User {
@@ -27,4 +28,13 @@ export interface Room {
   uuid: string;
   name: string;
   capacity: number;
+}
+
+export interface TabMenuOption {
+  uuid: string;
+  label: string;
+  icon: string;
+  route: string;
+  authRequired: boolean;
+  rolesAllowed: ('user' | 'admin' | 'developer' | 'moderator')[];
 }

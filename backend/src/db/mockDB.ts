@@ -46,5 +46,47 @@ export const DB: DataBase = {
       name: 'Room 3',
       capacity: 2
     }
+  ],
+  tabsMenuOptions: [
+    {
+      uuid: 'a001',
+      label: 'Inicio',
+      icon: 'home',
+      route: '/',
+      authRequired: false,
+      rolesAllowed: ['user', 'admin', 'developer', 'moderator']
+    },
+    {
+      uuid: 'a002',
+      label: 'Dashboard',
+      icon: 'dashboard',
+      route: '/dashboard',
+      authRequired: true,
+      rolesAllowed: ['user', 'admin', 'developer', 'moderator']
+    },
+    {
+      uuid: 'a003',
+      label: 'Salas',
+      icon: 'rooms',
+      route: '/create-room',
+      authRequired: true,
+      rolesAllowed: ['user', 'admin', 'developer', 'moderator']
+    },
+    {
+      uuid: 'a004',
+      label: 'Herramientas',
+      icon: 'tools',
+      route: '/dev-tools',
+      authRequired: true,
+      rolesAllowed: ['admin', 'developer']
+    },
+    {
+      uuid: 'a005',
+      label: 'Gestion de usuarios',
+      icon: 'user-management',
+      route: '/user-management',
+      authRequired: true,
+      rolesAllowed: ['admin', 'developer']
+    },
   ]
 };

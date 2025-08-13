@@ -1,8 +1,14 @@
 export interface JwtUserPayload {
-  username: string;
-  balance?: {
-    rafflePoints: number;
-  };
+  user: {
+    username: string;
+    role: 'user' | 'admin' | 'developer' | 'moderator';
+    uuid: string;
+    nickname: string;
+    mail: string;
+    balance?: {
+      rafflePoints: number;
+    };
+  }
   iat?: number;
   exp?: number;
 }
