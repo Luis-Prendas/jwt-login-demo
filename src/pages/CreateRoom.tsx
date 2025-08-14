@@ -29,7 +29,7 @@ export default function CreateRoom() {
   }, [token, rooms]);
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex items-center flex-col py-4 justify-start gap-4 w-full h-full">
       <h1 className="text-5xl font-bold">Salas Activas</h1>
       {rooms.length > 0 && rooms.map((room) => (
         <div key={room.uuid} className="flex gap-4">

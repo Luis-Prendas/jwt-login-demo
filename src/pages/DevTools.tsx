@@ -30,7 +30,7 @@ export default function DevTools() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center gap-4 flex-col">
+    <div className="flex justify-start w-full h-full py-4 items-center gap-4 flex-col">
       <h1 className="text-5xl font-bold">Developer Tools</h1>
       <div className="flex flex-col justify-center items-center gap-4">
         <button onClick={handleUserInfo} className="main_btn">Fetch User Info</button>

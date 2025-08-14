@@ -4,7 +4,7 @@ export const DB: DataBase = {
   users: [
     {
       uuid: '1',
-      mail: 'simil@example.com',
+      email: 'simil@example.com',
       username: 'simil',
       password: 'simil',
       nickname: 'Simil',
@@ -13,7 +13,7 @@ export const DB: DataBase = {
     },
     {
       uuid: '2',
-      mail: 'user@example.com',
+      email: 'user@example.com',
       username: 'luis',
       password: 'luis',
       nickname: 'Luis',
@@ -22,7 +22,7 @@ export const DB: DataBase = {
     },
     {
       uuid: '3',
-      mail: 'user3@example.com',
+      email: 'user3@example.com',
       username: 'dani',
       password: 'dani',
       nickname: 'Dani',

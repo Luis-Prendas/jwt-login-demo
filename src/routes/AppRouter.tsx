@@ -25,9 +25,9 @@ export default function AppRouter() {
           {/* Privadas (Requiere autenticación) */}
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create-room" element={<CreateRoom />} />
             <Route path="/room/:roomId" element={<Room />} />
-            <Route path="/dashboard" element={<Dashboard />} />
 
             {/* Administrativas (Requiere autenticación y rol de administrador) */}
             <Route element={<ProtectedAdminRoute />}>
