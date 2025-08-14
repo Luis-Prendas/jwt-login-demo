@@ -19,7 +19,7 @@ export interface UserBasicData {
 }
 
 export interface RegisterData {
-  mail: string;
+  email: string;
   username: string;
   password: string;
 }
@@ -37,4 +37,9 @@ export interface TabMenuOption {
   order: number;
   authRequired: boolean;
   rolesAllowed: ('user' | 'admin' | 'developer' | 'moderator')[];
+}
+
+export type LoginResponse = {
+  token: string | null
+  error: string | null
 }

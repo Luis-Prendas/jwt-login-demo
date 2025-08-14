@@ -23,9 +23,9 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (_req, res) => res.send('🚀 API con JWT en TS funcionando!'));
-app.use('/', userSessionRoutes);
-app.use('/', userRoutes);
-app.use('/', tabsMenuRoutes);
+app.use('/api', userSessionRoutes);
+app.use('/api', userRoutes);
+app.use('/api', tabsMenuRoutes);
 
 // Lógica de sockets
 io.on('connection', (socket) => {

@@ -6,7 +6,7 @@ export interface DataBase {
 
 export interface User {
   uuid: string;
-  mail: string;
+  email: string;
   username: string;
   password: string;
   nickname: string;
@@ -18,7 +18,7 @@ export interface User {
 
 export interface UserBasicData {
   uuid: string;
-  mail: string;
+  email: string;
   username: string;
   nickname: string;
   role: 'user' | 'admin' | 'developer' | 'moderator';

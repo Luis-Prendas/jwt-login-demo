@@ -3,17 +3,16 @@ import { persist } from 'zustand/middleware';
 import { userLogin } from '../services/Login';
 import { isTokenValid, decodeToken } from '../utils/jwt';
 import { userInfo } from '../services/UserInformatio';
-import type { UserBasicData } from '../types/UserManagement';
+import type { LoginResponse, UserBasicData } from '../types/UserManagement';
 
 interface AuthState {
   token: string | null;
   userData: UserBasicData | null;
   loading: boolean;
-  error: string | null;
   isAuthenticated: boolean;
 
   setLoading: (loading: boolean) => void;
-  login: (username: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<LoginResponse>;
   logout: () => void;
   fetchUserData: () => Promise<void>;
   setToken: (token: string | null) => void;
@@ -56,25 +55,11 @@ export const useAuthStore = create<AuthState>()(
       },
 
       login: async (username, password) => {
-        set({ loading: true, error: null });
-        try {
-          const receivedToken = await userLogin({ username, password });
-          if (!receivedToken) {
-            set({ error: 'Login failed', loading: false });
-            return false;
-          }
-
-          console.log(`Received token: ${receivedToken}`);
-          
-          get().setToken(receivedToken);
-          console.log(`Received token: ${receivedToken}`);
-          set({ loading: false });
-          return true;
-        } catch (error) {
-          console.log(`Error en login: ${error}`);
-          set({ error: 'Login error', loading: false });
-          return false;
-        }
+        set({ loading: true });
+        const receivedToken = await userLogin({ username, password });
+        get().setToken(receivedToken.token);
+        set({ loading: false });
+        return receivedToken;
       },
 
       logout: () => {
@@ -82,19 +67,18 @@ export const useAuthStore = create<AuthState>()(
           token: null,
           isAuthenticated: false,
           userData: null,
-          error: null,
         });
       },
 
       fetchUserData: async () => {
         const token = get().token;
         if (!token) return;
-        set({ loading: true, error: null });
+        set({ loading: true });
         try {
           const user = await userInfo(token);
           set({ userData: user, loading: false });
         } catch (error) {
-          set({ error: 'Error fetching user data', loading: false });
+          set({ loading: false });
         }
       }
     }),
@@ -113,7 +97,6 @@ export const useAuthStore = create<AuthState>()(
         userData: state.userData,
         isAuthenticated: state.isAuthenticated,
         loading: false,
-        error: null,
         setLoading: state.setLoading,
         login: state.login,
         logout: state.logout,

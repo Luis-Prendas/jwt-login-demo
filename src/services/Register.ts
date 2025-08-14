@@ -1,10 +1,10 @@
-import type { RegisterData } from "../types/UserManagement";
+import type { LoginResponse, RegisterData } from "../types/UserManagement";
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6666';
 
-export async function userRegister(data: RegisterData): Promise<string | null> {
+export async function userRegister(data: RegisterData): Promise<LoginResponse> {
   try {
-    const response = await fetch(`${BASE_URL}/register`, {
+    const response = await fetch(`${BASE_URL}/api/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -12,14 +12,15 @@ export async function userRegister(data: RegisterData): Promise<string | null> {
       body: JSON.stringify(data),
     });
 
+    const res: LoginResponse = await response.json();
+
     if (!response.ok) {
-      throw new Error('Registration failed');
+      throw new Error(res.error!);
     }
 
-    const { token } = await response.json();
-    return token;
+    return res
   } catch (error) {
-    console.error(`❌ Error en userRegister: ${error}`);
-    return null;
+    console.error(`❌ Error en userRegister: ${(error as Error).message}`);
+    return { token: null, error: (error as Error).message }
   }
 }

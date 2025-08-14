@@ -8,7 +8,6 @@ export function useAuth() {
     token,
     isAuthenticated,
     loading,
-    error,
     userData,
     setLoading,
     login,
@@ -28,9 +27,8 @@ export function useAuth() {
 
   const createUser = async (userData: RegisterData) => {
     setLoading(true);
-    if (!token) return;
-
     const newUser = await userRegister(userData);
+    setToken(newUser.token)
     setLoading(false);
     return newUser;
   };
@@ -39,7 +37,6 @@ export function useAuth() {
     token,
     isAuthenticated,
     loading,
-    error,
     userData,
     createUser,
     login,
