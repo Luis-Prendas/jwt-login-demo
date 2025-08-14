@@ -13,6 +13,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { useAuth } from "@/hooks/useAuth"
 import { Link, useNavigate } from "react-router"
+import { ModeToggle } from "./mode-toggle"
 
 // Menu items.
 const items = [
