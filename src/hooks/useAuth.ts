@@ -1,6 +1,6 @@
 import { userRegister } from "../services/Register";
 import { allUsersInfo } from "../services/UserInformatio";
-import { useAuthStore } from "../storage/cstorage";
+import { useAuthStore } from "../store/cstorage";
 import type { RegisterData, UserData } from "../types/UserManagement";
 
 export function useAuth() {

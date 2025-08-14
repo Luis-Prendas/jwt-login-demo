@@ -11,6 +11,7 @@ import Room from '../pages/Room';
 import UserManagement from '../pages/UserManagement';
 import { MainLayout } from '../components/MainLayout';
 import ProtectedAdminRoute from '../components/ProtectedAdminRoute';
+import TabsConfig from '../pages/TabsConfig';
 
 export default function AppRouter() {
   return (
@@ -33,6 +34,7 @@ export default function AppRouter() {
               <Route path="/fut-draft" element={<FutDraft />} />
               <Route path="/dev-tools" element={<DevTools />} />
               <Route path="/user-management" element={<UserManagement />} />
+              <Route path="/tabs-config" element={<TabsConfig />} />
             </Route>
           </Route>
         </Route>

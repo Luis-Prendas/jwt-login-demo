@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { DB } from '../db/mockDB';
 
 export const getUser = (req: Request, res: Response) => {
-  const username = req.user?.username;
+  const username = req.user?.user.username;
   const user = DB.users.find(u => u.username === username);
 
   if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -15,7 +15,7 @@ export const getAllUsers = (req: Request, res: Response) => {
 };
 
 export const addPoints = (req: Request, res: Response) => {
-  const username = req.user?.username;
+  const username = req.user?.user.username;
   const user = DB.users.find(u => u.username === username);
 
   if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });

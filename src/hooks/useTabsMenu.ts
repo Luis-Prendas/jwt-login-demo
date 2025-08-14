@@ -1,12 +1,22 @@
-import { useAsideMenuOptionsStore } from "../storage/useAsideMenuOptionsStore";
+import { allTabsMenu } from "../services/TabsMenu";
+import { useAuthStore } from "../store/cstorage";
+import { useAsideMenuOptionsStore } from "../store/useAsideMenuOptionsStore";
 
 export function useTabsMenu() {
-  const { tabs, selectedTab, fetchTabs, setSelectedTab } = useAsideMenuOptionsStore();
+  const { userTabs, userSelectedTab, fetchUserTabs, setUserSelectedTab } = useAsideMenuOptionsStore();
+  const { token } = useAuthStore();
+
+  const fetchAllTabs = async () => {
+    if (!token) return null;
+    const tabs = await allTabsMenu(token);
+    return tabs;
+  }
 
   return {
-    tabs,
-    selectedTab,
-    fetchTabs,
-    setSelectedTab,
+    userTabs,
+    userSelectedTab,
+    fetchAllTabs,
+    fetchUserTabs,
+    setUserSelectedTab
   };
 }

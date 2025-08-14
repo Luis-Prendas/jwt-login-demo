@@ -5,7 +5,7 @@ import { useTabsMenu } from '../hooks/useTabsMenu';
 
 export function MainLayout() {
   const { isAuthenticated, logout, token } = useAuth();
-  const { tabs, selectedTab, fetchTabs, setSelectedTab } = useTabsMenu()
+  const { userTabs, fetchUserTabs, setUserSelectedTab, userSelectedTab } = useTabsMenu()
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -16,25 +16,25 @@ export function MainLayout() {
   useEffect(() => {
     const fetchData = async () => {
       if (isAuthenticated && token) {
-        await fetchTabs(token);
+        await fetchUserTabs(token);
       }
     };
     fetchData();
   }, [isAuthenticated, token]);
 
   useEffect(() => {
-    if (!tabs || tabs.length === 0) return;
+    if (!userTabs || userTabs.length === 0) return;
 
-    const currentTab = tabs.find(tab => tab.route === location.pathname);
+    const currentTab = userTabs.find(tab => tab.route === location.pathname);
 
     if (currentTab) {
-      setSelectedTab(currentTab.uuid);
+      setUserSelectedTab(currentTab.uuid);
     }
   }, [location.pathname]);
 
   return (
     <div className="w-full min-h-screen flex">
-      <aside className="bg-[#181818] w-[300px] border-b border-white/10 shadow-lg flex flex-col justify-between">
+      <aside className="bg-[#181818] w-[260px] border-b border-white/10 shadow-lg flex flex-col justify-between">
         <div className='w-full px-4 py-2'>
           <h1 className="text-2xl font-bold">
             <Link to="/">Luis.Dev</Link>
@@ -44,9 +44,9 @@ export function MainLayout() {
           <>
             <div className='w-full h-full p-2'>
               <ul className="flex w-full flex-col justify-center items-start">
-                {tabs && tabs.map(tab => (
+                {userTabs && userTabs.map(tab => (
                   <li key={tab.uuid} className='w-full'>
-                    <Link to={tab.route} className={`flex gap-2 items-center hover:bg-[#2f2f2f] w-full p-2 justify-start rounded-lg ${tab.uuid === selectedTab?.uuid && 'bg-[#232323]'}`}>
+                    <Link to={tab.route} className={`flex gap-2 items-center hover:bg-[#2f2f2f] w-full p-2 justify-start rounded-lg ${tab.uuid === userSelectedTab?.uuid && 'bg-[#232323]'}`}>
                       {tab.label}
                     </Link>
                   </li>
@@ -61,7 +61,7 @@ export function MainLayout() {
             </div>
           </>
         ) : (
-          <div className="flex gap-4">
+          <div className="flex gap-4 p-2 w-full justify-center">
             <Link to="/register" className="secondary_btn">Registro</Link>
             <Link to="/login" className="main_btn">Iniciar sesión</Link>
           </div>

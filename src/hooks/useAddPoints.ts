@@ -1,6 +1,6 @@
 import { addPoints } from '../services/AddPoints';
 import { useState } from 'react';
-import { useAuthStore } from '../storage/cstorage';
+import { useAuthStore } from '../store/cstorage';
 
 export function useAddPoints() {
   const token = useAuthStore(state => state.token);

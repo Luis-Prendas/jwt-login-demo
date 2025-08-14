@@ -53,6 +53,7 @@ export const DB: DataBase = {
       label: 'Inicio',
       icon: 'home',
       route: '/',
+      order: 1,
       authRequired: false,
       rolesAllowed: ['user', 'admin', 'developer', 'moderator']
     },
@@ -62,6 +63,7 @@ export const DB: DataBase = {
       icon: 'dashboard',
       route: '/dashboard',
       authRequired: true,
+      order: 2,
       rolesAllowed: ['user', 'admin', 'developer', 'moderator']
     },
     {
@@ -70,6 +72,7 @@ export const DB: DataBase = {
       icon: 'rooms',
       route: '/create-room',
       authRequired: true,
+      order: 3,
       rolesAllowed: ['user', 'admin', 'developer', 'moderator']
     },
     {
@@ -78,6 +81,7 @@ export const DB: DataBase = {
       icon: 'tools',
       route: '/dev-tools',
       authRequired: true,
+      order: 4,
       rolesAllowed: ['admin', 'developer']
     },
     {
@@ -86,7 +90,17 @@ export const DB: DataBase = {
       icon: 'user-management',
       route: '/user-management',
       authRequired: true,
+      order: 5,
       rolesAllowed: ['admin', 'developer']
     },
+    {
+      uuid: 'a006',
+      label: 'Tabs config',
+      icon: 'tabs-config',
+      route: '/tabs-config',
+      authRequired: true,
+      order: 6,
+      rolesAllowed: ['admin', 'developer']
+    }
   ]
 };

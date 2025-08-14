@@ -35,6 +35,7 @@ export interface TabMenuOption {
   label: string;
   icon: string;
   route: string;
+  order: number;
   authRequired: boolean;
   rolesAllowed: ('user' | 'admin' | 'developer' | 'moderator')[];
 }

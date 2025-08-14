@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { DB } from '../db/mockDB';
 
-export const getAllTabsMenu = (req: Request, res: Response) => {
+export const getAllUserTabsMenu = (req: Request, res: Response) => {
   const userRole = req.user?.user.role
 
   if (!userRole) {
@@ -12,5 +12,10 @@ export const getAllTabsMenu = (req: Request, res: Response) => {
     return tab.authRequired ? tab.rolesAllowed.includes(userRole) : true;
   });
 
+  res.json(tabs);
+};
+
+export const getAllTabsMenu = (req: Request, res: Response) => {
+  const tabs = DB.tabsMenuOptions;
   res.json(tabs);
 };
