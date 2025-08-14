@@ -17,14 +17,14 @@ export default function AppRouter() {
   return (
     <Router>
       <Routes>
-        <Route element={<MainLayout />}>
-          {/* Públicas (Sin autenticación) */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+        {/* Públicas (Sin autenticación) */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
+        <Route element={<MainLayout />}>
           {/* Privadas (Requiere autenticación) */}
           <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Home />} />
             <Route path="/create-room" element={<CreateRoom />} />
             <Route path="/room/:roomId" element={<Room />} />
             <Route path="/dashboard" element={<Dashboard />} />
