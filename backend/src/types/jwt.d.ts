@@ -1,18 +1,24 @@
+/**
+ * Payload que se almacena en el JWT
+ */
 export interface JwtUserPayload {
   user: {
-    username: string;
-    role: 'user' | 'admin' | 'developer' | 'moderator';
     uuid: string;
+    username: string;
     nickname: string;
-    mail: string;
+    email: string; // corregido de 'mail' a 'email' para coherencia
+    role: 'user' | 'admin' | 'developer' | 'moderator';
     balance?: {
       rafflePoints: number;
     };
-  }
+  };
   iat?: number;
   exp?: number;
 }
 
+/**
+ * Extensión del Request de Express para incluir `user`
+ */
 declare global {
   namespace Express {
     interface Request {

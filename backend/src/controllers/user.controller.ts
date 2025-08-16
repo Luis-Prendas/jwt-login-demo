@@ -1,28 +1,63 @@
 import { Request, Response } from 'express';
-import { DB } from '../db/mockDB';
+import { initDB } from '../db/db';
+import { UserBasicData } from '../types/UserManagement';
 
-export const getUser = (req: Request, res: Response) => {
-  const username = req.user?.user.username;
-  const user = DB.users.find(u => u.username === username);
+/**
+ * Obtener información del usuario autenticado
+ */
+export const getUser = async (req: Request, res: Response) => {
+  try {
+    const username = req.user?.user.username;
+    if (!username) return res.status(401).json({ error: 'Usuario no autenticado' });
 
-  if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+    const db = await initDB();
+    const user = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
 
-  res.json({ user });
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    res.json({ user });
+  } catch (err) {
+    console.error('[GetUser Error]:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
-export const getAllUsers = (req: Request, res: Response) => {
-  res.json({ users: DB.users });
+/**
+ * Obtener todos los usuarios
+ */
+export const getAllUsers = async (_req: Request, res: Response) => {
+  try {
+    const db = await initDB();
+    const users = await db.all(`SELECT * FROM users`);
+    res.json({ users });
+  } catch (err) {
+    console.error('[GetAllUsers Error]:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };
 
-export const addPoints = (req: Request, res: Response) => {
-  const username = req.user?.user.username;
-  const user = DB.users.find(u => u.username === username);
+/**
+ * Agregar puntos al usuario autenticado
+ */
+export const addPoints = async (req: Request, res: Response) => {
+  try {
+    const username = req.user?.user.username;
+    if (!username) return res.status(401).json({ error: 'Usuario no autenticado' });
 
-  if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+    const points = Number(req.body.points);
+    if (isNaN(points) || points <= 0) return res.status(400).json({ error: 'Cantidad inválida' });
 
-  const points = Number(req.body.points);
-  if (isNaN(points) || points <= 0) return res.status(400).json({ error: 'Cantidad inválida' });
+    const db = await initDB();
+    const user = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
 
-  user.balance.rafflePoints += points;
-  res.json({ message: 'Puntos agregados', user });
+    const newBalance = user.rafflePoints + points;
+
+    await db.run(`UPDATE users SET rafflePoints = ? WHERE username = ?`, [newBalance, username]);
+
+    res.json({ message: 'Puntos agregados', user: { ...user, rafflePoints: newBalance } });
+  } catch (err) {
+    console.error('[AddPoints Error]:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
 };

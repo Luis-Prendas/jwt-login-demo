@@ -1,66 +1,98 @@
 import { Server, Socket } from 'socket.io';
 import { DB } from '../db/mockDB';
+import { UserBasicData } from '../types/UserManagement';
 
-export function roomHandler(io: Server, socket: Socket) {
-  const broadcastRooms = (io: Server) => {
-    const roomsList = DB.rooms.map(e => {
-      const roomUsers = io.sockets.adapter.rooms.get(e.uuid);
+/**
+ * Maneja todos los eventos relacionados con las salas (rooms) de Socket.IO.
+ * @param io Instancia de Socket.IO server
+ * @param socket Conexión del cliente actual
+ */
+export function handleRoomEvents(io: Server, socket: Socket) {
+
+  /**
+   * Emite a todos los clientes la lista de salas actualizada,
+   * indicando si cada sala está llena o no.
+   */
+  const broadcastRooms = () => {
+    const roomsList = DB.rooms.map(room => {
+      const roomUsers = io.sockets.adapter.rooms.get(room.uuid);
       return {
-        ...e,
-        isFull: roomUsers ? roomUsers.size >= e.capacity : false
+        ...room,
+        isFull: roomUsers ? roomUsers.size >= room.capacity : false
       };
     });
-    io.emit("roomsUpdated", roomsList); // 👈 evento global
-  }
 
-  // Unirse a sala
-  socket.on('joinRoom', (roomId, callback) => {
-    const room = DB.rooms.find(room => room.uuid === roomId);
+    io.emit('roomsUpdated', roomsList);
+  };
 
-    // Verificar si la sala existe.
+  /**
+   * Evento: Unirse a una sala
+   * @param roomId ID de la sala
+   * @param callback Función de respuesta al cliente
+   */
+  socket.on('joinRoom', (roomId: string, callback: (msg: string) => void) => {
+    const room = DB.rooms.find(r => r.uuid === roomId);
+
+    // Verificar si la sala existe
     if (!room) {
-      broadcastRooms(io);
-      callback(`Room ${roomId} does not exist`);
-      return;
+      broadcastRooms();
+      return callback(`Room ${roomId} does not exist`);
     }
 
     // Verificar si la sala está llena
     const roomUsers = io.sockets.adapter.rooms.get(roomId);
     if (roomUsers && roomUsers.size >= room.capacity) {
-      callback(`Room ${roomId} is full`);
-      return;
+      return callback(`Room ${roomId} is full`);
     }
 
+    // Unirse a la sala
     socket.join(roomId);
+
+    // Obtener información del usuario autenticado
+    const user: UserBasicData = (socket as any).user.user;
+
+    // Notificar al usuario y al resto de la sala
     callback(`Joined room ${roomId}`);
     socket.to(roomId).emit('userJoined', {
       id: socket.id,
-      uuid: (socket as any).user.user.uuid,
-      username: (socket as any).user.user.username,
-      nickname: (socket as any).user.user.nickname,
+      uuid: user.uuid,
+      username: user.username,
+      nickname: user.nickname,
     });
+
+    // Actualizar lista de salas global
+    broadcastRooms();
   });
 
-  // Mensaje en sala
-  socket.on('chatMessage', ({ roomId, message }) => {
-    io.to(roomId).emit('chatMessage', {
+  /**
+   * Evento: Enviar mensaje dentro de una sala
+   * @param data Objeto con { roomId, message }
+   */
+  socket.on('chatMessage', (data: { roomId: string; message: string }) => {
+    const user: UserBasicData = (socket as any).user.user;
+
+    io.to(data.roomId).emit('chatMessage', {
       id: socket.id,
-      uuid: (socket as any).user.user.uuid,
-      username: (socket as any).user.user.username,
-      nickname: (socket as any).user.user.nickname,
-      message
+      uuid: user.uuid,
+      username: user.username,
+      nickname: user.nickname,
+      message: data.message,
     });
   });
 
-  // Petición para listar salas activas
-  socket.on('listRooms', (callback) => {
-    const response = DB.rooms.map(e => {
-      const roomUsers = io.sockets.adapter.rooms.get(e.uuid);
+  /**
+   * Evento: Listar salas activas
+   * @param callback Función de respuesta al cliente
+   */
+  socket.on('listRooms', (callback: (rooms: typeof DB.rooms) => void) => {
+    const roomsList = DB.rooms.map(room => {
+      const roomUsers = io.sockets.adapter.rooms.get(room.uuid);
       return {
-        ...e,
-        isFull: roomUsers ? roomUsers.size >= e.capacity : false
-      }
-    })
-    callback(response);
+        ...room,
+        isFull: roomUsers ? roomUsers.size >= room.capacity : false
+      };
+    });
+
+    callback(roomsList);
   });
 }

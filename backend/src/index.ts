@@ -1,37 +1,49 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { PORT } from './config/env';
-import userSessionRoutes from './routes/userSession';
-import userRoutes from './routes/user';
-import tabsMenuRoutes from './routes/tabsMenu';
+import userRoutes from './routes/user.routes';
+import tabsMenuRoutes from './routes/tabsMenu.routes';
 import { socketAuth } from './middlewares/socketAuth';
-import { roomHandler } from './sockets/roomHandler';
+import { handleRoomEvents } from './sockets/roomHandler';
+import userSessionRouter from './routes/userSession.routes';
 
+// Crear instancia de Express
 const app = express();
+
+// Crear servidor HTTP a partir de Express
 const httpServer = createServer(app);
 
+// Configurar Socket.IO
 const io = new Server(httpServer, {
-  cors: { origin: '*' }
+  cors: { origin: '*' }, // Permitir cualquier origen (CORS)
 });
 
-// Middleware global para sockets (autenticación)
+// Middleware global para sockets: autenticación de usuarios
 io.use(socketAuth);
 
+// Middlewares globales de Express
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); // Parsear JSON en el body de requests
 
-app.get('/', (_req, res) => res.send('🚀 API con JWT en TS funcionando!'));
-app.use('/api', userSessionRoutes);
-app.use('/api', userRoutes);
-app.use('/api', tabsMenuRoutes);
-
-// Lógica de sockets
-io.on('connection', (socket) => {
-  roomHandler(io, socket);
+// Ruta de prueba /healthcheck
+app.get('/', (_req: Request, res: Response) => {
+  res.send('🚀 API con JWT en TypeScript funcionando correctamente!');
 });
 
+// Rutas de la API
+app.use('/api/sessions', userSessionRouter); // login, registro, logout
+app.use('/api/users', userRoutes);           // gestión de usuarios
+app.use('/api/tabs', tabsMenuRoutes);        // configuración de menú/tab
+
+// Configuración de sockets
+io.on('connection', (socket: Socket) => {
+  console.log(`⚡ Nuevo cliente conectado: ${socket.id}`);
+  handleRoomEvents(io, socket); // Manejo de eventos de salas
+});
+
+// Iniciar servidor HTTP
 httpServer.listen(PORT, () => {
   console.log(`✅ Servidor corriendo en http://localhost:${PORT}`);
 });

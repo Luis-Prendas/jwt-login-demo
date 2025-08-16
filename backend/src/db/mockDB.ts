@@ -1,5 +1,9 @@
-import { DataBase } from "../types/UserManagement";
+import { DataBase, UserWithPassword } from "../types/UserManagement";
 
+/**
+ * Base de datos simulada en memoria.
+ * Útil para pruebas rápidas o desarrollo local sin SQLite.
+ */
 export const DB: DataBase = {
   users: [
     {
@@ -29,24 +33,14 @@ export const DB: DataBase = {
       role: 'admin',
       balance: { rafflePoints: 30 }
     }
-  ],
+  ] as UserWithPassword[], // Tipado explícito
+
   rooms: [
-    {
-      uuid: 'room1',
-      name: 'Room 1',
-      capacity: 2
-    },
-    {
-      uuid: 'room2',
-      name: 'Room 2',
-      capacity: 2
-    },
-    {
-      uuid: 'room3',
-      name: 'Room 3',
-      capacity: 2
-    }
+    { uuid: 'room1', name: 'Room 1', capacity: 2 },
+    { uuid: 'room2', name: 'Room 2', capacity: 2 },
+    { uuid: 'room3', name: 'Room 3', capacity: 2 }
   ],
+
   tabsMenuOptions: [
     {
       uuid: 'a001',
@@ -62,8 +56,8 @@ export const DB: DataBase = {
       label: 'Dashboard',
       icon: 'dashboard',
       route: '/dashboard',
-      authRequired: true,
       order: 2,
+      authRequired: true,
       rolesAllowed: ['user', 'admin', 'developer', 'moderator']
     },
     {
@@ -71,8 +65,8 @@ export const DB: DataBase = {
       label: 'Salas',
       icon: 'rooms',
       route: '/create-room',
-      authRequired: true,
       order: 3,
+      authRequired: true,
       rolesAllowed: ['user', 'admin', 'developer', 'moderator']
     },
     {
@@ -80,17 +74,17 @@ export const DB: DataBase = {
       label: 'Herramientas',
       icon: 'tools',
       route: '/dev-tools',
-      authRequired: true,
       order: 4,
+      authRequired: true,
       rolesAllowed: ['admin', 'developer']
     },
     {
       uuid: 'a005',
-      label: 'Gestion de usuarios',
+      label: 'Gestión de usuarios',
       icon: 'user-management',
       route: '/user-management',
-      authRequired: true,
       order: 5,
+      authRequired: true,
       rolesAllowed: ['admin', 'developer']
     },
     {
@@ -98,8 +92,8 @@ export const DB: DataBase = {
       label: 'Tabs config',
       icon: 'tabs-config',
       route: '/tabs-config',
-      authRequired: true,
       order: 6,
+      authRequired: true,
       rolesAllowed: ['admin', 'developer']
     }
   ]
