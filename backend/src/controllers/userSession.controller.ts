@@ -3,8 +3,10 @@ import jwt from 'jsonwebtoken';
 import { DB } from '../db/mockDB';
 import { SECRET_KEY } from '../config/env';
 import { User, UserBasicData } from '../types/UserManagement';
+import { initDB } from '../db/db';
+import { v4 as uuidv4 } from "uuid";
 
-export const login = (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
 
@@ -13,15 +15,19 @@ export const login = (req: Request, res: Response) => {
       return res.status(400).json({ error: "Usuario y contraseña son obligatorios." });
     }
 
-    const user = DB.users.find(
-      (u) => u.username === username && u.password === password
+    const db = await initDB();
+
+    // Buscar usuario en la DB
+    const user = await db.get(
+      `SELECT * FROM users WHERE username = ? AND password = ?`,
+      [username, password]
     );
 
     if (!user) {
       return res.status(401).json({ error: "Credenciales inválidas." });
     }
 
-    const payload: UserBasicData = {
+    const payload = {
       username: user.username,
       role: user.role,
       uuid: user.uuid,
@@ -38,39 +44,42 @@ export const login = (req: Request, res: Response) => {
   }
 };
 
-export const register = (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
   try {
     const { username, password, email } = req.body;
-    const existingUser = DB.users.find(u => u.username === username || u.email === email);
+    const db = await initDB();
+
+    // ¿Usuario existente?
+    const existingUser = await db.get(
+      `SELECT * FROM users WHERE username = ? OR email = ?`,
+      [username, email]
+    );
 
     if (existingUser) {
-      return res.status(409).json({ error: 'Usuario ya existente.' });
+      return res.status(409).json({ error: "Usuario ya existente." });
     }
 
-    const newUser: User = {
-      uuid: String(DB.users.length + 1),
-      username,
-      password,
-      email,
-      nickname: username,
-      role: 'user',
-      balance: { rafflePoints: 0 }
-    };
-    DB.users.push(newUser);
+    const newUuid = uuidv4();
+    await db.run(
+      `INSERT INTO users 
+       (uuid, email, username, password, nickname, role, rafflePoints)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [newUuid, email, username, password, username, "user", 0]
+    );
 
-    const payload: UserBasicData = {
-      username: newUser.username,
-      role: newUser.role,
-      uuid: newUser.uuid,
-      nickname: newUser.nickname,
-      email: newUser.email,
+    const payload = {
+      username,
+      role: "user",
+      uuid: newUuid,
+      nickname: username,
+      email,
     };
 
     const token = jwt.sign({ user: payload }, SECRET_KEY, { expiresIn: "1h" });
 
-    return res.status(200).json({ token });
+    res.status(200).json({ token });
   } catch (err) {
-    console.error("Error en login:", err);
-    return res.status(500).json({ error: "Error interno del servidor." });
+    console.error("Error en registro:", err);
+    res.status(500).json({ error: "Error interno del servidor." });
   }
 };

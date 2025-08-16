@@ -5,8 +5,8 @@ export const DB: DataBase = {
     {
       uuid: '1',
       email: 'simil@example.com',
-      username: 'simil',
-      password: 'simil',
+      username: 'simil.3021',
+      password: 'simil21903180',
       nickname: 'Simil',
       role: 'admin',
       balance: { rafflePoints: 100 }
