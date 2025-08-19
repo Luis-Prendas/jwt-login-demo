@@ -4,11 +4,13 @@ import { initDB } from '../db/db';
 import { SECRET_KEY } from '../config/env';
 import { v4 as uuidv4 } from 'uuid';
 import { UserBasicData } from '../types/UserManagement';
+import bcrypt from 'bcrypt';
 
 /**
  * Endpoint para iniciar sesión de usuario.
  * Valida credenciales y retorna un JWT con los datos básicos del usuario.
  */
+
 export const login = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
@@ -20,22 +22,26 @@ export const login = async (req: Request, res: Response) => {
 
     const db = await initDB();
 
-    // Buscar usuario con las credenciales proporcionadas
-    const user = await db.get(
-      `SELECT * FROM users WHERE username = ? AND password = ?`,
-      [username, password]
-    );
+    // Buscar usuario por username
+    const user = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
 
     if (!user) {
+      return res.status(401).json({ error: 'Credenciales inválidas.' });
+    }
+
+    // Validar contraseña ingresada contra hash
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
       return res.status(401).json({ error: 'Credenciales inválidas.' });
     }
 
     // Preparar payload para el token JWT
     const payload: UserBasicData = {
       uuid: user.uuid,
+      email: user.email,
       username: user.username,
       nickname: user.nickname,
-      email: user.email,
       role: user.role,
     };
 
@@ -49,11 +55,14 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
+
 /**
  * Endpoint para registrar un nuevo usuario.
  * Valida que no exista un usuario con el mismo username o email y retorna un JWT.
  */
 export const register = async (req: Request, res: Response) => {
+  const SALT_ROUNDS = 10;
+
   try {
     const { username, password, email } = req.body;
 
@@ -77,10 +86,11 @@ export const register = async (req: Request, res: Response) => {
     const newUuid = uuidv4();
 
     // Insertar nuevo usuario en la base de datos
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
     await db.run(
       `INSERT INTO users (uuid, email, username, password, nickname, role, rafflePoints)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [newUuid, email, username, password, username, 'user', 0]
+      [newUuid, email, username, hashedPassword, username, 'user', 0]
     );
 
     // Preparar payload para JWT

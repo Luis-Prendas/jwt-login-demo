@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getUser, addPoints, getAllUsers } from '../controllers/user.controller';
+import { getUser, addPoints, getAllUsers, getUserWithBadges } from '../controllers/user.controller';
 import { authenticateToken } from '../middlewares/authenticateToken';
 
 /**
@@ -9,7 +9,10 @@ import { authenticateToken } from '../middlewares/authenticateToken';
 const userRouter = Router();
 
 // Obtener información del usuario autenticado
-userRouter.get('/user', authenticateToken, getUser);
+// userRouter.get('/user', authenticateToken, getUser);
+
+// Obtener información de un usuario específico por UUID
+userRouter.get('/user/:uuid', authenticateToken, getUserWithBadges);
 
 // Obtener listado de todos los usuarios (admin/dev)
 userRouter.get('/users', authenticateToken, getAllUsers);

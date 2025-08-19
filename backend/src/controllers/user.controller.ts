@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { initDB } from '../db/db';
-import { UserBasicData } from '../types/UserManagement';
+import { Badge, UserBasicData } from '../types/UserManagement';
 
 /**
  * Obtener información del usuario autenticado
@@ -33,6 +33,73 @@ export const getAllUsers = async (_req: Request, res: Response) => {
   } catch (err) {
     console.error('[GetAllUsers Error]:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+export const getUserWithBadges = async (req: Request, res: Response) => {
+  type UserWithBadgeRow = {
+    userUuid: string;
+    username: string;
+    nickname: string;
+    email: string;
+    role: 'user' | 'admin' | 'developer' | 'moderator';
+    badges: Badge[] | null;
+  };
+
+  // fila de la consulta
+  type RawUserBadgeRow = {
+    userUuid: string;
+    username: string;
+    nickname: string;
+    email: string;
+    role: 'user' | 'admin' | 'developer' | 'moderator';
+    rafflePoints: number;
+    badgeUuid: string | null;
+    badgeLabel: string | null;
+  };
+
+  try {
+    const { uuid } = req.params; // asumimos que pasas el uuid por params
+
+    if (!uuid) {
+      return res.status(400).json({ error: "Se requiere el UUID del usuario." });
+    }
+
+    const db = await initDB();
+
+    const rows: RawUserBadgeRow[] = await db.all<RawUserBadgeRow[]>(
+      `
+      SELECT 
+        u.uuid AS userUuid,
+        u.username,
+        u.nickname,
+        u.email,
+        u.role,
+        b.uuid AS badgeUuid,
+        b.label AS badgeLabel
+      FROM users u
+      LEFT JOIN userBadges ub ON u.uuid = ub.userUuid
+      LEFT JOIN badges b ON ub.badgeUuid = b.uuid
+      WHERE u.uuid = ?
+      `,
+      [uuid]
+    );
+
+    const user: UserWithBadgeRow = {
+      userUuid: rows[0].userUuid,
+      username: rows[0].username,
+      nickname: rows[0].nickname,
+      email: rows[0].email,
+      role: rows[0].role,
+      badges: rows[0].badgeUuid
+        ? rows.map(r => ({ uuid: r.badgeUuid!, label: r.badgeLabel! }))
+        : null
+    };
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.error("[GetUserWithBadges Error]:", err);
+    res.status(500).json({ error: "Error interno del servidor." });
   }
 };
 

@@ -4,7 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4040';
 
 export async function userLogin(data: UserLogin): Promise<LoginResponse> {
   try {
-    const response = await fetch(`${BASE_URL}/api/login`, {
+    const response = await fetch(`${BASE_URL}/api/sessions/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

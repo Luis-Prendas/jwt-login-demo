@@ -1,18 +1,25 @@
 export interface UserData {
   uuid: string;
-  mail: string;
+  email: string;
   username: string;
   password: string;
   nickname: string;
   role: 'user' | 'admin' | 'developer' | 'moderator';
-  balance: {
-    rafflePoints: number;
-  };
+}
+
+export interface UserDataWithBadges {
+  userUuid: string;
+  username: string;
+  nickname: string;
+  email: string;
+  role: 'user' | 'admin' | 'developer' | 'moderator';
+  rafflePoints: number;
+  badges: Badge[] | null;
 }
 
 export interface UserBasicData {
   uuid: string;
-  mail: string;
+  email: string;
   username: string;
   nickname: string;
   role: 'user' | 'admin' | 'developer' | 'moderator';

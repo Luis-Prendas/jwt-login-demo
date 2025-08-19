@@ -5,6 +5,8 @@ export interface DataBase {
   users: UserWithPassword[];        // Usuarios completos (incluye password)
   rooms: Room[];
   tabsMenuOptions: TabMenuOption[];
+  badges: Badge[];
+  userBadges: UserBadges[];
 }
 
 /**
@@ -17,9 +19,6 @@ export interface UserWithPassword {
   password: string;
   nickname: string;
   role: 'user' | 'admin' | 'developer' | 'moderator';
-  balance: {
-    rafflePoints: number;
-  };
 }
 
 /**
@@ -32,9 +31,6 @@ export interface UserBasicData {
   username: string;
   nickname: string;
   role: 'user' | 'admin' | 'developer' | 'moderator';
-  balance?: {
-    rafflePoints: number;
-  };
 }
 
 /**
@@ -57,4 +53,21 @@ export interface TabMenuOption {
   order: number;
   authRequired: boolean;
   rolesAllowed: ('user' | 'admin' | 'developer' | 'moderator')[];
+}
+
+/**
+ * Insignias
+ */
+export interface Badge {
+  uuid: string;
+  label: string;
+}
+
+/**
+ * Relacion user -> badges
+ */
+export interface UserBadges {
+  uuid: string;
+  badgeUuid: string;
+  userUuid: string;
 }

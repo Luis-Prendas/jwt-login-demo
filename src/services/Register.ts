@@ -4,7 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6666';
 
 export async function userRegister(data: RegisterData): Promise<LoginResponse> {
   try {
-    const response = await fetch(`${BASE_URL}/api/register`, {
+    const response = await fetch(`${BASE_URL}/api/sessions/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

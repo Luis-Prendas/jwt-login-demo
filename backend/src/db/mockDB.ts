@@ -8,30 +8,27 @@ export const DB: DataBase = {
   users: [
     {
       uuid: '1',
-      email: 'simil@example.com',
-      username: 'simil.3021',
-      password: 'simil21903180',
-      nickname: 'Simil',
-      role: 'admin',
-      balance: { rafflePoints: 100 }
+      email: 'user1@example.com',
+      username: 'az',
+      password: 'az',
+      nickname: 'Az',
+      role: 'developer',
     },
     {
       uuid: '2',
-      email: 'user@example.com',
+      email: 'user2@example.com',
       username: 'luis',
       password: 'luis',
       nickname: 'Luis',
       role: 'user',
-      balance: { rafflePoints: 50 }
     },
     {
       uuid: '3',
       email: 'user3@example.com',
-      username: 'dani',
-      password: 'dani',
+      username: 'dani1',
+      password: 'dani1',
       nickname: 'Dani',
       role: 'admin',
-      balance: { rafflePoints: 30 }
     }
   ] as UserWithPassword[], // Tipado explícito
 
@@ -96,5 +93,38 @@ export const DB: DataBase = {
       authRequired: true,
       rolesAllowed: ['admin', 'developer']
     }
+  ],
+
+  badges: [
+    {
+      uuid: 'b001',
+      label: 'Primeros 10'
+    },
+    {
+      uuid: 'b002',
+      label: 'Developer'
+    },
+    {
+      uuid: 'b003',
+      label: 'Mew user'
+    }
+  ],
+
+  userBadges: [
+    {
+      uuid: 'c001',
+      userUuid: '1',
+      badgeUuid: 'b003'
+    },
+    {
+      uuid: 'c002',
+      userUuid: '1',
+      badgeUuid: 'b001'
+    },
+    {
+      uuid: 'c003',
+      userUuid: '1',
+      badgeUuid: 'b002'
+    },
   ]
 };

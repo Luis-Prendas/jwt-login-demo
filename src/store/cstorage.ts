@@ -39,7 +39,7 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: true,
             userData: {
               uuid: decoded.user.uuid,
-              mail: decoded.user.mail,
+              email: decoded.user.email,
               username: decoded.user.username,
               nickname: decoded.user.nickname,
               role: decoded.user.role,
