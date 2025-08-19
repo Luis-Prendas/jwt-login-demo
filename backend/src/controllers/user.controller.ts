@@ -36,6 +36,9 @@ export const getAllUsers = async (_req: Request, res: Response) => {
   }
 };
 
+/**
+ * Obtener información de un usuario específico por UUID
+ */
 export const getUserWithBadges = async (req: Request, res: Response) => {
   type UserWithBadgeRow = {
     userUuid: string;
@@ -126,5 +129,31 @@ export const addPoints = async (req: Request, res: Response) => {
   } catch (err) {
     console.error('[AddPoints Error]:', err);
     res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+/**
+ * Actualizar información de un usuario específico por UUID
+ */
+export const userUpdate = async (req: Request, res: Response) => {
+  try {
+    const { uuid } = req.params;
+    const { nickname, username, role } = req.body;
+
+    if (!uuid) {
+      return res.status(400).json({ error: "Se requiere el UUID del usuario." });
+    }
+
+    const db = await initDB();
+
+    await db.run(
+      `UPDATE users SET nickname = ?, username = ?, role = ? WHERE uuid = ?`,
+      [nickname, username, role, uuid]
+    );
+
+    res.status(200).json({ message: "Usuario actualizado con éxito." });
+  } catch (err) {
+    console.error("[UserUpdate Error]:", err);
+    res.status(500).json({ error: "Error interno del servidor." });
   }
 };

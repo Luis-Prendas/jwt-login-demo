@@ -11,23 +11,23 @@ export const DB: DataBase = {
       email: 'user1@example.com',
       username: 'az',
       password: 'az',
-      nickname: 'Az',
+      nickname: 'Simil',
       role: 'developer',
     },
     {
       uuid: '2',
       email: 'user2@example.com',
-      username: 'luis',
-      password: 'luis',
-      nickname: 'Luis',
+      username: 'daniel',
+      password: 'daniel',
+      nickname: 'Daniel',
       role: 'user',
     },
     {
       uuid: '3',
       email: 'user3@example.com',
-      username: 'dani1',
-      password: 'dani1',
-      nickname: 'Dani',
+      username: 'luis',
+      password: 'luis',
+      nickname: 'Luis',
       role: 'admin',
     }
   ] as UserWithPassword[], // Tipado explícito
@@ -126,5 +126,25 @@ export const DB: DataBase = {
       userUuid: '1',
       badgeUuid: 'b002'
     },
+    {
+      uuid: 'c004',
+      userUuid: '2',
+      badgeUuid: 'b003'
+    },
+    {
+      uuid: 'c005',
+      userUuid: '2',
+      badgeUuid: 'b001'
+    },
+    {
+      uuid: 'c006',
+      userUuid: '3',
+      badgeUuid: 'b003'
+    },
+    {
+      uuid: 'c007',
+      userUuid: '3',
+      badgeUuid: 'b001'
+    }
   ]
 };

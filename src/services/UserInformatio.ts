@@ -62,10 +62,31 @@ export async function userInfoWithBadges(token: string, uuid: string): Promise<U
 
 
     const data = await response.json();
-    console.log(data)
-    return data.user;
+    return data;
   } catch (error) {
     console.error(`❌ Error en userInfoWithBadges: ${error}`);
     return null;
+  }
+}
+
+export async function userUpdate(token: string, userData: UserDataWithBadges): Promise<boolean> {
+  try {
+    const response = await fetch(`${BASE_URL}/api/users/user/${userData.userUuid}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update user info');
+    }
+
+    return true;
+  } catch (error) {
+    console.error(`❌ Error en userUpdate: ${error}`);
+    return false;
   }
 }

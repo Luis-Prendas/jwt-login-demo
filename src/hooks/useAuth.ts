@@ -1,5 +1,5 @@
 import { userRegister } from "../services/Register";
-import { allUsersInfo, userInfoWithBadges } from "../services/UserInformatio";
+import { allUsersInfo, userInfoWithBadges, userUpdate } from "../services/UserInformatio";
 import { useAuthStore } from "../store/cstorage";
 import type { RegisterData, UserData, UserDataWithBadges } from "../types/UserManagement";
 
@@ -34,6 +34,15 @@ export function useAuth() {
     return user
   }
 
+  const updateUser = async (userData: UserDataWithBadges) => {
+    setLoading(true);
+    if (!token) return null;
+
+    const updatedUser = await userUpdate(token, userData);
+    setLoading(false);
+    return updatedUser;
+  };
+
   const createUser = async (userData: RegisterData) => {
     setLoading(true);
     const newUser = await userRegister(userData);
@@ -53,6 +62,7 @@ export function useAuth() {
     fetchUserData,
     setToken,
     fetchAllUsers,
-    fetchUserInfoWithBadge
+    fetchUserInfoWithBadge,
+    updateUser
   };
 }
