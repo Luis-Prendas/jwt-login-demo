@@ -1,6 +1,5 @@
 import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite';
-import path from 'path';
 
 /**
  * Inicializa y retorna la conexión a la base de datos SQLite.

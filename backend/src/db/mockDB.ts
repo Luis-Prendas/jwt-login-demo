@@ -32,69 +32,6 @@ export const DB: DataBase = {
     }
   ] as UserWithPassword[], // Tipado explícito
 
-  rooms: [
-    { uuid: 'room1', name: 'Room 1', capacity: 2 },
-    { uuid: 'room2', name: 'Room 2', capacity: 2 },
-    { uuid: 'room3', name: 'Room 3', capacity: 2 }
-  ],
-
-  tabsMenuOptions: [
-    {
-      uuid: 'a001',
-      label: 'Inicio',
-      icon: 'home',
-      route: '/',
-      order: 1,
-      authRequired: false,
-      rolesAllowed: ['user', 'admin', 'developer', 'moderator']
-    },
-    {
-      uuid: 'a002',
-      label: 'Dashboard',
-      icon: 'dashboard',
-      route: '/dashboard',
-      order: 2,
-      authRequired: true,
-      rolesAllowed: ['user', 'admin', 'developer', 'moderator']
-    },
-    {
-      uuid: 'a003',
-      label: 'Salas',
-      icon: 'rooms',
-      route: '/create-room',
-      order: 3,
-      authRequired: true,
-      rolesAllowed: ['user', 'admin', 'developer', 'moderator']
-    },
-    {
-      uuid: 'a004',
-      label: 'Herramientas',
-      icon: 'tools',
-      route: '/dev-tools',
-      order: 4,
-      authRequired: true,
-      rolesAllowed: ['admin', 'developer']
-    },
-    {
-      uuid: 'a005',
-      label: 'Gestión de usuarios',
-      icon: 'user-management',
-      route: '/user-management',
-      order: 5,
-      authRequired: true,
-      rolesAllowed: ['admin', 'developer']
-    },
-    {
-      uuid: 'a006',
-      label: 'Tabs config',
-      icon: 'tabs-config',
-      route: '/tabs-config',
-      order: 6,
-      authRequired: true,
-      rolesAllowed: ['admin', 'developer']
-    }
-  ],
-
   badges: [
     {
       uuid: 'b001',
@@ -145,6 +82,54 @@ export const DB: DataBase = {
       uuid: 'c007',
       userUuid: '3',
       badgeUuid: 'b001'
+    }
+  ],
+
+  schedules: [
+    {
+      uuid: 's001',
+      userUuid: '1',
+      dayOfWeek: 1,
+      startTime: '09:00',
+      endTime: '17:00'
+    },
+    {
+      uuid: 's002',
+      userUuid: '2',
+      dayOfWeek: 1,
+      startTime: '10:00',
+      endTime: '18:00'
+    },
+    {
+      uuid: 's003',
+      userUuid: '3',
+      dayOfWeek: 2,
+      startTime: '08:00',
+      endTime: '16:00'
+    }
+  ],
+
+  attendance: [
+    {
+      uuid: 'a001',
+      userUuid: '1',
+      date: '2023-03-01',
+      clockIn: new Date('2023-03-01T07:42:12'),
+      clockOut: new Date('2023-03-01T17:12:31')
+    },
+    {
+      uuid: 'a002',
+      userUuid: '2',
+      date: '2023-03-01',
+      clockIn: new Date('2023-03-01T07:42:12'),
+      clockOut: new Date('2023-03-01T17:12:31')
+    },
+    {
+      uuid: 'a003',
+      userUuid: '3',
+      date: '2023-03-01',
+      clockIn: new Date('2023-03-01T07:42:12'),
+      clockOut: new Date('2023-03-01T17:12:31')
     }
   ]
 };

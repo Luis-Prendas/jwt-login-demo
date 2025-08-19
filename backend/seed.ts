@@ -1,23 +1,16 @@
-// src/db/db.ts
-import sqlite3 from "sqlite3";
-import { open } from "sqlite";
 import bcrypt from "bcrypt";
 import { DB } from "./src/db/mockDB";
 import { initDB } from "./src/db/db";
 
-/**
- * Seed de la base de datos con reset total.
- * Borra tablas y las recrea antes de insertar los datos iniciales.
- */
 export async function seedDatabase() {
   const db = await initDB();
 
   // 🔥 Borrar todas las tablas si existen
   await db.exec(`
+    DROP TABLE IF EXISTS attendance;
+    DROP TABLE IF EXISTS schedules;
     DROP TABLE IF EXISTS userBadges;
     DROP TABLE IF EXISTS badges;
-    DROP TABLE IF EXISTS tabsMenuOptions;
-    DROP TABLE IF EXISTS rooms;
     DROP TABLE IF EXISTS users;
   `);
 
@@ -32,22 +25,6 @@ export async function seedDatabase() {
       role TEXT NOT NULL
     );
 
-    CREATE TABLE rooms (
-      uuid TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      capacity INTEGER NOT NULL
-    );
-
-    CREATE TABLE tabsMenuOptions (
-      uuid TEXT PRIMARY KEY,
-      label TEXT NOT NULL,
-      icon TEXT NOT NULL,
-      route TEXT NOT NULL,
-      authRequired INTEGER NOT NULL,
-      "order" INTEGER NOT NULL,
-      rolesAllowed TEXT NOT NULL -- JSON
-    );
-
     CREATE TABLE badges (
       uuid TEXT PRIMARY KEY,
       label TEXT NOT NULL
@@ -60,6 +37,24 @@ export async function seedDatabase() {
       FOREIGN KEY (userUuid) REFERENCES users(uuid),
       FOREIGN KEY (badgeUuid) REFERENCES badges(uuid)
     );
+
+    CREATE TABLE schedules (
+      uuid TEXT PRIMARY KEY,
+      userUuid TEXT NOT NULL,
+      dayOfWeek INTEGER NOT NULL,
+      startTime TEXT NOT NULL, -- formato HH:mm
+      endTime TEXT NOT NULL,
+      FOREIGN KEY (userUuid) REFERENCES users(uuid)
+    );
+
+    CREATE TABLE attendance (
+      uuid TEXT PRIMARY KEY,
+      userUuid TEXT NOT NULL,
+      date TEXT NOT NULL,        -- YYYY-MM-DD
+      clockIn TEXT NOT NULL,     -- ISO string
+      clockOut TEXT,             -- ISO string o NULL
+      FOREIGN KEY (userUuid) REFERENCES users(uuid)
+    );
   `);
 
   const SALT_ROUNDS = 10;
@@ -67,7 +62,6 @@ export async function seedDatabase() {
   // Insertar usuarios
   for (const user of DB.users) {
     const hashedPassword = await bcrypt.hash(user.password, SALT_ROUNDS);
-
     await db.run(
       `INSERT INTO users (uuid, email, username, password, nickname, role)
        VALUES (?, ?, ?, ?, ?, ?)`,
@@ -78,33 +72,6 @@ export async function seedDatabase() {
         hashedPassword,
         user.nickname,
         user.role,
-      ]
-    );
-  }
-
-  // Insertar salas
-  for (const room of DB.rooms) {
-    await db.run(
-      `INSERT INTO rooms (uuid, name, capacity)
-       VALUES (?, ?, ?)`,
-      [room.uuid, room.name, room.capacity]
-    );
-  }
-
-  // Insertar tabs
-  for (const tab of DB.tabsMenuOptions) {
-    await db.run(
-      `INSERT INTO tabsMenuOptions 
-       (uuid, label, icon, route, authRequired, "order", rolesAllowed)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [
-        tab.uuid,
-        tab.label,
-        tab.icon,
-        tab.route,
-        tab.authRequired ? 1 : 0,
-        tab.order,
-        JSON.stringify(tab.rolesAllowed),
       ]
     );
   }
@@ -127,10 +94,37 @@ export async function seedDatabase() {
     );
   }
 
+  // Insertar schedules
+  if (DB.schedules) {
+    for (const s of DB.schedules) {
+      await db.run(
+        `INSERT INTO schedules (uuid, userUuid, dayOfWeek, startTime, endTime)
+         VALUES (?, ?, ?, ?, ?)`,
+        [s.uuid, s.userUuid, s.dayOfWeek, s.startTime, s.endTime]
+      );
+    }
+  }
+
+  // Insertar attendance
+  if (DB.attendance) {
+    for (const a of DB.attendance) {
+      await db.run(
+        `INSERT INTO attendance (uuid, userUuid, date, clockIn, clockOut)
+         VALUES (?, ?, ?, ?, ?)`,
+        [
+          a.uuid,
+          a.userUuid,
+          a.date,
+          a.clockIn.toISOString(),
+          a.clockOut ? a.clockOut.toISOString() : null,
+        ]
+      );
+    }
+  }
+
   console.log("✅ Base de datos recreada e inicializada con datos de ejemplo.");
 }
 
-// Ejecutar automáticamente si se corre este archivo
 if (require.main === module) {
   seedDatabase().catch((err) => {
     console.error("❌ Error al inicializar la base de datos:", err);

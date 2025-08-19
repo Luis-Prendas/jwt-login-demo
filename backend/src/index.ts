@@ -9,6 +9,7 @@ import { socketAuth } from './middlewares/socketAuth';
 import { handleRoomEvents } from './sockets/roomHandler';
 import userSessionRouter from './routes/userSession.routes';
 import handleWebRTCEvents from './sockets/webrtcHandler';
+import assistanceRouter from './routes/assistance.routes';
 
 // Crear instancia de Express
 const app = express();
@@ -37,6 +38,7 @@ app.get('/', (_req: Request, res: Response) => {
 app.use('/api/sessions', userSessionRouter); // login, registro, logout
 app.use('/api/users', userRoutes);           // gestión de usuarios
 app.use('/api/tabs', tabsMenuRoutes);        // configuración de menú/tab
+app.use('/api/assistance', assistanceRouter);        // configuración de asistencia
 
 // Configuración de sockets
 io.on('connection', (socket: Socket) => {

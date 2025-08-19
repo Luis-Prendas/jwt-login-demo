@@ -2,23 +2,18 @@
  * Estructura de toda la "base de datos" simulada
  */
 export interface DataBase {
-  users: UserWithPassword[];        // Usuarios completos (incluye password)
-  rooms: Room[];
-  tabsMenuOptions: TabMenuOption[];
+  users: UserWithPassword[];
   badges: Badge[];
   userBadges: UserBadges[];
+  schedules: UserSchedule[];
+  attendance: Attendance[];
 }
 
 /**
  * Usuario con contraseña (almacenamiento interno)
  */
-export interface UserWithPassword {
-  uuid: string;
-  email: string;
-  username: string;
+export interface UserWithPassword extends UserBasicData {
   password: string;
-  nickname: string;
-  role: 'user' | 'admin' | 'developer' | 'moderator';
 }
 
 /**
@@ -31,28 +26,6 @@ export interface UserBasicData {
   username: string;
   nickname: string;
   role: 'user' | 'admin' | 'developer' | 'moderator';
-}
-
-/**
- * Sala de chat
- */
-export interface Room {
-  uuid: string;
-  name: string;
-  capacity: number;
-}
-
-/**
- * Opción de menú/tab
- */
-export interface TabMenuOption {
-  uuid: string;
-  label: string;
-  icon: string;
-  route: string;
-  order: number;
-  authRequired: boolean;
-  rolesAllowed: ('user' | 'admin' | 'developer' | 'moderator')[];
 }
 
 /**
@@ -70,4 +43,26 @@ export interface UserBadges {
   uuid: string;
   badgeUuid: string;
   userUuid: string;
+}
+
+/**
+ * Horario asignado al usuario
+ */
+export interface UserSchedule {
+  uuid: string;          // ID del horario
+  userUuid: string;      // Usuario asignado
+  dayOfWeek: number;     // 0=domingo ... 6=sábado
+  startTime: string;     // "08:00"
+  endTime: string;       // "17:00"
+}
+
+/**
+ * Registro de entrada/salida
+ */
+export interface Attendance {
+  uuid: string;
+  userUuid: string;
+  date: string;          // Fecha del registro (YYYY-MM-DD)
+  clockIn: Date;         // Fecha/hora de entrada
+  clockOut?: Date;       // Fecha/hora de salida (puede ser null si no ha salido aún)
 }
