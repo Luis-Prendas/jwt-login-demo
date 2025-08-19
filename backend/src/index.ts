@@ -8,6 +8,7 @@ import tabsMenuRoutes from './routes/tabsMenu.routes';
 import { socketAuth } from './middlewares/socketAuth';
 import { handleRoomEvents } from './sockets/roomHandler';
 import userSessionRouter from './routes/userSession.routes';
+import handleWebRTCEvents from './sockets/webrtcHandler';
 
 // Crear instancia de Express
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/tabs', tabsMenuRoutes);        // configuración de menú/tab
 io.on('connection', (socket: Socket) => {
   console.log(`⚡ Nuevo cliente conectado: ${socket.id}`);
   handleRoomEvents(io, socket); // Manejo de eventos de salas
+  handleWebRTCEvents(io, socket); // Manejo de eventos WebRTC
 });
 
 // Iniciar servidor HTTP
