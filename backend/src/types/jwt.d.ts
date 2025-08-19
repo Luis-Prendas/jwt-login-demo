@@ -6,11 +6,8 @@ export interface JwtUserPayload {
     uuid: string;
     username: string;
     nickname: string;
-    email: string; // corregido de 'mail' a 'email' para coherencia
+    email: string;
     role: 'user' | 'admin' | 'developer' | 'moderator';
-    balance?: {
-      rafflePoints: number;
-    };
   };
   iat?: number;
   exp?: number;

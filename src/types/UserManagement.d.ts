@@ -36,17 +36,15 @@ export interface UserLogin {
   password: string;
 }
 
-export interface TabMenuOption {
-  uuid: string;
-  label: string;
-  icon: string;
-  route: string;
-  order: number;
-  authRequired: boolean;
-  rolesAllowed: ('user' | 'admin' | 'developer' | 'moderator')[];
-}
-
 export type LoginResponse = {
   token: string | null
   error: string | null
+}
+
+export type Assistance = {
+  uuid: string;
+  userUuid: string;
+  date: Date;
+  clockIn: Date;
+  clockOut?: Date;
 }

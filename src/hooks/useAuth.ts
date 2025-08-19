@@ -1,7 +1,7 @@
 import { userRegister } from "../services/Register";
-import { allUsersInfo, userInfoWithBadges, userUpdate } from "../services/UserInformatio";
+import { allUsersInfo, userAssistance, userInfoWithBadges, userUpdate } from "../services/UserInformatio";
 import { useAuthStore } from "../store/cstorage";
-import type { RegisterData, UserData, UserDataWithBadges } from "../types/UserManagement";
+import type { Assistance, RegisterData, UserData, UserDataWithBadges } from "../types/UserManagement";
 
 export function useAuth() {
   const {
@@ -23,6 +23,16 @@ export function useAuth() {
     const users = await allUsersInfo(token);
     setLoading(false);
     return users;
+  };
+
+  const fetchUserAssistance = async (): Promise<Assistance[] | null> => {
+    setLoading(true);
+    if (!userData?.uuid || !token) return null;
+
+    const assistance = await userAssistance(token, userData.uuid);
+    console.log('Asistencia obtenida:', assistance);
+    setLoading(false);
+    return assistance;
   };
 
   const fetchUserInfoWithBadge = async (userUuid: string): Promise<UserDataWithBadges | null> => {
@@ -63,6 +73,7 @@ export function useAuth() {
     setToken,
     fetchAllUsers,
     fetchUserInfoWithBadge,
-    updateUser
+    updateUser,
+    fetchUserAssistance
   };
 }

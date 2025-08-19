@@ -1,4 +1,4 @@
-import type { UserData, UserDataWithBadges } from "../types/UserManagement";
+import type { Assistance, UserData, UserDataWithBadges } from "../types/UserManagement";
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4040';
 
@@ -42,6 +42,29 @@ export async function allUsersInfo(token: string): Promise<UserData[] | null> {
     return data.users;
   } catch (error) {
     console.error(`❌ Error en allUsersInfo: ${error}`);
+    return null;
+  }
+}
+
+export async function userAssistance(token: string, userUuid: string): Promise<Assistance[] | null> {
+  try {
+    const response = await fetch(`${BASE_URL}/api/assistance/getAssistance`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userUuid }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user assistance');
+    } 
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`❌ Error en userAssistance: ${error}`);
     return null;
   }
 }

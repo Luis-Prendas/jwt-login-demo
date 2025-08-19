@@ -8,13 +8,16 @@ import { JwtUserPayload } from '../types/jwt';
  */
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers['authorization'];
+  const content = req.body;
   const token = authHeader?.split(' ')[1];
 
   if (!token) return res.status(401).json({ error: 'Token faltante' });
 
   try {
+    console.log('Token decodificado:');
     const decoded = jwt.verify(token, SECRET_KEY) as JwtUserPayload;
-    req.user = decoded; // agregamos user al request
+    const body = { userRequest: decoded.user, content };
+    req.body = body;
     next();
   } catch {
     return res.status(401).json({ error: 'Token inválido o expirado' });

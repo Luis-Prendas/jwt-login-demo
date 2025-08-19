@@ -12,6 +12,7 @@ import TabsConfig from '../pages/TabsConfig';
 import CreateRoom from '@/pages/Streaming/CreateRoom';
 import Room from '@/pages/Streaming/Room';
 import Profile from '@/pages/profile/Profile';
+import { Assistance } from '@/pages/Assistance/Assistance';
 
 export default function AppRouter() {
   return (
@@ -35,6 +36,7 @@ export default function AppRouter() {
               <Route path="/streaming" element={<CreateRoom />} />
               <Route path="/streaming/:streamId" element={<Room />} />
               <Route path="/profile/:userId" element={<Profile />} />
+              <Route path="/assistance" element={<Assistance />} />
             </Route>
           </Route>
         </Route>

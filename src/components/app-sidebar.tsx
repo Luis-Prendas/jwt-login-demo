@@ -41,6 +41,11 @@ const items = [
     url: "/user-management",
     icon: Settings,
   },
+  {
+    title: "Asistencia",
+    url: "/assistance",
+    icon: Users,
+  }
 ]
 
 export function AppSidebar() {
