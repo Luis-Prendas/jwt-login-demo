@@ -52,12 +52,13 @@ export default function Profile() {
           </div>
           <div className="w-full p-4 flex items-end justify-center flex-col gap-2">
             <div className="flex items-center gap-2">
-              {userData?.username === data?.username && (
+              {userData?.username === data?.username ? (
                 <>
-                  <Button variant="outline">Editar perfil</Button>
+                  <Button>Editar perfil</Button>
                 </>
+              ) : (
+                <Button>Enviar mensaje</Button>
               )}
-              <Button>Enviar mensaje</Button>
               <Button variant="outline" className="text-2xl">
                 <Bookmark />
               </Button>
