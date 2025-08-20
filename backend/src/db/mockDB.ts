@@ -91,35 +91,35 @@ export const DB: DataBase = {
       userUuid: '1',
       dayOfWeek: 1,
       startTime: '09:00',
-      endTime: '17:00'
+      endTime: '16:55'
     },
     {
       uuid: 's002',
       userUuid: '1',
       dayOfWeek: 2,
       startTime: '09:00',
-      endTime: '17:00'
+      endTime: '16:55'
     },
     {
       uuid: 's003',
       userUuid: '1',
       dayOfWeek: 3,
       startTime: '09:00',
-      endTime: '17:00'
+      endTime: '16:55'
     },
     {
       uuid: 's004',
       userUuid: '1',
       dayOfWeek: 4,
       startTime: '09:00',
-      endTime: '17:00'
+      endTime: '16:55'
     },
     {
       uuid: 's005',
       userUuid: '1',
       dayOfWeek: 5,
       startTime: '09:00',
-      endTime: '17:00'
+      endTime: '16:55'
     }
   ],
 
