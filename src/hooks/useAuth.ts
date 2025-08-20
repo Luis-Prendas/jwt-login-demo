@@ -1,7 +1,10 @@
+import { s } from "node_modules/framer-motion/dist/types.d-Bq-Qm38R";
 import { userRegister } from "../services/Register";
-import { allUsersInfo, userAssistance, userInfoWithBadges, userUpdate } from "../services/UserInformatio";
+import { allUsersInfo, userAssistance, userInfoWithBadges, userSchedule, userUpdate } from "../services/UserInformatio";
 import { useAuthStore } from "../store/cstorage";
-import type { Assistance, RegisterData, UserData, UserDataWithBadges } from "../types/UserManagement";
+import type { Assistance, RegisterData, Schedule, UserData, UserDataWithBadges } from "../types/UserManagement";
+
+export type AssistanceWithSchedule = Assistance & { schedule: Schedule | null };
 
 export function useAuth() {
   const {
@@ -25,14 +28,32 @@ export function useAuth() {
     return users;
   };
 
-  const fetchUserAssistance = async (): Promise<Assistance[] | null> => {
+  const fetchUserAssistance = async (): Promise<{ assistance: Assistance[], assistanceWithSchedule: AssistanceWithSchedule[] } | null> => {
     setLoading(true);
     if (!userData?.uuid || !token) return null;
 
     const assistance = await userAssistance(token, userData.uuid);
-    console.log('Asistencia obtenida:', assistance);
+    const schedule = await userSchedule(token, userData.uuid);
+
+    const assistanceWithSchedule: AssistanceWithSchedule[] | undefined = assistance?.map(item => {
+      if (!schedule) return { ...item, schedule: null };
+      const scheduleItem = schedule.find(s => s.dayOfWeek === item.dayOfWeek);
+      return { ...item, schedule: scheduleItem || null };
+    });
+
     setLoading(false);
-    return assistance;
+
+    return assistance && schedule && assistanceWithSchedule ? { assistance, assistanceWithSchedule } : null;
+  };
+
+  const fetchUserSchedule = async (): Promise<Schedule[] | null> => {
+    setLoading(true);
+    if (!userData?.uuid || !token) return null;
+
+    const schedule = await userSchedule(token, userData.uuid);
+    console.log('Horario obtenido:', schedule);
+    setLoading(false);
+    return schedule;
   };
 
   const fetchUserInfoWithBadge = async (userUuid: string): Promise<UserDataWithBadges | null> => {
@@ -74,6 +95,7 @@ export function useAuth() {
     fetchAllUsers,
     fetchUserInfoWithBadge,
     updateUser,
-    fetchUserAssistance
+    fetchUserAssistance,
+    fetchUserSchedule
   };
 }

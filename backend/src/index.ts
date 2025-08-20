@@ -10,6 +10,7 @@ import { handleRoomEvents } from './sockets/roomHandler';
 import userSessionRouter from './routes/userSession.routes';
 import handleWebRTCEvents from './sockets/webrtcHandler';
 import assistanceRouter from './routes/assistance.routes';
+import scheduleRouter from './routes/schedule.routes';
 
 // Crear instancia de Express
 const app = express();
@@ -39,6 +40,7 @@ app.use('/api/sessions', userSessionRouter); // login, registro, logout
 app.use('/api/users', userRoutes);           // gestión de usuarios
 app.use('/api/tabs', tabsMenuRoutes);        // configuración de menú/tab
 app.use('/api/assistance', assistanceRouter);        // configuración de asistencia
+app.use('/api/schedule', scheduleRouter);        // configuración de horarios
 
 // Configuración de sockets
 io.on('connection', (socket: Socket) => {

@@ -50,6 +50,7 @@ export async function seedDatabase() {
     CREATE TABLE attendance (
       uuid TEXT PRIMARY KEY,
       userUuid TEXT NOT NULL,
+      dayOfWeek INTEGER NOT NULL,
       date TEXT NOT NULL,        -- YYYY-MM-DD
       clockIn TEXT NOT NULL,     -- ISO string
       clockOut TEXT,             -- ISO string o NULL
@@ -109,12 +110,13 @@ export async function seedDatabase() {
   if (DB.attendance) {
     for (const a of DB.attendance) {
       await db.run(
-        `INSERT INTO attendance (uuid, userUuid, date, clockIn, clockOut)
-         VALUES (?, ?, ?, ?, ?)`,
+        `INSERT INTO attendance (uuid, userUuid, dayOfWeek, date, clockIn, clockOut)
+         VALUES (?, ?, ?, ?, ?, ?)`,
         [
           a.uuid,
           a.userUuid,
-          a.date,
+          a.dayOfWeek,
+          a.date.toISOString(),
           a.clockIn.toISOString(),
           a.clockOut ? a.clockOut.toISOString() : null,
         ]

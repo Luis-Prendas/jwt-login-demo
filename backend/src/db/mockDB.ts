@@ -95,17 +95,31 @@ export const DB: DataBase = {
     },
     {
       uuid: 's002',
-      userUuid: '2',
-      dayOfWeek: 1,
-      startTime: '10:00',
-      endTime: '18:00'
+      userUuid: '1',
+      dayOfWeek: 2,
+      startTime: '09:00',
+      endTime: '17:00'
     },
     {
       uuid: 's003',
-      userUuid: '3',
-      dayOfWeek: 2,
-      startTime: '08:00',
-      endTime: '16:00'
+      userUuid: '1',
+      dayOfWeek: 3,
+      startTime: '09:00',
+      endTime: '17:00'
+    },
+    {
+      uuid: 's004',
+      userUuid: '1',
+      dayOfWeek: 4,
+      startTime: '09:00',
+      endTime: '17:00'
+    },
+    {
+      uuid: 's005',
+      userUuid: '1',
+      dayOfWeek: 5,
+      startTime: '09:00',
+      endTime: '17:00'
     }
   ],
 
@@ -113,23 +127,34 @@ export const DB: DataBase = {
     {
       uuid: 'a001',
       userUuid: '1',
-      date: '2023-03-01',
-      clockIn: new Date('2023-03-01T07:42:12'),
-      clockOut: new Date('2023-03-01T17:12:31')
+      dayOfWeek: 2,
+      date: new Date('2023-03-01T07:42:11'),
+      clockIn: new Date('2023-03-01T09:01:12'),
+      clockOut: new Date('2023-03-01T16:58:31')
     },
     {
       uuid: 'a002',
-      userUuid: '2',
-      date: '2023-03-01',
-      clockIn: new Date('2023-03-01T07:42:12'),
-      clockOut: new Date('2023-03-01T17:12:31')
+      userUuid: '1',
+      dayOfWeek: 3,
+      date: new Date('2023-03-02T07:42:11'),
+      clockIn: new Date('2023-03-02T08:55:55'),
+      clockOut: new Date('2023-03-02T16:52:31')
     },
     {
       uuid: 'a003',
-      userUuid: '3',
-      date: '2023-03-01',
-      clockIn: new Date('2023-03-01T07:42:12'),
-      clockOut: new Date('2023-03-01T17:12:31')
+      userUuid: '1',
+      dayOfWeek: 4,
+      date: new Date('2023-03-03T07:42:11'),
+      clockIn: new Date('2023-03-03T09:06:12'),
+      clockOut: new Date('2023-03-03T17:01:31')
+    },
+    {
+      uuid: 'a004',
+      userUuid: '1',
+      dayOfWeek: 5,
+      date: new Date('2023-03-04T07:42:11'),
+      clockIn: new Date('2023-03-04T08:53:12'),
+      clockOut: new Date('2023-03-04T17:12:31')
     }
   ]
 };

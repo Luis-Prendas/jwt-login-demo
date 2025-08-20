@@ -8,8 +8,6 @@ export const getAllUserAssistance = async (req: Request, res: Response) => {
   try {
     const userId = req.body.content.userUuid;
 
-    console.log(req.body);
-
     if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
     const db = await initDB();

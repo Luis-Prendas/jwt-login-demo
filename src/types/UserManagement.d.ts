@@ -44,7 +44,16 @@ export type LoginResponse = {
 export type Assistance = {
   uuid: string;
   userUuid: string;
+  dayOfWeek: number;
   date: Date;
   clockIn: Date;
   clockOut?: Date;
+}
+
+export type Schedule = {
+  uuid: string;        
+  userUuid: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
 }

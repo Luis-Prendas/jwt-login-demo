@@ -51,7 +51,7 @@ export interface UserBadges {
 export interface UserSchedule {
   uuid: string;          // ID del horario
   userUuid: string;      // Usuario asignado
-  dayOfWeek: number;     // 0=domingo ... 6=sábado
+  dayOfWeek: number;     // 1=lunes ... 7=domingo
   startTime: string;     // "08:00"
   endTime: string;       // "17:00"
 }
@@ -62,7 +62,8 @@ export interface UserSchedule {
 export interface Attendance {
   uuid: string;
   userUuid: string;
-  date: string;          // Fecha del registro (YYYY-MM-DD)
+  dayOfWeek: number;    // 1=lunes ... 7=domingo
+  date: Date;          // Fecha del registro (YYYY-MM-DD)
   clockIn: Date;         // Fecha/hora de entrada
   clockOut?: Date;       // Fecha/hora de salida (puede ser null si no ha salido aún)
 }

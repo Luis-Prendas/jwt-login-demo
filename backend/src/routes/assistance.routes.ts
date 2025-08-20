@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { authenticateToken } from '../middlewares/authenticateToken';
-import { getAllUserTabsMenu } from '../controllers/tabsMenu.controller';
 import { getAllUserAssistance } from '../controllers/assistance.controller';
 
 /**
