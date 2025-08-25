@@ -5,7 +5,7 @@ import { TBL_Schedule } from '../../types/DataBase';
 
 const logger = getLogger('api-schedule');
 
-export const getSchedule = async (req: Request, res: Response) => {
+export const getSchedule = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = req.params.id;
     if (!userId) {
@@ -20,7 +20,7 @@ export const getSchedule = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'No se encontró ningún horario' });
     }
     logger.info(`Horario encontrado: ${JSON.stringify(schedule)}`);
-    res.json(schedule);
+    return res.json(schedule);
   } catch (error) {
     logger.error('[GetSchedule Error]:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });

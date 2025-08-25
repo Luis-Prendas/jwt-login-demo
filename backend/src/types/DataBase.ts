@@ -53,7 +53,7 @@ export interface TBL_Schedule extends DescriptiveData {
   endTime: string;
 }
 
-interface TBL_Attendance extends BaseTableData {
+export interface TBL_Attendance extends BaseTableData {
   userId: string;
   scheduleId: string;
   dayOfWeek: number;
