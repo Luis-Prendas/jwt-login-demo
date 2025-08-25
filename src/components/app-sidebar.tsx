@@ -13,6 +13,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { useAuth } from "@/hooks/useAuth"
 import { Link, useNavigate } from "react-router"
+import { decodeToken } from "@/utils/jwt"
 
 // Menu items.
 const items = [
@@ -26,11 +27,6 @@ const items = [
     url: "/dashboard",
     icon: LayoutDashboard,
   },
-  // {
-  //   title: "Salas",
-  //   url: "/create-room",
-  //   icon: Users,
-  // },
   {
     title: "Herramientas",
     url: "/dev-tools",
@@ -49,7 +45,7 @@ const items = [
 ]
 
 export function AppSidebar() {
-  const { userData, logout } = useAuth()
+  const { logout, userData } = useAuth()
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -93,7 +89,7 @@ export function AppSidebar() {
                 className="w-[--radix-popper-anchor-width]"
               >
                 <DropdownMenuItem className="p-0 m-0">
-                  <Link to={`/profile/${userData?.uuid}`} className="w-full p-2">Ver perfil</Link>
+                  <Link to={`/profile/${userData?.id}`} className="w-full p-2">Ver perfil</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="p-0 m-0">
                   <button onClick={handleLogout} className="w-full p-2 text-left cursor-pointer">Cerrar sesión</button>
