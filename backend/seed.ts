@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { initDB } from "./src/db/db";
 import { DB } from "./src/db/mockDB";
 
-export async function seedDatabase() {
+async function seedDatabase() {
   const db = await initDB();
 
   // 🔥 Borrar todas las tablas si existen

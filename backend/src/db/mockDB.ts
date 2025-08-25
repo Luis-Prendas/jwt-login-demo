@@ -1,4 +1,4 @@
-import { DataBase, UserRole } from "../types/DB";
+import { type DataBase, UserRole } from "../types/DataBase";
 
 export const DB: DataBase = {
   users: [
