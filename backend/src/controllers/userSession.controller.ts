@@ -83,9 +83,9 @@ export const register = async (req: Request, res: Response): Promise<Response> =
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     await db.run(
-      `INSERT INTO users (uuid, email, username, password, nickname, role, rafflePoints)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
-      [newUuid, email, username, hashedPassword, username, 'user', 0]
+      `INSERT INTO users (uuid, email, username, password, nickname, role)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [newUuid, email, username, hashedPassword, username, 'user']
     );
 
     const payload: UserBasicData = {
