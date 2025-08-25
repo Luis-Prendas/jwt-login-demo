@@ -14,13 +14,13 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
     }
     logger.info(`Obteniendo usuario con ID: ${id}`);
     const db = await initDB();
-    const user = await db.get(`SELECT * FROM users WHERE id = ?`, [id]) as UserWithPassword;
+    const user = await db.get(`SELECT * FROM user WHERE id = ?`, [id]) as UserWithPassword;
     if (!user) {
       logger.warn(`Usuario no encontrado con ID: ${id}`);
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-    logger.info(`Usuario encontrado: ${JSON.stringify(user)}`);
     const { password, ...userWithoutPassword } = user;
+    logger.info(`Usuario encontrado: ${JSON.stringify(userWithoutPassword)}`);
     return res.json({ user: userWithoutPassword });
   } catch (err) {
     logger.error('[GetUser Error]:', err);
@@ -34,7 +34,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<Response
   try {
     logger.info('Obteniendo todos los usuarios');
     const db = await initDB();
-    const users = await db.all(`SELECT * FROM users`);
+    const users = await db.all(`SELECT * FROM user`);
     if (!users || users.length === 0) {
       logger.warn('No se encontraron usuarios');
       return res.status(404).json({ error: 'No se encontraron usuarios' });
@@ -59,7 +59,7 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
     }
     logger.info(`Actualizando usuario con ID: ${id}`);
     const db = await initDB();
-    const result = await db.run(`UPDATE users SET name = ?, email = ? WHERE id = ?`, [userData.name, userData.email, id]);
+    const result = await db.run(`UPDATE user SET name = ?, email = ? WHERE id = ?`, [userData.name, userData.email, id]);
     if (result.changes === 0) {
       logger.warn(`No se pudo actualizar el usuario con ID: ${id}`);
       return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -83,7 +83,7 @@ export const userDelete = async (req: Request, res: Response): Promise<Response>
     }
     logger.info(`Eliminando usuario con ID: ${id}`);
     const db = await initDB();
-    const result = await db.run(`DELETE FROM users WHERE id = ?`, [id]);
+    const result = await db.run(`DELETE FROM user WHERE id = ?`, [id]);
     if (result.changes === 0) {
       logger.warn(`No se pudo eliminar el usuario con ID: ${id}`);
       return res.status(404).json({ error: 'Usuario no encontrado' });

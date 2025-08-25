@@ -24,7 +24,7 @@ export function getLogger(moduleName: string) {
       new transports.File({
         filename: path.join(logDir, `${moduleName}.log`),
       }),
-      new transports.Console(), // opcional: también mostrar en consola
+      // new transports.Consolecls(), // opcional: también mostrar en consola
     ],
   });
 }
