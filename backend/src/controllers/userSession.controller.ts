@@ -55,40 +55,39 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
   }
 };
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response): Promise<Response> => {
   const SALT_ROUNDS = 10;
 
   try {
     const { username, password, email } = req.body;
+    logger.info(`Intento de registro: username=${username}, email=${email}`);
 
     if (!username || !password || !email) {
+      logger.warn('Campos faltantes en registro');
       return res.status(400).json({ error: 'Nombre de usuario, email y contraseña son obligatorios.' });
     }
 
     const db = await initDB();
 
-    // Verificar si el usuario ya existe
     const existingUser = await db.get(
       `SELECT * FROM users WHERE username = ? OR email = ?`,
       [username, email]
     );
 
     if (existingUser) {
+      logger.warn(`Registro rechazado: usuario/email ya existente -> ${username}, ${email}`);
       return res.status(409).json({ error: 'Usuario o email ya existente.' });
     }
 
-    // Crear nuevo UUID para el usuario
     const newUuid = uuidv4();
-
-    // Insertar nuevo usuario en la base de datos
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
     await db.run(
       `INSERT INTO users (uuid, email, username, password, nickname, role, rafflePoints)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [newUuid, email, username, hashedPassword, username, 'user', 0]
     );
 
-    // Preparar payload para JWT
     const payload: UserBasicData = {
       uuid: newUuid,
       username,
@@ -97,12 +96,15 @@ export const register = async (req: Request, res: Response) => {
       role: 'user',
     };
 
-    // Generar token con expiración de 1 hora
     const token = jwt.sign({ user: payload }, SECRET_KEY, { expiresIn: '1h' });
+
+    logger.info(`Registro exitoso para usuario: ${username}`);
 
     return res.status(200).json({ token });
   } catch (error) {
-    console.error('[Register Error]:', error);
+    logger.error(`[Register Error]: ${(error as Error).message}`);
     return res.status(500).json({ error: 'Error interno del servidor.' });
+  } finally {
+    logger.info(`------------ ${req.method} ${req.originalUrl} finalizado ------------`);
   }
 };
