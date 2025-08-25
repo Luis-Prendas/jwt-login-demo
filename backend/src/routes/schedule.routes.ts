@@ -1,13 +1,18 @@
 import { Router } from 'express';
 import { authenticateToken } from '../middlewares/authenticateToken';
-import { getAllUserSchedule } from '../controllers/schedule.controller';
+import { getSchedule } from '../controllers/schedule/schedule.controller';
 
 /**
  * Rutas relacionadas con los horarios.
- * Requiere autenticación mediante JWT.
+ * Todas requieren autenticación mediante JWT.
  */
 const scheduleRouter = Router();
 
-scheduleRouter.post('/getSchedule', authenticateToken, getAllUserSchedule);
+/**
+ * GET /api/schedule/getSchedule/:id
+ * Recibe: { id } -> id del usuario
+ * Retorna: TBL_Schedule
+ */
+scheduleRouter.get('/getSchedule/:id', authenticateToken, getSchedule);
 
 export default scheduleRouter;

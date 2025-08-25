@@ -67,7 +67,7 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
     logger.info(`Usuario actualizado con éxito: ${JSON.stringify(userData)}`);
     return res.json({ success: true });
   } catch (error) {
-    logger.error('[UpdateUser Error]:', error);
+    logger.error('[  Error]:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
   } finally {
     logger.info(`------------ ${req.method} ${req.originalUrl} finalizado ------------`);

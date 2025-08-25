@@ -46,7 +46,7 @@ interface TBL_UserBadge extends BaseTableData {
   badgeId: string;
 }
 
-interface TBL_Schedule extends DescriptiveData {
+export interface TBL_Schedule extends DescriptiveData {
   userId: string;
   dayOfWeek: number;
   startTime: string;
