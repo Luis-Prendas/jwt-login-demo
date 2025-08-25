@@ -162,3 +162,69 @@ describe("Auth - /api/user/updateUser/:id", () => {
     await db.run("DELETE FROM user WHERE id = ?", ["9999"]);
   });
 });
+
+describe("Auth - /api/user/deleteUser/:id", () => {
+  beforeEach(async () => {
+    const db = await initDB();
+    // Eliminar si ya existía
+    await db.run("DELETE FROM user WHERE id = ?", ["9999"]);
+    await db.run("DELETE FROM user WHERE username = ?", ["testuser"]);
+
+    // Insertar usuario base
+    await db.run(
+      `INSERT INTO user (id, email, username, password, nickname, role, description, createdAt, updatedAt, isDeleted)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        "9999",
+        "testuser@test.com",
+        "testuser",
+        "testuser",
+        "testuser",
+        "user",
+        "testuser",
+        new Date(),
+        new Date(),
+        0,
+      ]
+    );
+  });
+
+  it("debe devolver 404 si no se encuentra el usuario", async () => {
+    const token = await request(app)
+      .post("/api/session/login")
+      .send({ username: "az", password: "az" });
+
+    const res = await request(app)
+      .delete("/api/user/deleteUser/000")
+      .set("Authorization", `Bearer ${token.body.token}`);
+
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty("error", "Usuario no encontrado");
+  });
+
+  it("debe devolver 401 si no se proporciona un token", async () => {
+    const res = await request(app)
+      .delete("/api/user/deleteUser/9999");
+
+    expect(res.status).toBe(401);
+    expect(res.body).toHaveProperty("error", "Token no proporcionado");
+  });
+
+  it("debe devolver 200 y un booleano indicando éxito", async () => {
+    const token = await request(app)
+      .post("/api/session/login")
+      .send({ username: "az", password: "az" });
+
+    const res = await request(app)
+      .delete(`/api/user/deleteUser/9999`)
+      .set("Authorization", `Bearer ${token.body.token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty("success", true);
+  });
+
+  afterEach(async () => {
+    const db = await initDB();
+    await db.run("DELETE FROM user WHERE id = ?", ["9999"]);
+  });
+});

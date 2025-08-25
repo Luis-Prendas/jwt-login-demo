@@ -54,15 +54,11 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
   try {
     const id = req.params.id;
     const { username, email, nickname, role } = req.body.content
-
-    console.log('HEREEEEEEEEE', req.body.content);
-
     if (!id || !username || !email || !nickname || !role) {
       logger.warn('ID de usuario o datos de usuario no proporcionados');
       return res.status(400).json({ error: 'ID de usuario o datos de usuario no proporcionados' });
     }
     logger.info(`Actualizando usuario con ID: ${id}`);
-
     const db = await initDB();
     const result = await db.run(`UPDATE user SET username = ?, email = ?, nickname = ?, role = ? WHERE id = ?`, [username, email, nickname, role, id]);
     if (result.changes === 0) {
@@ -70,7 +66,6 @@ export const updateUser = async (req: Request, res: Response): Promise<Response>
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
     logger.info(`Usuario actualizado con éxito: ${JSON.stringify({ username, email, nickname, role })}`);
-
     return res.json({ success: true });
   } catch (error) {
     logger.error('[UpdateUser Error]:', error);
