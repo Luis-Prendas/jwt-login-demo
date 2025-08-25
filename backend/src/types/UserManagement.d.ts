@@ -4,8 +4,8 @@
 export interface DataBase {
   users: UserWithPassword[];
   badges: Badge[];
-  userBadges: UserBadges[];
-  schedules: UserSchedule[];
+  userBadges: UserBadge[];
+  schedules: Schedule[];
   attendance: Attendance[];
 }
 
@@ -18,7 +18,6 @@ export interface UserWithPassword extends UserBasicData {
 
 /**
  * Datos básicos de usuario (sin password)
- * Para exponer al frontend o generar JWT
  */
 export interface UserBasicData {
   uuid: string;
@@ -39,7 +38,7 @@ export interface Badge {
 /**
  * Relacion user -> badges
  */
-export interface UserBadges {
+export interface UserBadge {
   uuid: string;
   badgeUuid: string;
   userUuid: string;
@@ -48,12 +47,12 @@ export interface UserBadges {
 /**
  * Horario asignado al usuario
  */
-export interface UserSchedule {
-  uuid: string;          // ID del horario
-  userUuid: string;      // Usuario asignado
-  dayOfWeek: number;     // 1=lunes ... 7=domingo
-  startTime: string;     // "08:00"
-  endTime: string;       // "17:00"
+export interface Schedule {
+  uuid: string;
+  userUuid: string;
+  dayOfWeek: number;
+  startTime: string;
+  endTime: string;
 }
 
 /**
@@ -62,8 +61,8 @@ export interface UserSchedule {
 export interface Attendance {
   uuid: string;
   userUuid: string;
-  dayOfWeek: number;    // 1=lunes ... 7=domingo
-  date: Date;          // Fecha del registro (YYYY-MM-DD)
-  clockIn: Date;         // Fecha/hora de entrada
-  clockOut?: Date;       // Fecha/hora de salida (puede ser null si no ha salido aún)
+  dayOfWeek: number;
+  date: Date;
+  clockIn: Date;
+  clockOut?: Date;
 }

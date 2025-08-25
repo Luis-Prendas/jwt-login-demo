@@ -157,3 +157,74 @@ export const userUpdate = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Error interno del servidor." });
   }
 };
+
+/**
+ * Obtener información de un usuario específico por UUID, incluyendo sus insignias, horarios y asistencia.
+ */
+export const getUserWithBadgesScheduleAttendance = async (req: Request, res: Response) => {
+  try {
+    const { uuid } = req.params;
+
+    if (!uuid) {
+      return res.status(400).json({ error: "Se requiere el UUID del usuario." });
+    }
+
+    const db = await initDB();
+
+    const user = await db.get(
+      `
+      SELECT 
+        u.uuid AS userUuid,
+        u.username,
+        u.nickname,
+        u.email,
+        u.role
+      FROM users u
+      WHERE u.uuid = ?
+      `,
+      [uuid]
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado." });
+    }
+
+    const badges = await db.all(
+      `
+      SELECT b.uuid AS badgeUuid, b.label AS badgeLabel
+      FROM badges b
+      LEFT JOIN userBadges ub ON b.uuid = ub.badgeUuid
+      WHERE ub.userUuid = ?
+      `,
+      [uuid]
+    );
+
+    const schedules = await db.all(
+      `
+      SELECT s.uuid AS scheduleUuid, s.dayOfWeek, s.startTime, s.endTime
+      FROM schedules s
+      WHERE s.userUuid = ?
+      `,
+      [uuid]
+    );
+
+    const attendance = await db.all(
+      `
+      SELECT a.uuid AS attendanceUuid, a.date, a.clockIn, a.clockOut
+      FROM attendance a
+      WHERE a.userUuid = ?
+      `,
+      [uuid]
+    );
+
+    res.status(200).json({
+      user,
+      badges,
+      schedules,
+      attendance
+    });
+  } catch (err) {
+    console.error("[GetUserWithBadgesScheduleAttendance Error]:", err);
+    res.status(500).json({ error: "Error interno del servidor." });
+  }
+}

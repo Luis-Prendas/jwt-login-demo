@@ -5,38 +5,35 @@ import { SECRET_KEY } from '../config/env';
 import { v4 as uuidv4 } from 'uuid';
 import { UserBasicData } from '../types/UserManagement';
 import bcrypt from 'bcrypt';
+import { getLogger } from '../utils/logger';
 
-/**
- * Endpoint para iniciar sesión de usuario.
- * Valida credenciales y retorna un JWT con los datos básicos del usuario.
- */
+const logger = getLogger('api-session-log');
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { username, password } = req.body;
+    logger.info(`Intento de login para usuario: ${username}`);
 
-    // Validación de campos obligatorios
     if (!username || !password) {
+      logger.warn('Campos faltantes en login');
       return res.status(400).json({ error: 'Usuario y contraseña son obligatorios.' });
     }
 
     const db = await initDB();
-
-    // Buscar usuario por username
     const user = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
 
     if (!user) {
+      logger.warn(`Usuario no encontrado: ${username}`);
       return res.status(401).json({ error: 'Credenciales inválidas.' });
     }
 
-    // Validar contraseña ingresada contra hash
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
+      logger.warn(`Contraseña inválida para usuario: ${username}`);
       return res.status(401).json({ error: 'Credenciales inválidas.' });
     }
 
-    // Preparar payload para el token JWT
     const payload: UserBasicData = {
       uuid: user.uuid,
       email: user.email,
@@ -45,21 +42,19 @@ export const login = async (req: Request, res: Response) => {
       role: user.role,
     };
 
-    // Generar token con expiración de 1 hora
     const token = jwt.sign({ user: payload }, SECRET_KEY, { expiresIn: '1h' });
+
+    logger.info(`Login exitoso para usuario: ${username}`);
 
     return res.status(200).json({ token });
   } catch (error) {
-    console.error('[Login Error]:', error);
+    logger.error(`[Login Error]: ${(error as Error).message}`);
     return res.status(500).json({ error: 'Error interno del servidor.' });
+  } finally {
+    logger.info(`------------ ${req.method} ${req.originalUrl} finalizado ------------`);
   }
 };
 
-
-/**
- * Endpoint para registrar un nuevo usuario.
- * Valida que no exista un usuario con el mismo username o email y retorna un JWT.
- */
 export const register = async (req: Request, res: Response) => {
   const SALT_ROUNDS = 10;
 

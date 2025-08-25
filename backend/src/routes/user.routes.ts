@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getUser, addPoints, getAllUsers, getUserWithBadges, userUpdate } from '../controllers/user.controller';
+import { getUser, addPoints, getAllUsers, getUserWithBadges, userUpdate, getUserWithBadgesScheduleAttendance } from '../controllers/user.controller';
 import { authenticateToken } from '../middlewares/authenticateToken';
 
 /**
@@ -22,5 +22,7 @@ userRouter.post('/add-points', authenticateToken, addPoints);
 
 // Actualizar información del usuario
 userRouter.put('/user/:uuid', authenticateToken, userUpdate);
+
+userRouter.get('/user/withBadgesScheduleAttendance/:uuid', authenticateToken, getUserWithBadgesScheduleAttendance);
 
 export default userRouter;
