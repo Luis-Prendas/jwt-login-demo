@@ -1,60 +1,81 @@
 import bcrypt from "bcrypt";
-import { DB } from "./src/db/mockDB";
 import { initDB } from "./src/db/db";
+import { DB } from "./src/db/mockDB";
 
 export async function seedDatabase() {
   const db = await initDB();
 
   // 🔥 Borrar todas las tablas si existen
   await db.exec(`
+    DROP TABLE IF EXISTS user;
+    DROP TABLE IF EXISTS badge;
+    DROP TABLE IF EXISTS userBadge;
+    DROP TABLE IF EXISTS schedule;
     DROP TABLE IF EXISTS attendance;
-    DROP TABLE IF EXISTS schedules;
-    DROP TABLE IF EXISTS userBadges;
-    DROP TABLE IF EXISTS badges;
-    DROP TABLE IF EXISTS users;
   `);
 
   // 🔨 Crear todas las tablas de nuevo
   await db.exec(`
-    CREATE TABLE users (
-      uuid TEXT PRIMARY KEY,
+    CREATE TABLE user (
+      id TEXT PRIMARY KEY,
       email TEXT NOT NULL,
       username TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL,
       nickname TEXT NOT NULL,
-      role TEXT NOT NULL
+      role TEXT NOT NULL,
+      description TEXT,
+      createdAt TEXT NOT NULL,
+      updatedAt TEXT NOT NULL,
+      isDeleted INTEGER NOT NULL DEFAULT 0
     );
 
-    CREATE TABLE badges (
-      uuid TEXT PRIMARY KEY,
-      label TEXT NOT NULL
+    CREATE TABLE badge (
+      id TEXT PRIMARY KEY,
+      label TEXT NOT NULL,
+      description TEXT,
+      createdAt TEXT NOT NULL,
+      updatedAt TEXT NOT NULL,
+      isDeleted INTEGER NOT NULL DEFAULT 0
     );
 
-    CREATE TABLE userBadges (
-      uuid TEXT PRIMARY KEY,
-      userUuid TEXT NOT NULL,
-      badgeUuid TEXT NOT NULL,
-      FOREIGN KEY (userUuid) REFERENCES users(uuid),
-      FOREIGN KEY (badgeUuid) REFERENCES badges(uuid)
+    CREATE TABLE userBadge (
+      id TEXT PRIMARY KEY,
+      userId TEXT NOT NULL,
+      badgeId TEXT NOT NULL,
+      createdAt TEXT NOT NULL,
+      updatedAt TEXT NOT NULL,
+      isDeleted INTEGER NOT NULL DEFAULT 0,
+      FOREIGN KEY (userId) REFERENCES user(id),
+      FOREIGN KEY (badgeId) REFERENCES badge(id)
     );
 
-    CREATE TABLE schedules (
-      uuid TEXT PRIMARY KEY,
-      userUuid TEXT NOT NULL,
+    CREATE TABLE schedule (
+      id TEXT PRIMARY KEY,
+      userId TEXT NOT NULL,
       dayOfWeek INTEGER NOT NULL,
-      startTime TEXT NOT NULL, -- formato HH:mm
+      startTime TEXT NOT NULL,
       endTime TEXT NOT NULL,
-      FOREIGN KEY (userUuid) REFERENCES users(uuid)
+      description TEXT,
+      createdAt TEXT NOT NULL,
+      updatedAt TEXT NOT NULL,
+      isDeleted INTEGER NOT NULL DEFAULT 0,
+      FOREIGN KEY (userId) REFERENCES user(id)
     );
 
     CREATE TABLE attendance (
-      uuid TEXT PRIMARY KEY,
-      userUuid TEXT NOT NULL,
+      id TEXT PRIMARY KEY,
+      userId TEXT NOT NULL,
+      scheduleId TEXT NOT NULL,
       dayOfWeek INTEGER NOT NULL,
-      date TEXT NOT NULL,        -- YYYY-MM-DD
-      clockIn TEXT NOT NULL,     -- ISO string
-      clockOut TEXT,             -- ISO string o NULL
-      FOREIGN KEY (userUuid) REFERENCES users(uuid)
+      date TEXT NOT NULL,
+      clockIn TEXT NOT NULL,
+      clockOut TEXT,
+      status TEXT,
+      createdAt TEXT NOT NULL,
+      updatedAt TEXT NOT NULL,
+      isDeleted INTEGER NOT NULL DEFAULT 0,
+      FOREIGN KEY (userId) REFERENCES user(id),
+      FOREIGN KEY (scheduleId) REFERENCES schedule(id)
     );
   `);
 
@@ -64,15 +85,19 @@ export async function seedDatabase() {
   for (const user of DB.users) {
     const hashedPassword = await bcrypt.hash(user.password, SALT_ROUNDS);
     await db.run(
-      `INSERT INTO users (uuid, email, username, password, nickname, role)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO user (id, email, username, password, nickname, role, description, createdAt, updatedAt, isDeleted)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        user.uuid,
+        user.id,
         user.email,
         user.username,
         hashedPassword,
         user.nickname,
         user.role,
+        user.description,
+        user.createdAt,
+        user.updatedAt,
+        user.isDeleted,
       ]
     );
   }
@@ -80,18 +105,32 @@ export async function seedDatabase() {
   // Insertar badges
   for (const badge of DB.badges) {
     await db.run(
-      `INSERT INTO badges (uuid, label)
-       VALUES (?, ?)`,
-      [badge.uuid, badge.label]
+      `INSERT INTO badge (id, label, description, createdAt, updatedAt, isDeleted)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        badge.id,
+        badge.label,
+        badge.description,
+        badge.createdAt,
+        badge.updatedAt,
+        badge.isDeleted,
+      ]
     );
   }
 
   // Insertar userBadges
   for (const ub of DB.userBadges) {
     await db.run(
-      `INSERT INTO userBadges (uuid, userUuid, badgeUuid)
-       VALUES (?, ?, ?)`,
-      [ub.uuid, ub.userUuid, ub.badgeUuid]
+      `INSERT INTO userBadge (id, userId, badgeId, createdAt, updatedAt, isDeleted)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        ub.id,
+        ub.userId,
+        ub.badgeId,
+        ub.createdAt,
+        ub.updatedAt,
+        ub.isDeleted,
+      ]
     );
   }
 
@@ -99,9 +138,19 @@ export async function seedDatabase() {
   if (DB.schedules) {
     for (const s of DB.schedules) {
       await db.run(
-        `INSERT INTO schedules (uuid, userUuid, dayOfWeek, startTime, endTime)
-         VALUES (?, ?, ?, ?, ?)`,
-        [s.uuid, s.userUuid, s.dayOfWeek, s.startTime, s.endTime]
+        `INSERT INTO schedule (id, userId, dayOfWeek, startTime, endTime, description, createdAt, updatedAt, isDeleted)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          s.id,
+          s.userId,
+          s.dayOfWeek,
+          s.startTime,
+          s.endTime,
+          s.description,
+          s.createdAt,
+          s.updatedAt,
+          s.isDeleted,
+        ]
       );
     }
   }
@@ -110,15 +159,20 @@ export async function seedDatabase() {
   if (DB.attendance) {
     for (const a of DB.attendance) {
       await db.run(
-        `INSERT INTO attendance (uuid, userUuid, dayOfWeek, date, clockIn, clockOut)
-         VALUES (?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO attendance (id, userId, scheduleId, dayOfWeek, date, clockIn, clockOut, status, createdAt, updatedAt, isDeleted)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          a.uuid,
-          a.userUuid,
+          a.id,
+          a.userId,
+          a.scheduleId,
           a.dayOfWeek,
-          a.date.toISOString(),
-          a.clockIn.toISOString(),
-          a.clockOut ? a.clockOut.toISOString() : null,
+          a.date,
+          a.clockIn,
+          a.clockOut ? a.clockOut : null,
+          a.status,
+          a.createdAt,
+          a.updatedAt,
+          a.isDeleted,
         ]
       );
     }
