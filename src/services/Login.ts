@@ -1,10 +1,10 @@
-import type { LoginResponse, UserLogin } from "../types/UserManagement";
+import type { LoginResponse, LoginForm } from "../types/UserManagement";
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4040';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6969';
 
-export async function userLogin(data: UserLogin): Promise<LoginResponse> {
+export async function sessionLogin(data: LoginForm): Promise<LoginResponse> {
   try {
-    const response = await fetch(`${BASE_URL}/api/sessions/login`, {
+    const response = await fetch(`${BASE_URL}/api/session/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

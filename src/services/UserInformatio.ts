@@ -1,6 +1,6 @@
 import type { Assistance, Schedule, UserData, UserDataWithBadges } from "../types/UserManagement";
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4040';
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6969';
 
 export async function userInfo(token: string): Promise<UserData | null> {
   try {

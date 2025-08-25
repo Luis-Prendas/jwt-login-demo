@@ -1,89 +1,29 @@
+import type { UserBasicData } from '@/types/UserManagement';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { userLogin } from '../services/Login';
-import { isTokenValid, decodeToken } from '../utils/jwt';
-import { userInfo } from '../services/UserInformatio';
-import type { LoginResponse, UserBasicData } from '../types/UserManagement';
 
 interface AuthState {
   token: string | null;
-  userData: UserBasicData | null;
-  loading: boolean;
   isAuthenticated: boolean;
-
-  setLoading: (loading: boolean) => void;
-  login: (username: string, password: string) => Promise<LoginResponse>;
-  logout: () => void;
-  fetchUserData: () => Promise<void>;
   setToken: (token: string | null) => void;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set, get) => ({
+    (set, _get) => ({
       token: null,
-      userData: null,
-      loading: false,
-      error: null,
       isAuthenticated: false,
 
-      setLoading: (loading) => {
-        set({ loading });
-      },
-
       setToken: (token) => {
-        if (token && isTokenValid(token)) {
-          const decoded = decodeToken(token);
-          set({
-            token,
-            isAuthenticated: true,
-            userData: {
-              uuid: decoded.user.uuid,
-              email: decoded.user.email,
-              username: decoded.user.username,
-              nickname: decoded.user.nickname,
-              role: decoded.user.role,
-            },
-          });
-        } else {
-          set({
-            token: null,
-            isAuthenticated: false,
-            userData: null,
-          });
-        }
+        set({ token });
       },
-
-      login: async (username, password) => {
-        set({ loading: true });
-        const receivedToken = await userLogin({ username, password });
-        get().setToken(receivedToken.token);
-        set({ loading: false });
-        return receivedToken;
+      setIsAuthenticated: (isAuthenticated) => {
+        set({ isAuthenticated });
       },
-
-      logout: () => {
-        set({
-          token: null,
-          isAuthenticated: false,
-          userData: null,
-        });
-      },
-
-      fetchUserData: async () => {
-        const token = get().token;
-        if (!token) return;
-        set({ loading: true });
-        try {
-          const user = await userInfo(token);
-          set({ userData: user, loading: false });
-        } catch (error) {
-          set({ loading: false });
-        }
-      }
     }),
     {
-      name: 'auth-storage', // clave en sessionStorage
+      name: 'auth-storage',
       storage: {
         getItem: (key) => {
           const value = sessionStorage.getItem(key);
@@ -94,14 +34,9 @@ export const useAuthStore = create<AuthState>()(
       },
       partialize: (state) => ({
         token: state.token,
-        userData: state.userData,
         isAuthenticated: state.isAuthenticated,
-        loading: false,
-        setLoading: state.setLoading,
-        login: state.login,
-        logout: state.logout,
-        fetchUserData: state.fetchUserData,
         setToken: state.setToken,
+        setIsAuthenticated: state.setIsAuthenticated,
       }),
     }
   )

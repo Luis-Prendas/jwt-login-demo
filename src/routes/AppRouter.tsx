@@ -4,11 +4,9 @@ import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import Register from '../pages/Register';
-import DevTools from '../pages/DevTools';
 import UserManagement from '../pages/UserManagement';
 import { MainLayout } from '../components/MainLayout';
 import ProtectedAdminRoute from '../components/ProtectedAdminRoute';
-import TabsConfig from '../pages/TabsConfig';
 import CreateRoom from '@/pages/Streaming/CreateRoom';
 import Room from '@/pages/Streaming/Room';
 import Profile from '@/pages/profile/Profile';
@@ -30,9 +28,7 @@ export default function AppRouter() {
 
             {/* Administrativas (Requiere autenticación y rol de administrador) */}
             <Route element={<ProtectedAdminRoute />}>
-              <Route path="/dev-tools" element={<DevTools />} />
               <Route path="/user-management" element={<UserManagement />} />
-              <Route path="/tabs-config" element={<TabsConfig />} />
               <Route path="/streaming" element={<CreateRoom />} />
               <Route path="/streaming/:streamId" element={<Room />} />
               <Route path="/profile/:userId" element={<Profile />} />
