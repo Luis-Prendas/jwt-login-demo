@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { initDB } from '../../db/db';
 import { getLogger } from '../../utils/logger';
 import { UserWithPassword } from '../../types/DataBase';
+import { UserBasicData } from '../session/session';
 
 const logger = getLogger('api-user');
 
@@ -34,7 +35,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<Response
   try {
     logger.info('Obteniendo todos los usuarios');
     const db = await initDB();
-    const users = await db.all(`SELECT * FROM user`);
+    const users = await db.all(`SELECT * FROM user`) as UserWithPassword[];
     if (!users || users.length === 0) {
       logger.warn('No se encontraron usuarios');
       return res.status(404).json({ error: 'No se encontraron usuarios' });
@@ -52,22 +53,27 @@ export const getAllUsers = async (req: Request, res: Response): Promise<Response
 export const updateUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     const id = req.params.id;
-    const userData = req.body;
-    if (!id || !userData) {
+    const { username, email, nickname, role } = req.body.content
+
+    console.log('HEREEEEEEEEE', req.body.content);
+
+    if (!id || !username || !email || !nickname || !role) {
       logger.warn('ID de usuario o datos de usuario no proporcionados');
       return res.status(400).json({ error: 'ID de usuario o datos de usuario no proporcionados' });
     }
     logger.info(`Actualizando usuario con ID: ${id}`);
+
     const db = await initDB();
-    const result = await db.run(`UPDATE user SET name = ?, email = ? WHERE id = ?`, [userData.name, userData.email, id]);
+    const result = await db.run(`UPDATE user SET username = ?, email = ?, nickname = ?, role = ? WHERE id = ?`, [username, email, nickname, role, id]);
     if (result.changes === 0) {
       logger.warn(`No se pudo actualizar el usuario con ID: ${id}`);
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-    logger.info(`Usuario actualizado con éxito: ${JSON.stringify(userData)}`);
+    logger.info(`Usuario actualizado con éxito: ${JSON.stringify({ username, email, nickname, role })}`);
+
     return res.json({ success: true });
   } catch (error) {
-    logger.error('[  Error]:', error);
+    logger.error('[UpdateUser Error]:', error);
     return res.status(500).json({ error: 'Error interno del servidor' });
   } finally {
     logger.info(`------------ ${req.method} ${req.originalUrl} finalizado ------------`);
