@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { login, register } from '../controllers/userSession.controller';
+import { login, register } from '../controllers/session/session.controller';
 
 /**
  * Rutas relacionadas con sesiones de usuario (login y registro)
  */
-const userSessionRouter = Router();
+const sessionRouter = Router();
 
 /**
  * POST /api/sessions/login
@@ -12,7 +12,7 @@ const userSessionRouter = Router();
  * Recibe: { username, password }
  * Retorna: JWT con los datos básicos del usuario
  */
-userSessionRouter.post('/login', login);
+sessionRouter.post('/login', login);
 
 /**
  * POST /api/sessions/register
@@ -20,6 +20,6 @@ userSessionRouter.post('/login', login);
  * Recibe: { username, email, password }
  * Retorna: JWT con los datos básicos del usuario
  */
-userSessionRouter.post('/register', register);
+sessionRouter.post('/register', register);
 
-export default userSessionRouter;
+export default sessionRouter;

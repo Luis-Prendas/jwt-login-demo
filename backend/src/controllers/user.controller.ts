@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { initDB } from '../db/db';
-import { Badge, UserBasicData } from '../types/UserManagement';
 
 /**
  * Obtener información del usuario autenticado

@@ -6,7 +6,7 @@ describe("Auth - /api/session/register", () => {
   beforeAll(async () => {
     const db = await initDB();
     // Limpieza de usuarios con el mismo correo o username de prueba
-    await db.run(`DELETE FROM users WHERE username = ? OR email = ?`, [
+    await db.run(`DELETE FROM user WHERE username = ? OR email = ?`, [
       "testuser",
       "testuser@test.com",
     ]);

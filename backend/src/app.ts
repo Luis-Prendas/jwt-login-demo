@@ -1,9 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import userRoutes from './routes/user.routes';
-import userSessionRouter from './routes/userSession.routes';
-import assistanceRouter from './routes/assistance.routes';
-import scheduleRouter from './routes/schedule.routes';
+import sessionRouter from './routes/session.routes';
 
 const app = express();
 
@@ -17,9 +14,9 @@ app.get('/', (_req: Request, res: Response) => {
 });
 
 // Rutas
-app.use('/api/session', userSessionRouter);
-app.use('/api/user', userRoutes);
-app.use('/api/assistance', assistanceRouter);
-app.use('/api/schedule', scheduleRouter);
+app.use('/api/session', sessionRouter);
+// app.use('/api/user', userRoutes);
+// app.use('/api/assistance', assistanceRouter);
+// app.use('/api/schedule', scheduleRouter);
 
 export default app;

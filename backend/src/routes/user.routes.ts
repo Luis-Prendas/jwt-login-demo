@@ -8,21 +8,27 @@ import { authenticateToken } from '../middlewares/authenticateToken';
  */
 const userRouter = Router();
 
-// Obtener información del usuario autenticado
-// userRouter.get('/user', authenticateToken, getUser);
+/** 
+ * GET /api/user/getUser/:uuid
+ * Obtener información de un usuario específico por UUID
+ * Recibe: { uuid }
+ * Retorna: TBL_User
+ */
+userRouter.get('/getUser/:uuid', authenticateToken, getUserWithBadges);
 
-// Obtener información de un usuario específico por UUID
-userRouter.get('/user/:uuid', authenticateToken, getUserWithBadges);
+/**
+ * GET /api/user/getAll
+ * Obtener listado de todos los usuarios (admin/dev)
+ * Retorna: TBL_User[]
+ */
+userRouter.get('/getAll', authenticateToken, getAllUsers);
 
-// Obtener listado de todos los usuarios (admin/dev)
-userRouter.get('/users', authenticateToken, getAllUsers);
-
-// Agregar puntos al usuario autenticado
-userRouter.post('/add-points', authenticateToken, addPoints);
-
-// Actualizar información del usuario
-userRouter.put('/user/:uuid', authenticateToken, userUpdate);
-
-userRouter.get('/user/withBadgesScheduleAttendance/:uuid', authenticateToken, getUserWithBadgesScheduleAttendance);
+/**
+ * PUT /api/user/updateUser/:uuid
+ * Actualizar información del usuario
+ * Recibe: { uuid, userData }
+ * Retorna: Boolean
+ */
+userRouter.put('/updateUser/:uuid', authenticateToken, userUpdate);
 
 export default userRouter;

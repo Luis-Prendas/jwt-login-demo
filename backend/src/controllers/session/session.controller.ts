@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { initDB } from '../db/db';
-import { SECRET_KEY } from '../config/env';
+import { initDB } from '../../db/db';
+import { SECRET_KEY } from '../../config/env';
 import { v4 as uuidv4 } from 'uuid';
-import { UserBasicData } from '../types/UserManagement';
 import bcrypt from 'bcrypt';
-import { getLogger } from '../utils/logger';
+import { getLogger } from '../../utils/logger';
+import { UserBasicData } from './session';
+import { UserWithPassword } from '../../types/DataBase';
 
-const logger = getLogger('api-session-log');
+const logger = getLogger('api-session');
 
 export const login = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -20,7 +21,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     }
 
     const db = await initDB();
-    const user = await db.get(`SELECT * FROM users WHERE username = ?`, [username]);
+    const user = await db.get(`SELECT * FROM user WHERE username = ? AND isDeleted = 0`, [username]) as UserWithPassword
 
     if (!user) {
       logger.warn(`Usuario no encontrado: ${username}`);
@@ -35,7 +36,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     }
 
     const payload: UserBasicData = {
-      uuid: user.uuid,
+      id: user.id,
       email: user.email,
       username: user.username,
       nickname: user.nickname,
@@ -69,10 +70,7 @@ export const register = async (req: Request, res: Response): Promise<Response> =
 
     const db = await initDB();
 
-    const existingUser = await db.get(
-      `SELECT * FROM users WHERE username = ? OR email = ?`,
-      [username, email]
-    );
+    const existingUser = await db.get(`SELECT * FROM user WHERE username = ? OR email = ?`, [username, email]) as UserWithPassword;
 
     if (existingUser) {
       logger.warn(`Registro rechazado: usuario/email ya existente -> ${username}, ${email}`);
@@ -83,13 +81,13 @@ export const register = async (req: Request, res: Response): Promise<Response> =
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
     await db.run(
-      `INSERT INTO users (uuid, email, username, password, nickname, role)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [newUuid, email, username, hashedPassword, username, 'user']
+      `INSERT INTO user (id, email, username, password, nickname, role, description, createdAt, updatedAt, isDeleted)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [newUuid, email, username, hashedPassword, username, 'user', null, new Date().toISOString(), new Date().toISOString(), 0]
     );
 
     const payload: UserBasicData = {
-      uuid: newUuid,
+      id: newUuid,
       username,
       nickname: username,
       email,

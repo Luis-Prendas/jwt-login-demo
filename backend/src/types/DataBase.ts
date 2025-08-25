@@ -6,6 +6,13 @@ export interface DataBase {
   attendance: TBL_Attendance[];
 }
 
+export enum UserRole {
+  USER = 'user',
+  MODERATOR = 'moderator',
+  ADMIN = 'admin',
+  DEVELOPER = 'developer'
+}
+
 // Tabla básica
 interface BaseTableData {
   id: string; // uuid
@@ -19,11 +26,8 @@ interface DescriptiveData extends BaseTableData {
   description: string | null;
 }
 
-export enum UserRole {
-  USER = 'user',
-  MODERATOR = 'moderator',
-  ADMIN = 'admin',
-  DEVELOPER = 'developer'
+export interface UserWithPassword extends TBL_User {
+  password: string;
 }
 
 export interface TBL_User extends DescriptiveData {
@@ -33,27 +37,23 @@ export interface TBL_User extends DescriptiveData {
   role: UserRole;
 }
 
-interface UserWithPassword extends TBL_User {
-  password: string;
-}
-
-export interface TBL_Badge extends DescriptiveData {
+interface TBL_Badge extends DescriptiveData {
   label: string;
 }
 
-export interface TBL_UserBadge extends BaseTableData {
+interface TBL_UserBadge extends BaseTableData {
   userId: string;
   badgeId: string;
 }
 
-export interface TBL_Schedule extends DescriptiveData {
+interface TBL_Schedule extends DescriptiveData {
   userId: string;
   dayOfWeek: number;
   startTime: string;
   endTime: string;
 }
 
-export interface TBL_Attendance extends BaseTableData {
+interface TBL_Attendance extends BaseTableData {
   userId: string;
   scheduleId: string;
   dayOfWeek: number;
