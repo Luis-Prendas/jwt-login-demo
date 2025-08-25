@@ -1,14 +1,10 @@
+import { UserBasicData } from "../controllers/session/session";
+
 /**
  * Payload que se almacena en el JWT
  */
 export interface JwtUserPayload {
-  user: {
-    uuid: string;
-    username: string;
-    nickname: string;
-    email: string;
-    role: 'user' | 'admin' | 'developer' | 'moderator';
-  };
+  user: UserBasicData;
   iat?: number;
   exp?: number;
 }
@@ -19,7 +15,7 @@ export interface JwtUserPayload {
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtUserPayload;
+      data?: JwtUserPayload;
     }
   }
 }

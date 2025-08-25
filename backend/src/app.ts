@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import sessionRouter from './routes/session.routes';
+import userRouter from './routes/user.routes';
 
 const app = express();
 
@@ -15,7 +16,7 @@ app.get('/', (_req: Request, res: Response) => {
 
 // Rutas
 app.use('/api/session', sessionRouter);
-// app.use('/api/user', userRoutes);
+app.use('/api/user', userRouter);
 // app.use('/api/assistance', assistanceRouter);
 // app.use('/api/schedule', scheduleRouter);
 

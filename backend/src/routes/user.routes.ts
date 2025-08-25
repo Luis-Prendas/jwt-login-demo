@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getUser, addPoints, getAllUsers, getUserWithBadges, userUpdate, getUserWithBadgesScheduleAttendance } from '../controllers/user.controller';
+import { getAllUsers, getUser, updateUser, userDelete } from '../controllers/user/user.controller';
 import { authenticateToken } from '../middlewares/authenticateToken';
 
 /**
@@ -9,26 +9,34 @@ import { authenticateToken } from '../middlewares/authenticateToken';
 const userRouter = Router();
 
 /** 
- * GET /api/user/getUser/:uuid
- * Obtener información de un usuario específico por UUID
- * Recibe: { uuid }
+ * GET /api/user/getUser/:id
+ * Obtener información de un usuario específico por ID
+ * Recibe: { id }
  * Retorna: TBL_User
  */
-userRouter.get('/getUser/:uuid', authenticateToken, getUserWithBadges);
+userRouter.get('/getUser/:id', authenticateToken, getUser);
 
 /**
- * GET /api/user/getAll
+ * GET /api/user/getAllUsers
  * Obtener listado de todos los usuarios (admin/dev)
  * Retorna: TBL_User[]
  */
-userRouter.get('/getAll', authenticateToken, getAllUsers);
+userRouter.get('/getAllUsers', authenticateToken, getAllUsers);
 
 /**
- * PUT /api/user/updateUser/:uuid
+ * PUT /api/user/updateUser/:id
  * Actualizar información del usuario
- * Recibe: { uuid, userData }
+ * Recibe: { id, userData }
  * Retorna: Boolean
  */
-userRouter.put('/updateUser/:uuid', authenticateToken, userUpdate);
+userRouter.put('/updateUser/:id', authenticateToken, updateUser);
+
+/**
+ * DELETE /api/user/deleteUser/:id
+ * Eliminar un usuario específico por ID
+ * Recibe: { id }
+ * Retorna: Boolean
+ */
+userRouter.delete('/deleteUser/:id', authenticateToken, userDelete);
 
 export default userRouter;
