@@ -13,9 +13,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { useAuth } from "@/hooks/useAuth"
 import { Link, useNavigate } from "react-router"
-import { decodeToken } from "@/utils/jwt"
 
-// Menu items.
 const items = [
   {
     title: "Inicio",
@@ -28,19 +26,9 @@ const items = [
     icon: LayoutDashboard,
   },
   {
-    title: "Herramientas",
-    url: "/dev-tools",
-    icon: ToolCase,
-  },
-  {
     title: "Gestion de usuarios",
     url: "/user-management",
     icon: Settings,
-  },
-  {
-    title: "Asistencia",
-    url: "/assistance",
-    icon: Users,
   }
 ]
 

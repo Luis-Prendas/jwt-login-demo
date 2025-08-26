@@ -1,14 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table"
 import { ActionCell } from "./ActionCell";
+import type { UserBasicData } from "@/types/UserManagement";
 
-export type Payment = {
-  uuid: string;
-  email: string;
-  username: string;
-  password: string;
-  nickname: string;
-  role: 'user' | 'admin' | 'developer' | 'moderator';
-}
+export type Payment = UserBasicData;
 
 export const columns: ColumnDef<Payment>[] = [
   { accessorKey: "email", header: "Email" },

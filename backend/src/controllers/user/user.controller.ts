@@ -41,7 +41,8 @@ export const getAllUsers = async (req: Request, res: Response): Promise<Response
       return res.status(404).json({ error: 'No se encontraron usuarios' });
     }
     logger.info(`Usuarios encontrados: ${JSON.stringify(users)}`);
-    return res.json({ users });
+    const response = users.map(({ id, username, nickname, email, role }) => ({ id, username, nickname, email, role }));
+    return res.json({ users: response });
   } catch (err) {
     logger.error('[GetAllUsers Error]:', err);
     return res.status(500).json({ error: 'Error interno del servidor' });

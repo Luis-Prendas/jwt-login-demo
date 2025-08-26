@@ -6,12 +6,12 @@ import { Dialog } from "@/components/ui/dialog"
 
 
 export function UsersTabaTable() {
-  const { fetchAllUsers } = useAuth()
+  const { getAllUsers } = useAuth()
   const [data, setData] = useState<Payment[] | []>([])
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await fetchAllUsers()
+      const response = await getAllUsers()
       setData(response ? response : [])
     }
     fetch()
