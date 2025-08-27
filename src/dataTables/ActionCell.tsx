@@ -1,4 +1,3 @@
-// ActionCell.tsx
 import { useState } from "react";
 import { SquarePen } from "lucide-react";
 import {
@@ -15,41 +14,42 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-import type { UserDataWithBadges } from "@/types/UserManagement";
+import type { UserBasicData, UserRole } from "@/types/UserManagement";
 import type { Payment } from "./columns";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router";
 
 export function ActionCell({ payment }: { payment: Payment }) {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState<UserDataWithBadges | null>(null);
-  const { fetchUserInfoWithBadge, updateUser } = useAuth();
+  const [data, setData] = useState<UserBasicData | null>(null);
+  const { getUser, updateUser } = useAuth();
+  const navigate = useNavigate();
 
   const [nickname, setNickname] = useState<string | null>(null);
   const [username, setUsername] = useState<string | null>(null);
   const [role, setRole] = useState<"user" | "admin" | "developer" | "moderator" | null>(null);
 
   const handleClick = async () => {
-    const response = await fetchUserInfoWithBadge(payment.uuid);
+    const response = await getUser(payment.id);
     setData(response);
   };
 
   const handleSaveChanges = async () => {
     if (!data) return;
 
-    const updatedData = {
+    const updatedData: UserBasicData = {
       ...data,
       nickname: nickname ? nickname : data.nickname,
       username: username ? username : data.username,
-      role: role ? role : data.role,
+      role: role ? (role as UserRole) : data.role,
     };
 
-    const updated = await updateUser(updatedData);
-
-    console.log(updatedData, updated);
+    const updated = await updateUser(updatedData, payment.id);
 
     if (updated) {
       setOpen(false);
+      navigate(0);
     }
   };
 
@@ -60,22 +60,17 @@ export function ActionCell({ payment }: { payment: Payment }) {
           <SquarePen />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[450px]">
+      <DialogContent className="sm:max-w-[450px] p-0">
         {data ? (
           <Tabs defaultValue="account">
-            <TabsList>
-              <TabsTrigger value="account">Account</TabsTrigger>
-              <TabsTrigger value="password">Password</TabsTrigger>
+            <TabsList className="p-0 bg-transparent mb-2 ml-3.5 mt-4">
+              <TabsTrigger value="account">Cuenta</TabsTrigger>
+              <TabsTrigger value="badges">Insignias</TabsTrigger>
             </TabsList>
-            <TabsContent value="account">
+            <TabsContent value="account" className="flex flex-col gap-4 px-4 pb-4">
               <DialogHeader>
                 <DialogTitle className="flex gap-4">
                   Editar perfil
-                  <ul className="flex gap-2">
-                    {data && data.badges && data.badges.map((badge) => (
-                      <li key={badge.uuid} className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{badge.label}</li>
-                    ))}
-                  </ul>
                 </DialogTitle>
                 <DialogDescription className="text-balance">
                   Realiza cambios en tu perfil aquí. Haz clic en guardar cuando hayas terminado.
@@ -111,6 +106,24 @@ export function ActionCell({ payment }: { payment: Payment }) {
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline" type="button">Cancelar</Button>
+                </DialogClose>
+                <Button onClick={handleSaveChanges}>Guardar cambios</Button>
+              </DialogFooter>
+            </TabsContent>
+            <TabsContent value="badges" className="flex flex-col gap-4 px-4 pb-4">
+              <DialogHeader>
+                <DialogTitle className="flex gap-4">
+                  Editar perfil
+                </DialogTitle>
+                <DialogDescription className="text-balance">
+                  Realiza cambios en tu perfil aquí. Haz clic en guardar cuando hayas terminado.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4">
               </div>
               <DialogFooter>
                 <DialogClose asChild>

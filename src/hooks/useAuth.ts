@@ -1,12 +1,11 @@
 import { sessionLogin } from "@/services/Login";
 import { useAuthStore } from "../store/cstorage";
-import type { LoginForm } from "@/types/UserManagement";
+import type { LoginForm, UserBasicData } from "@/types/UserManagement";
 import { useState } from "react";
 import { decodeToken } from "@/utils/jwt";
-import { gerAllUsers, gerUser } from "@/services/UserInformatio";
+import { gerAllUsersService, getUserService, updateUserService } from "@/services/UserInformatio";
 
 export function useAuth() {
-  const [loading, setLoading] = useState(false);
   const {
     token,
     isAuthenticated,
@@ -15,6 +14,8 @@ export function useAuth() {
     setIsAuthenticated,
     setUserData
   } = useAuthStore();
+
+  const [loading, setLoading] = useState(false);
 
   const login = async (loginForm: LoginForm) => {
     setLoading(true);
@@ -37,14 +38,21 @@ export function useAuth() {
 
   const getAllUsers = async () => {
     setLoading(true)
-    const response = await gerAllUsers(token!)
+    const response = await gerAllUsersService(token!)
     setLoading(false)
     return response
   }
 
   const getUser = async (id: string) => {
     setLoading(true)
-    const response = await gerUser(id, token!)
+    const response = await getUserService(id, token!)
+    setLoading(false)
+    return response
+  }
+
+  const updateUser = async (userData: UserBasicData, id: string) => {
+    setLoading(true)
+    const response = await updateUserService(userData, token!, id)
     setLoading(false)
     return response
   }
@@ -58,6 +66,7 @@ export function useAuth() {
     setToken,
     logout,
     getAllUsers,
-    getUser
+    getUser,
+    updateUser
   };
 }

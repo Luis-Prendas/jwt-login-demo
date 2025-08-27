@@ -17,7 +17,6 @@ export function UsersTabaTable() {
     fetch()
   }, [])
 
-
   return (
     <div className="container mx-auto py-10">
       <Dialog>
