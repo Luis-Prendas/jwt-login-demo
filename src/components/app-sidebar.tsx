@@ -1,4 +1,4 @@
-import { Users, ChevronUp, Home, LayoutDashboard, ToolCase, Settings, User2 } from "lucide-react"
+import { ChevronUp, Home, LayoutDashboard, Settings, User2 } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -13,22 +13,26 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { useAuth } from "@/hooks/useAuth"
 import { Link, useNavigate } from "react-router"
+import { ALL_ACCESS, PROTECTED_ACSSES } from "@/utils/constants"
 
 const items = [
   {
     title: "Inicio",
     url: "/",
     icon: Home,
+    access: ALL_ACCESS
   },
   {
     title: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboard,
+    access: ALL_ACCESS
   },
   {
     title: "Gestion de usuarios",
     url: "/user-management",
     icon: Settings,
+    access: PROTECTED_ACSSES
   }
 ]
 
@@ -48,16 +52,20 @@ export function AppSidebar() {
           <SidebarGroupLabel>Aplicación</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {items.map((item) =>
+                item.access.includes(userData?.role || '')
+                  ? (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild>
+                          <Link to={item.url}>
+                            <item.icon />
+                            <span>{item.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    )
+                  : null
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
