@@ -4,6 +4,7 @@ import sessionRouter from './routes/session.routes';
 import userRouter from './routes/user.routes';
 import scheduleRouter from './routes/schedule.routes';
 import attendanceRouter from './routes/attendance.routes';
+import badgeRouter from './routes/badge.routes';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.get('/', (_req: Request, res: Response) => {
 // Rutas
 app.use('/api/session', sessionRouter);
 app.use('/api/user', userRouter);
+app.use('/api/badge', badgeRouter);
 app.use('/api/schedule', scheduleRouter);
 app.use('/api/attendance', attendanceRouter);
 

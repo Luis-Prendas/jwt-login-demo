@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/cstorage";
 import type { LoginForm, UserBasicData } from "@/types/UserManagement";
 import { useState } from "react";
 import { decodeToken } from "@/utils/jwt";
-import { gerAllUsersService, getUserService, updateUserService } from "@/services/UserInformatio";
+import { gerAllUsersService, getUserBadgesService, getUserService, updateUserService } from "@/services/UserInformatio";
 
 export function useAuth() {
   const {
@@ -57,6 +57,13 @@ export function useAuth() {
     return response
   }
 
+  const getUserBadges = async (id: string) => {
+    setLoading(true)
+    const response = await getUserBadgesService(id, token!)
+    setLoading(false)
+    return response
+  }
+
   return {
     token,
     isAuthenticated,
@@ -67,6 +74,7 @@ export function useAuth() {
     logout,
     getAllUsers,
     getUser,
-    updateUser
+    updateUser,
+    getUserBadges
   };
 }

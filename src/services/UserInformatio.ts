@@ -1,4 +1,4 @@
-import type { UserBasicData } from "../types/UserManagement";
+import type { TBL_Badge, UserBasicData } from "../types/UserManagement";
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6969';
 
@@ -65,5 +65,27 @@ export async function updateUserService(userData: UserBasicData, token: string, 
   } catch (error) {
     console.error(`❌ Error en updateUserInfo: ${error}`);
     return false;
+  }
+}
+
+export async function getUserBadgesService(id: string, token: string): Promise<TBL_Badge[] | null> {
+  try {
+    const response = await fetch(`${BASE_URL}/api/badge/getUserBadges/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch user badges');
+    }
+
+    const data = await response.json();
+    return data.badges;
+  } catch (error) {
+    console.error(`❌ Error en getUserBadges: ${error}`);
+    return null;
   }
 }

@@ -18,6 +18,21 @@ export interface LoginForm {
   password: string;
 }
 
+interface BaseTableData {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  isDeleted: boolean;
+}
+
+interface DescriptiveData extends BaseTableData {
+  description: string | null;
+}
+
+export interface TBL_Badge extends DescriptiveData {
+  label: string;
+}
+
 ////////////////////////////////////////////////////////
 
 export interface UserData {
