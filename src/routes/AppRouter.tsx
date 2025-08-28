@@ -23,11 +23,11 @@ export default function AppRouter() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile/:userId" element={<Profile />} />
 
             {/* Administrativas (Requiere autenticación y rol de administrador) */}
             <Route element={<ProtectedAdminRoute />}>
               <Route path="/user-management" element={<UserManagement />} />
-              <Route path="/profile/:userId" element={<Profile />} />
               <Route path="/assistance" element={<Assistance />} />
             </Route>
           </Route>

@@ -10,7 +10,6 @@ export default function Profile() {
   const [user, setUser] = useState<UserBasicData | null>(null);
   const { userId } = useParams<{ userId: string }>();
   const { getUserBadges, getUser, userData } = useAuth();
-  const [date, setDate] = useState<Date | null>(null);
 
   useEffect(() => {
     if (!userId) return;
@@ -20,7 +19,6 @@ export default function Profile() {
       const userInfo = await getUser(userId);
       setBadges(userBadges);
       setUser(userInfo);
-      setDate(new Date());
     };
 
     fetchData();
@@ -36,19 +34,19 @@ export default function Profile() {
         <div className="h-28 w-full flex justify-center items-start gap-[225px]">
           <div className="w-full h-full p-2 flex items-center justify-around">
             <div className="flex flex-col items-center gap-2">
-              <span className="text-3xl font-bold">{date?.getDate()}</span>
+              <span className="text-3xl font-bold">{new Date().getDate()}</span>
               <span className="text-lg opacity-60">Dia</span>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <span className="text-3xl font-bold">{date?.getMonth()}</span>
+              <span className="text-3xl font-bold">{new Date().getMonth()}</span>
               <span className="text-lg opacity-60">Mes</span>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <span className="text-3xl font-bold">{date?.getFullYear()}</span>
+              <span className="text-3xl font-bold">{new Date().getFullYear()}</span>
               <span className="text-lg opacity-60">Año</span>
             </div>
             <div className="flex flex-col items-center gap-2">
-              <span className="text-3xl font-bold">{date?.getHours()}:{date ? date.getMinutes().toString().padStart(2, '0') : ''}</span>
+              <span className="text-3xl font-bold">{new Date().getHours()}:{new Date().getMinutes().toString().padStart(2, '0')}</span>
               <span className="text-lg opacity-60">Hora</span>
             </div>
           </div>
@@ -82,7 +80,7 @@ export default function Profile() {
             ))}
           </ul>
           <span className="opacity-60 text-lg">{user?.email}</span>
-          <span className="text-2xl font-semibold">{user?.nickname}</span>
+          <span className="text-2xl font-semibold flex gap-2 justify-center items-center">{user?.nickname}<span className="text-xl font-normal opacity-50">@{user?.username}</span></span>
         </div>
       </section>
     </main>
