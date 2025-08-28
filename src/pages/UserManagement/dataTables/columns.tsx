@@ -1,6 +1,6 @@
 import { type ColumnDef } from "@tanstack/react-table"
-import { ActionCell } from "./ActionCell";
 import type { UserBasicData } from "@/types/UserManagement";
+import { EditUser } from "./EditUser";
 
 export type Payment = UserBasicData;
 
@@ -11,6 +11,6 @@ export const columns: ColumnDef<Payment>[] = [
   { accessorKey: "role", header: "Rol" },
   {
     id: "actions",
-    cell: ({ row }) => <ActionCell payment={row.original} />,
+    cell: ({ row }) => <EditUser payment={row.original} />,
   },
 ]

@@ -4,7 +4,7 @@ import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import Register from '../pages/Register';
-import UserManagement from '../pages/UserManagement';
+import UserManagement from '../pages/UserManagement/UserManagement';
 import { MainLayout } from '../components/MainLayout';
 import ProtectedAdminRoute from '../components/ProtectedAdminRoute';
 import Profile from '@/pages/profile/Profile';

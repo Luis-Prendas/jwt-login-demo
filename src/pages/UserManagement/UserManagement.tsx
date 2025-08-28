@@ -1,4 +1,4 @@
-import { UsersTabaTable } from "@/dataTables/page";
+import { UsersTabaTable } from "@/pages/UserManagement/dataTables/page";
 
 export default function UserManagement() {
   return (

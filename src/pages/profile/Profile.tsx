@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import type { TBL_Badge, UserBasicData } from "@/types/UserManagement";
 import { Bookmark, EllipsisVertical } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import DialogEditUser from "../UserManagement/dataTables/DialogEditUser";
 
 export default function Profile() {
+  const [open, setOpen] = useState(false);
   const [badges, setBadges] = useState<TBL_Badge[] | null>(null);
   const [user, setUser] = useState<UserBasicData | null>(null);
   const { userId } = useParams<{ userId: string }>();
@@ -54,7 +57,12 @@ export default function Profile() {
             <div className="flex items-center gap-4">
               {userData?.id === user?.id ? (
                 <>
-                  <Button>Editar perfil</Button>
+                  <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogTrigger asChild>
+                      <Button>Editar perfil</Button>
+                    </DialogTrigger>
+                    <DialogEditUser data={user} setOpen={setOpen} />
+                  </Dialog>
                 </>
               ) : (
                 <Button>Enviar mensaje</Button>
