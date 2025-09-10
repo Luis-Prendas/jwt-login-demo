@@ -7,6 +7,14 @@
   @apply bg-red-200/50;
 }
 
+.line1 {
+  @apply outline-1 outline-[#0f131e];
+}
+
+.line2 {
+  @apply outline-1 outline-[#353841];
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
