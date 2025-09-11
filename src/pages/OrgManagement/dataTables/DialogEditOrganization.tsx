@@ -39,20 +39,20 @@ export default function DialogEditOrganization({ data, setOpen }: { data: TBL_Or
           </DialogHeader>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="corporateName">Nombre corporativo</Label>
-              <Input id="corporateName" name="corporateName" type="text" defaultValue={data?.corporateName ?? ""} />
+              <Label htmlFor="corporateName">Nombre corporativo *</Label>
+              <Input id="corporateName" name="corporateName" type="text" defaultValue={data?.corporateName ?? ""} required />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="displayName">Nombre a mostrar</Label>
-              <Input id="displayName" name="displayName" type="text" defaultValue={data?.displayName ?? ""} />
+              <Label htmlFor="displayName">Nombre a mostrar *</Label>
+              <Input id="displayName" name="displayName" type="text" defaultValue={data?.displayName ?? ""} required />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="slogan">Slogan</Label>
               <Input id="slogan" name="slogan" type="text" defaultValue={data?.slogan ?? ""} />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="organizationCode">Código de organización</Label>
-              <Input id="organizationCode" name="organizationCode" type="text" defaultValue={data?.organizationCode ?? ""} className="cursor-not-allowed" disabled />
+              <Label htmlFor="organizationCode">Código de organización *</Label>
+              <Input id="organizationCode" name="organizationCode" type="text" defaultValue={data?.organizationCode ?? ""} className="cursor-not-allowed" disabled required />
             </div>
           </div>
           <DialogFooter>
