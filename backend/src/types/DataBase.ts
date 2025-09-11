@@ -1,7 +1,14 @@
+// =======================
+// Base Types
+// =======================
+
 export interface DataBase {
+  auditLogs: TBL_AuditLog[];
+  organizations: TBL_Organization[];
+  departments: TBL_Department[];
+  positions: TBL_Position[];
   users: UserWithPassword[];
-  badges: TBL_Badge[];
-  userBadges: TBL_UserBadge[];
+  userPositions: TBL_UserPosition[];
   schedules: TBL_Schedule[];
   attendance: TBL_Attendance[];
 }
@@ -10,21 +17,79 @@ export enum UserRole {
   USER = 'user',
   MODERATOR = 'moderator',
   ADMIN = 'admin',
+  SUPERADMIN = 'superadmin',
   DEVELOPER = 'developer'
 }
 
-// Tabla básica
 interface BaseTableData {
-  id: string; // uuid
-  createdAt: string; // ISO string mejor para compatibilidad DB
+  id: string; 
+  createdAt: string; 
+  createdBy: string;
   updatedAt: string;
+  updatedBy: string;
+  deletedAt: string | null;
+  deletedBy: string | null;
   isDeleted: boolean;
 }
 
-// Tabla con descripción
 interface DescriptiveData extends BaseTableData {
   description: string | null;
 }
+
+// =======================
+// Auditoría
+// =======================
+
+export interface TBL_AuditLog extends BaseTableData {
+  tableName: string;
+  recordId: string;
+  action: 'CREATE' | 'UPDATE' | 'DELETE';
+  changes: string; // JSON string
+}
+
+// =======================
+// Organización
+// =======================
+
+export interface TBL_Organization extends DescriptiveData {
+  corporateName: string;
+  displayName: string;
+  organizationCode: string; // ej: "5568"
+  logoUrl: string | null;
+  slogan: string | null;
+}
+
+// =======================
+// Departamento
+// =======================
+
+export interface TBL_Department extends DescriptiveData {
+  organizationId: string; // FK -> Organization.id
+  name: string;           // Ej: "Desarrollo", "Soporte"
+}
+
+// =======================
+// Puestos dentro de un departamento
+// =======================
+
+export interface TBL_Position extends DescriptiveData {
+  departmentId: string;   // FK -> Department.id
+  maleName: string;       // Ej: "Contador", "Desarrollador"
+  femaleName: string;     // Ej: "Contadora", "Desarrolladora"
+}
+
+// =======================
+// Relación Usuario ↔ Puesto
+// =======================
+
+export interface TBL_UserPosition extends BaseTableData {
+  userId: string;        // FK -> User.id
+  positionId: string;    // FK -> Position.id
+}
+
+// =======================
+// Usuario
+// =======================
 
 export interface UserWithPassword extends TBL_User {
   password: string;
@@ -34,28 +99,31 @@ export interface TBL_User extends DescriptiveData {
   email: string;
   username: string;
   nickname: string;
+  name: string;
+  lastName: string;
+  phone: string | null;
+  gender: "F" | "M" | "N"; // Femenino, Masculino, Neutro
+  birthDate: string | null; // ISO Date string
+  indentificationNumber: string | null; // Número de identificación oficial
+  address: string | null;
   role: UserRole;
+  organizationId: string; // FK -> Organization.id
 }
 
-interface TBL_Badge extends DescriptiveData {
-  label: string;
-}
-
-interface TBL_UserBadge extends BaseTableData {
-  userId: string;
-  badgeId: string;
-}
+// =======================
+// Horarios & Asistencia
+// =======================
 
 export interface TBL_Schedule extends DescriptiveData {
-  userId: string;
+  userId: string;       // FK -> User.id
   dayOfWeek: number;
   startTime: string;
   endTime: string;
 }
 
 export interface TBL_Attendance extends BaseTableData {
-  userId: string;
-  scheduleId: string;
+  userId: string;       // FK -> User.id
+  scheduleId: string;   // FK -> Schedule.id
   dayOfWeek: number;
   date: string;
   clockIn: string;
