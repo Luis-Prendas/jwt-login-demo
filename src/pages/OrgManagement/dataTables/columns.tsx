@@ -1,5 +1,6 @@
 import { type ColumnDef } from "@tanstack/react-table"
 import type { TBL_Organization } from "@/types/UserManagement";
+import { EditOrganization } from "./EditOrganization";
 
 export type Payment = TBL_Organization;
 
@@ -14,12 +15,7 @@ export const columns: ColumnDef<Payment>[] = [
     )
   },
   {
-    accessorKey: "logoUrl", header: "Logo",
-    cell: ({ row }) => (
-      row.original.logoUrl ? row.original.logoUrl : "Null"
-    )
-  },
-  {
     id: "actions",
+    cell: ({ row }) => <EditOrganization payment={row.original} />,
   },
 ]
