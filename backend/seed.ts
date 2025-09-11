@@ -7,7 +7,6 @@ async function seedDatabase() {
 
   // 🔥 Borrar todas las tablas si existen
   await db.exec(`
-    DROP TABLE IF EXISTS auditLog;
     DROP TABLE IF EXISTS attendance;
     DROP TABLE IF EXISTS schedule;
     DROP TABLE IF EXISTS userPosition;
@@ -143,21 +142,6 @@ async function seedDatabase() {
       isDeleted INTEGER NOT NULL DEFAULT 0,
       FOREIGN KEY (userId) REFERENCES user(id),
       FOREIGN KEY (scheduleId) REFERENCES schedule(id)
-    );
-
-    CREATE TABLE auditLog (
-      id TEXT PRIMARY KEY,
-      tableName TEXT NOT NULL,
-      recordId TEXT NOT NULL,
-      action TEXT NOT NULL,
-      changes TEXT NOT NULL,
-      createdAt TEXT NOT NULL,
-      createdBy TEXT NOT NULL,
-      updatedAt TEXT NOT NULL,
-      updatedBy TEXT NOT NULL,
-      deletedAt TEXT,
-      deletedBy TEXT,
-      isDeleted INTEGER NOT NULL DEFAULT 0
     );
   `);
 
@@ -327,28 +311,6 @@ async function seedDatabase() {
         a.deletedAt,
         a.deletedBy,
         a.isDeleted,
-      ]
-    );
-  }
-
-  // Insertar auditLogs
-  for (const log of DB.auditLogs) {
-    await db.run(
-      `INSERT INTO auditLog (id, tableName, recordId, action, changes, createdAt, createdBy, updatedAt, updatedBy, deletedAt, deletedBy, isDeleted)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        log.id,
-        log.tableName,
-        log.recordId,
-        log.action,
-        log.changes,
-        log.createdAt,
-        log.createdBy,
-        log.updatedAt,
-        log.updatedBy,
-        log.deletedAt,
-        log.deletedBy,
-        log.isDeleted,
       ]
     );
   }

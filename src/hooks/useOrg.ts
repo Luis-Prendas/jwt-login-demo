@@ -1,8 +1,14 @@
-import { getAllOrgService, getOrgService, updateOrgService } from "@/services/Organizations";
+import { createOrgService, deleteOrgService, getAllOrgService, getOrgService, updateOrgService } from "@/services/Organizations";
 import { useState } from "react";
 import { useAuth } from "./useAuth";
 
 export interface UpdateOrg {
+  corporateName: string
+  displayName: string
+  slogan: string
+}
+
+export interface CreateData {
   corporateName: string
   displayName: string
   slogan: string
@@ -33,10 +39,26 @@ export function useOrg() {
     return response
   }
 
+  const createOrg = async (createData: CreateData) => {
+    setLoading(true)
+    const response = createOrgService(createData, token!)
+    setLoading(false)
+    return response
+  }
+
+  const deleteOrg = async (orgId: string) => {
+    setLoading(true)
+    const response = deleteOrgService(orgId, token!)
+    setLoading(false)
+    return response
+  }
+
   return {
     loading,
     getAllOrg,
     getOrg,
-    updateOrg
+    updateOrg,
+    createOrg,
+    deleteOrg
   }
 }

@@ -3,7 +3,6 @@
 // =======================
 
 export interface DataBase {
-  auditLogs: TBL_AuditLog[];
   organizations: TBL_Organization[];
   departments: TBL_Department[];
   positions: TBL_Position[];
@@ -34,17 +33,6 @@ interface BaseTableData {
 
 interface DescriptiveData extends BaseTableData {
   description: string | null;
-}
-
-// =======================
-// Auditoría
-// =======================
-
-export interface TBL_AuditLog extends BaseTableData {
-  tableName: string;
-  recordId: string;
-  action: 'CREATE' | 'UPDATE' | 'DELETE';
-  changes: string; // JSON string
 }
 
 // =======================

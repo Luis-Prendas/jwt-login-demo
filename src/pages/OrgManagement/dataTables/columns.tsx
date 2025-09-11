@@ -7,13 +7,13 @@ export type Payment = TBL_Organization;
 export const columns: ColumnDef<Payment>[] = [
   { accessorKey: "corporateName", header: "Nombre corporativo" },
   { accessorKey: "displayName", header: "Nombre a mostrar" },
-  { accessorKey: "organizationCode", header: "Código de organización" },
   {
     accessorKey: "slogan", header: "Slogan",
     cell: ({ row }) => (
       row.original.slogan ? row.original.slogan : 'Null'
     )
   },
+  { accessorKey: "organizationCode", header: "Código de organización" },
   {
     id: "actions",
     cell: ({ row }) => <EditOrganization payment={row.original} />,

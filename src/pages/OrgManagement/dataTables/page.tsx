@@ -1,8 +1,8 @@
 import { columns, type Payment } from "./columns"
 import { DataTable } from "./data-table"
 import { useEffect, useState } from "react"
-import { Dialog } from "@/components/ui/dialog"
 import { useOrg } from "@/hooks/useOrg"
+import { AddOrganization } from "./AddOrganization"
 
 export function OrgDataTable() {
   const { getAllOrg } = useOrg()
@@ -17,10 +17,9 @@ export function OrgDataTable() {
   }, [])
 
   return (
-    <div className="container mx-auto py-10">
-      <Dialog>
-        <DataTable columns={columns} data={data ? data : []} />
-      </Dialog>
+    <div className="flex flex-col justify-center items-end">
+      <DataTable columns={columns} data={data ? data : []} />
+      <AddOrganization />
     </div>
   )
 }

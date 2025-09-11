@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authenticateToken } from "../middlewares/authenticateToken";
-import { getAllOrg, getOrg, updateOrganization } from "../controllers/organization/organization.controller";
+import { createOrganization, deleteOrganization, getAllOrg, getOrg, updateOrganization } from "../controllers/organization/organization.controller";
 
 /**
  * Rutas relacionadas con las organozaciones
@@ -29,5 +29,21 @@ organizationRouter.get('/getOrg/:id', authenticateToken, getOrg)
  * Retorna: Boolean
  */
 organizationRouter.put('/update/:id', authenticateToken, updateOrganization);
+
+/**
+ * POST /api/organization/create
+ * Endpoint para registrar una nueva organizacion.
+ * Recibe: { createData }
+ * Retorna: Boolean
+ */
+organizationRouter.post('/create', authenticateToken, createOrganization);
+
+/**
+ * DELETE /api/organization/delete/:id
+ * Eliminar una organizacion específica por ID
+ * Recibe: { id }
+ * Retorna: Boolean
+ */
+organizationRouter.delete('/delete/:id', authenticateToken, deleteOrganization);
 
 export default organizationRouter

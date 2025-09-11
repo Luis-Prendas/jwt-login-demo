@@ -3,8 +3,6 @@ import { type DataBase, UserRole } from "../types/DataBase";
 const now = new Date().toISOString();
 
 export const DB: DataBase = {
-  auditLogs: [],
-
   // =======================
   // Organización
   // =======================
