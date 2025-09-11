@@ -3,7 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useEffect } from 'react';
 
 export function ProtectedRoute() {
-  const { setToken, } = useAuth();
+  const { setToken } = useAuth();
   const cookie = document.cookie.split('; ').find(row => row.startsWith('token='));
 
   if (!cookie) {

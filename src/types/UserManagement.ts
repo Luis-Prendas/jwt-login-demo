@@ -51,18 +51,14 @@ export interface UserDataWithBadges {
   email: string;
   role: 'user' | 'admin' | 'developer' | 'moderator';
   rafflePoints: number;
-  badges: Badge[] | null;
+  badges: TBL_Badge[] | null;
 }
-
-
 
 export interface RegisterData {
   email: string;
   username: string;
   password: string;
 }
-
-
 
 export type LoginResponse = {
   token: string | null
