@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "../hooks/useAuth";
-import { PROTECTED_ACSSES } from "@/utils/constants";
+import { PROTECTED_ACCESS } from "@/utils/constants";
 
 export default function ProtectedAdminRoute() {
   const { userData } = useAuth();
 
-  if (!userData || !PROTECTED_ACSSES.includes(userData.role)) {
+  if (!userData || !PROTECTED_ACCESS.includes(userData.role)) {
     return <Navigate to="/" />;
   }
 

@@ -3,7 +3,7 @@ import { useAuthStore } from "../store/cstorage";
 import type { LoginForm, UserBasicData } from "@/types/UserManagement";
 import { useState } from "react";
 import { decodeToken } from "@/utils/jwt";
-import { gerAllUsersService, getUserBadgesService, getUserService, updateUserService } from "@/services/UserInformatio";
+import { gerAllUsersService, getUserService, updateUserService } from "@/services/UserInformatio";
 
 export function useAuth() {
   const {
@@ -20,10 +20,12 @@ export function useAuth() {
   const login = async (loginForm: LoginForm) => {
     setLoading(true);
     const response = await sessionLogin(loginForm);
-    setToken(response.token);
-    setIsAuthenticated(!!response.token);
-    cookieStore.set({ name: 'token', value: response.token || '', path: '/' });
-    setUserData(decodeToken(response.token!).user);
+    if (response.token) {
+      setToken(response.token);
+      setIsAuthenticated(!!response.token);
+      cookieStore.set({ name: 'token', value: response.token || '', path: '/' });
+      setUserData(decodeToken(response.token!).user);
+    }
     setLoading(false);
     return response;
   }
@@ -36,13 +38,6 @@ export function useAuth() {
     setLoading(false);
   }
 
-  const getAllUsers = async () => {
-    setLoading(true)
-    const response = await gerAllUsersService(token!)
-    setLoading(false)
-    return response
-  }
-
   const getUser = async (id: string) => {
     setLoading(true)
     const response = await getUserService(id, token!)
@@ -50,16 +45,16 @@ export function useAuth() {
     return response
   }
 
-  const updateUser = async (userData: UserBasicData, id: string) => {
+  const getAllUsers = async () => {
     setLoading(true)
-    const response = await updateUserService(userData, token!, id)
+    const response = await gerAllUsersService(token!)
     setLoading(false)
     return response
   }
 
-  const getUserBadges = async (id: string) => {
+  const updateUser = async (userData: UserBasicData, id: string) => {
     setLoading(true)
-    const response = await getUserBadgesService(id, token!)
+    const response = await updateUserService(userData, token!, id)
     setLoading(false)
     return response
   }
@@ -75,6 +70,5 @@ export function useAuth() {
     getAllUsers,
     getUser,
     updateUser,
-    getUserBadges
   };
 }

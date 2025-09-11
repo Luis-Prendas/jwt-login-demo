@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link, useNavigate } from "react-router"
+import { useNavigate } from "react-router"
 import { useAuth } from "@/hooks/useAuth"
 import { toast } from "sonner"
 import { ModeToggle } from "@/components/mode-toggle"
@@ -17,8 +17,9 @@ export default function Login({ className, ...props }: React.ComponentProps<"div
     const form = e.currentTarget;
     const username = form.loginUsername.value;
     const password = form.loginPassword.value;
+    const orgCode = form.loginOrgCode.value;
 
-    const response = await login({ username, password });
+    const response = await login({ username, password, orgCode });
     if (!response.error && response.token) {
       navigate('/dashboard');
     } else {
@@ -66,15 +67,24 @@ export default function Login({ className, ...props }: React.ComponentProps<"div
                   </div>
                   <Input id="loginPassword" name="loginPassword" type="password" required />
                 </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="loginOrgCode">Código de organización</Label>
+                  <Input
+                    name="loginOrgCode"
+                    id="loginOrgCode"
+                    type="text"
+                    required
+                  />
+                </div>
                 <Button type="submit" className="w-full">
                   {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
                 </Button>
-                <div className="text-center text-sm">
+                {/* <div className="text-center text-sm">
                   ¿No tienes una cuenta?{" "}
                   <Link to="/register" className="underline underline-offset-4">
                     Regístrate
                   </Link>
-                </div>
+                </div> */}
               </div>
             </form>
             <div className="bg-muted relative hidden md:block">
@@ -89,10 +99,10 @@ export default function Login({ className, ...props }: React.ComponentProps<"div
             </div>
           </CardContent>
         </Card>
-        {/* <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+        <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
           Al hacer clic en «Continuar», aceptas nuestros <a href="#">Términos de servicio</a>{" "}
           y nuestra <a href="#"> Política de privacidad</a>.
-        </div> */}
+        </div>
       </div>
     </main>
   )

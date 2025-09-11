@@ -14,7 +14,7 @@ export async function sessionLogin(data: LoginForm): Promise<LoginResponse> {
 
     const res: LoginResponse = await response.json();
 
-    if (!response.ok) {
+    if (res.error) {
       throw new Error(res.error!);
     }
 

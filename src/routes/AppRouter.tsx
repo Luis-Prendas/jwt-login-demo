@@ -9,6 +9,7 @@ import { MainLayout } from '../components/MainLayout';
 import ProtectedAdminRoute from '../components/ProtectedAdminRoute';
 import Profile from '@/pages/profile/Profile';
 import { Assistance } from '@/pages/Assistance/Assistance';
+import OrgManagement from '@/pages/OrgManagement/OrgManagement';
 
 export default function AppRouter() {
   return (
@@ -28,6 +29,7 @@ export default function AppRouter() {
             <Route element={<ProtectedAdminRoute />}>
               <Route path="/user-management" element={<UserManagement />} />
               <Route path="/assistance" element={<Assistance />} />
+              <Route path="/organization-management" element={<OrgManagement />} />
             </Route>
           </Route>
         </Route>

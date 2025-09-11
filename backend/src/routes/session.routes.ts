@@ -7,17 +7,17 @@ import { login, register } from '../controllers/session/session.controller';
 const sessionRouter = Router();
 
 /**
- * POST /api/sessions/login
+ * POST /api/session/login
  * Endpoint para iniciar sesión de usuario.
- * Recibe: { username, password }
+ * Recibe: { username, password, orgCode }
  * Retorna: JWT con los datos básicos del usuario
  */
 sessionRouter.post('/login', login);
 
 /**
- * POST /api/sessions/register
+ * POST /api/session/register
  * Endpoint para registrar un nuevo usuario.
- * Recibe: { username, email, password }
+ * Recibe: { Type UserWithPassword }
  * Retorna: JWT con los datos básicos del usuario
  */
 sessionRouter.post('/register', register);

@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { initDB } from '../../db/db';
 import { getLogger } from '../../utils/logger';
 import { UserWithPassword } from '../../types/DataBase';
-import { UserBasicData } from '../session/session';
 
 const logger = getLogger('api-user');
 

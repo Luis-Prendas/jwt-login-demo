@@ -4,7 +4,7 @@ import { UserBasicData } from "../controllers/session/session";
  * Payload que se almacena en el JWT
  */
 export interface JwtUserPayload {
-  user: UserBasicData;
+  user: TBL_user;
   iat?: number;
   exp?: number;
 }

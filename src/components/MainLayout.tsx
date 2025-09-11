@@ -2,11 +2,11 @@ import { Outlet } from 'react-router';
 import { SidebarProvider, SidebarTrigger } from './ui/sidebar';
 import { AppSidebar } from './app-sidebar';
 import { useAuth } from '@/hooks/useAuth';
-import { UserRole } from '@/types/UserManagement';
+import { USER_ROLES } from '@/types/UserManagement';
 
 export function MainLayout() {
   const { userData } = useAuth();
-  const isDeveloper = userData && userData.role === UserRole.DEVELOPER;
+  const isDeveloper = userData && userData.role === USER_ROLES.DEVELOPER;
 
   return (
     <SidebarProvider defaultOpen={false}>
