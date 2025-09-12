@@ -1,21 +1,31 @@
-import { Database } from 'sqlite';
-import { UserWithPassword } from '../../types/DataBase';
+import { Prisma } from '@prisma/client';
+import prisma from '../../prisma/prisma';
+import bcrypt from "bcrypt";
 
-export async function getUserByUsernameAndOrg(
-  db: Database,
-  username: string,
-  orgCode: string
-): Promise<UserWithPassword | undefined> {
-  return db.get<UserWithPassword>(
-    `
-    SELECT us.* 
-    FROM user AS us
-    INNER JOIN organization AS org 
-      ON us.organizationId = org.id
-    WHERE us.username = ?
-      AND org.organizationCode = ?
-      AND us.isDeleted = 0
-    `,
-    [username, orgCode]
-  );
+export async function getUserByUsernameAndOrg(username: string, orgCode: string) {
+  return prisma.user.findFirst({
+    where: {
+      username,
+      isDeleted: false,
+      organization: {
+        organizationCode: orgCode,
+        isDeleted: false
+      }
+    },
+    include: {
+      organization: false,
+    }
+  });
+}
+
+export async function registerUserService(registerData: Prisma.UserCreateInput, newUuid: string) {
+  const SALT_ROUNDS = 10;
+  const hashedPassword = await bcrypt.hash(registerData.password, SALT_ROUNDS);
+  await prisma.user.create({
+    data: {
+      ...registerData,
+      id: newUuid,
+      password: hashedPassword,
+    },
+  });
 }

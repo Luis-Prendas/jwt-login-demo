@@ -7,14 +7,12 @@ const logger = getLogger('Middleware/validateBody');
 export const validateBody =
   (schema: z.ZodTypeAny) =>
     (req: Request, res: Response, next: NextFunction) => {
+      logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
       let validationResult: { success: boolean; data?: any; error?: any } = { success: false };
-
       try {
         logger.info(`Validando req.body.content -> { ${JSON.stringify(req.body.content)} }`);
-
         const parsed = schema.safeParse(req.body.content);
         validationResult = parsed;
-
         if (!parsed.success) {
           logger.info(`req.body.content invalidado -> { ${JSON.stringify(req.body.content)} }`);
           return res.status(400).json({
@@ -22,13 +20,11 @@ export const validateBody =
             details: parsed.error
           });
         }
-
         logger.info(`req.body.content validado -> { ${JSON.stringify(req.body.content)} }`);
         req.body.content = parsed.data;
         next();
-
       } finally {
-        logger.info(`------------ ${req.method} ${req.originalUrl} finalizado ------------`);
+        logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
         logger.info('');
       }
     };

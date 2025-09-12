@@ -14,6 +14,7 @@ export const updateOrgSchema = z.object({
   corporateName: z.string().min(1),
   displayName: z.string().min(1),
   slogan: z.string().optional(),
+  description: z.string().optional(),
 });
 
 const router = Router();
