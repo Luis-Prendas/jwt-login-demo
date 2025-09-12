@@ -6,7 +6,7 @@ import { open, Database } from 'sqlite';
  */
 export async function initDB(): Promise<Database> {
   const db = await open({
-    filename: "./database.sqlite",
+    filename: "./prisma/database.sqlite",
     driver: sqlite3.Database,
   });
 

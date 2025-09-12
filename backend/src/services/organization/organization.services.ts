@@ -1,111 +1,60 @@
-import { Database } from "sqlite";
-import { TBL_Organization, TBL_User } from "../../types/DataBase";
-import { CreateData, UpdateOrg } from "../../controllers/organization/organization.controller";
-import crypto from "crypto";
-import { v4 as uuidv4 } from "uuid";
+import prisma from '../../prisma/prisma';
 
-// ============ GET ALL ============
-export async function getAllOrganizationService(
-  db: Database
-): Promise<TBL_Organization[] | undefined> {
-  return db.all<TBL_Organization[]>(
-    `SELECT * FROM organization WHERE isDeleted = 0`
-  );
+export async function getAllOrganizationService() {
+  return prisma.organization.findMany({
+    where: { isDeleted: false },
+  });
 }
 
-// ============ GET ONE ============
-export async function getOrganizationService(
-  db: Database,
-  orgId: string
-): Promise<TBL_Organization | undefined> {
-  return db.get<TBL_Organization>(
-    `SELECT * FROM organization WHERE id = ? AND isDeleted = 0`,
-    [orgId]
-  );
+export async function getOrganizationService(orgId: string) {
+  return prisma.organization.findUnique({
+    where: { id: orgId, isDeleted: false },
+  });
 }
 
-// ============ UPDATE ============
-export async function updateOrganizationService(
-  db: Database,
-  dataUpdate: UpdateOrg,
-  orgId: string,
-  userRequest: TBL_User
-): Promise<boolean> {
-  const response = await db.run(
-    `
-    UPDATE organization 
-    SET corporateName = ?, 
-        displayName = ?, 
-        slogan = ?, 
-        updatedAt = ?, 
-        updatedBy = ?
-    WHERE id = ? AND isDeleted = 0
-    `,
-    [
-      dataUpdate.corporateName,
-      dataUpdate.displayName,
-      dataUpdate.slogan ?? null,
-      new Date().toISOString(),
-      userRequest.id,
-      orgId,
-    ]
-  );
-
-  return response.changes! > 0;
-}
-
-// ============ CREATE ============
-export async function createOrganizationService(
-  db: Database,
-  createData: CreateData,
-  userRequest: TBL_User
-) {
-  const newUuid = uuidv4();
-  const now = new Date().toISOString();
-  const organizationCode = crypto.randomInt(1000, 10000).toString();
-
-  await db.run(
-    `
-    INSERT INTO organization 
-    (id, corporateName, displayName, organizationCode, logoUrl, slogan, description, createdAt, createdBy, updatedAt, updatedBy, deletedAt, deletedBy, isDeleted)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
-    `,
-    [
-      newUuid,
-      createData.corporateName,
-      createData.displayName,
+export async function createOrganizationService(createData: {
+  corporateName: string,
+  displayName: string,
+  slogan?: string,
+  description?: string
+}, userRequest: { id: string }) {
+  const organizationCode = Math.floor(Math.random() * 9000 + 1000).toString();
+  const org = await prisma.organization.create({
+    data: {
+      corporateName: createData.corporateName,
+      displayName: createData.displayName,
       organizationCode,
-      null, // logoUrl opcional
-      createData.slogan ?? null,
-      createData.description ?? null,
-      now,
-      userRequest.id,
-      now,
-      userRequest.id,
-      null,
-      null,
-    ]
-  );
-
-  return newUuid; // 👉 útil para devolver el ID creado
+      logoUrl: null,
+      slogan: createData.slogan ?? null,
+      description: createData.description ?? null,
+      createdBy: userRequest.id,
+      updatedBy: userRequest.id,
+    },
+  });
+  return org.id;
 }
 
-// ============ DELETE (soft delete) ============
-export async function deleteOrganizationService(
-  db: Database,
-  orgId: string,
-  userRequest: TBL_User
-): Promise<boolean> {
-  const response = await db.run(
-    `
-    UPDATE organization 
-    SET isDeleted = 1,
-        deletedAt = ?,
-        deletedBy = ?
-    WHERE id = ?
-    `,
-    [new Date().toISOString(), userRequest.id, orgId]
-  );
+export async function updateOrganizationService(orgId: string, dataUpdate: { corporateName: string, displayName: string, slogan?: string }, userRequest: { id: string }) {
+  const updated = await prisma.organization.updateMany({
+    where: { id: orgId, isDeleted: false },
+    data: {
+      corporateName: dataUpdate.corporateName,
+      displayName: dataUpdate.displayName,
+      slogan: dataUpdate.slogan ?? null,
+      updatedBy: userRequest.id
+    }
+  });
+  return updated.count > 0;
+}
 
-  return response.changes! > 0;
+export async function deleteOrganizationService(orgId: string, userRequest: { id: string }) {
+  const updated = await prisma.organization.updateMany({
+    where: { id: orgId, isDeleted: false },
+    data: {
+      isDeleted: true,
+      deletedAt: new Date(),
+      deletedBy: userRequest.id,
+    }
+  });
+  return updated.count > 0;
 }

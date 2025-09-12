@@ -1,49 +1,27 @@
-import { Router } from "express";
-import { authenticateToken } from "../middlewares/authenticateToken";
-import { createOrganization, deleteOrganization, getAllOrg, getOrg, updateOrganization } from "../controllers/organization/organization.controller";
+import { Router } from 'express';
+import { validateBody } from '../middlewares/validate';
+import { createOrganization, deleteOrganization, getAllOrg, getOrg, updateOrganization } from '../controllers/organization/organization.controller';
+import { z } from 'zod';
+import { authenticateToken } from '../middlewares/authenticateToken';
 
-/**
- * Rutas relacionadas con las organozaciones
- */
-const organizationRouter = Router()
+export const createOrgSchema = z.object({
+  corporateName: z.string().min(1),
+  displayName: z.string().min(1),
+  slogan: z.string().optional(),
+  description: z.string().optional(),
+});
+export const updateOrgSchema = z.object({
+  corporateName: z.string().min(1),
+  displayName: z.string().min(1),
+  slogan: z.string().optional(),
+});
 
-/**
- * GET /api/organization/getAllOrg
- * Obtener listado de todas las organizaciones.
- * Retorna: TBL_Organization[]
- */
-organizationRouter.get('/getAllOrg', authenticateToken, getAllOrg)
+const router = Router();
 
-/** 
- * GET /api/organization/getOrg/:id
- * Obtener información de una organizacion específica por ID
- * Recibe: { id }
- * Retorna: TBL_Organization
- */
-organizationRouter.get('/getOrg/:id', authenticateToken, getOrg)
+router.get('/getAllOrg', authenticateToken, getAllOrg);
+router.get('/getOrg/:id', authenticateToken, getOrg);
+router.put('/update/:id', authenticateToken, validateBody(updateOrgSchema), updateOrganization);
+router.post('/create', authenticateToken, validateBody(createOrgSchema), createOrganization);
+router.delete('/delete/:id', authenticateToken, deleteOrganization);
 
-/**
- * PUT /api/organization/update/:id
- * Actualizar información de organizacion
- * Recibe: { id, dataUpdate }
- * Retorna: Boolean
- */
-organizationRouter.put('/update/:id', authenticateToken, updateOrganization);
-
-/**
- * POST /api/organization/create
- * Endpoint para registrar una nueva organizacion.
- * Recibe: { createData }
- * Retorna: Boolean
- */
-organizationRouter.post('/create', authenticateToken, createOrganization);
-
-/**
- * DELETE /api/organization/delete/:id
- * Eliminar una organizacion específica por ID
- * Recibe: { id }
- * Retorna: Boolean
- */
-organizationRouter.delete('/delete/:id', authenticateToken, deleteOrganization);
-
-export default organizationRouter
+export default router;
