@@ -24,11 +24,11 @@ export type UserRole =
   | 'developer';
 
 export const USER_ROLES = {
-  USER: 'user',
-  MODERATOR: 'moderator',
-  ADMIN: 'admin',
-  SUPERADMIN: 'superadmin',
-  DEVELOPER: 'developer'
+  USER: 'USER',
+  MODERATOR: 'MODERATOR',
+  ADMIN: 'ADMIN',
+  SUPERADMIN: 'SUPERADMIN',
+  DEVELOPER: 'DEVELOPER'
 }
 
 

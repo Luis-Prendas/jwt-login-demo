@@ -13,7 +13,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { useAuth } from "@/hooks/useAuth"
 import { Link, useNavigate } from "react-router"
-import { ALL_ACCESS, PROTECTED_ACCESS, DEVELOPER_ACCESS } from "@/utils/constants"
+import { USER_ROLES } from "@/types/UserManagement"
 
 const items = [
   {
@@ -21,21 +21,21 @@ const items = [
     title: "Dashboard",
     url: "/dashboard",
     icon: LayoutDashboard,
-    access: ALL_ACCESS
+    access: [USER_ROLES.USER, USER_ROLES.MODERATOR, USER_ROLES.ADMIN, USER_ROLES.SUPERADMIN, USER_ROLES.DEVELOPER]
   },
   {
     id: '2',
     title: "Gestión de organizaciones",
     url: "/organization-management",
     icon: Building,
-    access: DEVELOPER_ACCESS
+    access: [USER_ROLES.DEVELOPER]
   },
   {
     id: '3',
     title: "Gestión de usuarios",
     url: "/user-management",
     icon: Settings,
-    access: PROTECTED_ACCESS
+    access: [USER_ROLES.DEVELOPER]
   }
 ]
 
