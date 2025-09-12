@@ -18,7 +18,7 @@ export async function getOrgService(orgId: string, token: string): Promise<TBL_O
     }
 
     const res = await response.json()
-    return res.org
+    return res.data
   } catch (error) {
     console.error(`❌ Error en getOrgService: ${error}`);
     return null;
