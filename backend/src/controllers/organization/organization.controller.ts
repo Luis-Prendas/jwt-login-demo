@@ -87,6 +87,7 @@ export interface CreateData {
   corporateName: string
   displayName: string
   slogan: string
+  description: string
 }
 export const createOrganization = async (req: Request, res: Response): Promise<Response> => {
   try {
