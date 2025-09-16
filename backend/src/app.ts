@@ -19,9 +19,14 @@ app.get('/', (_req: Request, res: Response) => {
 
 // Rutas
 app.use('/api/session', sessionRouter);
+
+// Rutas Protegidas
 app.use('/api/organization', organizationRouter)
 app.use('/api/department', departmentRouter)
 app.use('/api/position', positionRouter)
 app.use('/api/user', userRouter);
+// app.use('/api/user-position', userPositionRouter)
+// app.use('/api/schedule', scheduleRouter)
+// app.use('/api/attendance', attendanceRouter)
 
 export default app;

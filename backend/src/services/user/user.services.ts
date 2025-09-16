@@ -58,3 +58,19 @@ export async function deleteUserService(id: string, userRequest: { id: string })
     data: { isDeleted: true, deletedBy: userRequest.id, deletedAt: new Date() },
   });
 }
+
+export async function getUserByUsernameAndOrgCodeService(username: string, orgCode: string) {
+  return prisma.user.findFirst({
+    where: {
+      username,
+      isDeleted: false,
+      organization: {
+        organizationCode: orgCode,
+        isDeleted: false
+      }
+    },
+    include: {
+      organization: false,
+    }
+  });
+}
