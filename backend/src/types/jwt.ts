@@ -1,5 +1,4 @@
 import { Gender, UserRole } from "@prisma/client";
-import { UserBasicData } from "../controllers/session/session";
 
 /**
  * Payload que se almacena en el JWT
