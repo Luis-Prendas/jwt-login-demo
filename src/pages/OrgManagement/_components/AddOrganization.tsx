@@ -70,3 +70,22 @@ export function AddOrganization() {
     </Dialog>
   );
 }
+
+
+{/* <AlertDialog>
+  <AlertDialogTrigger asChild>
+    <Button variant="outline"><Trash /></Button>
+  </AlertDialogTrigger>
+  <AlertDialogContent className="p-4">
+    <AlertDialogHeader>
+      <AlertDialogTitle>¿Estás completamente seguro?</AlertDialogTitle>
+      <AlertDialogDescription>
+        Esta acción no se puede deshacer. Eliminará permanentemente los datos de nuestros servidores.
+      </AlertDialogDescription>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+      <AlertDialogAction onClick={handleDelete}>Conninuar</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog> */}

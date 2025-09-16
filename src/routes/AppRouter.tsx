@@ -9,7 +9,7 @@ import { MainLayout } from '../components/MainLayout';
 import ProtectedAdminRoute from '../components/ProtectedAdminRoute';
 import Profile from '@/pages/profile/Profile';
 import { Assistance } from '@/pages/Assistance/Assistance';
-import OrgManagement from '@/pages/OrgManagement/OrgManagement';
+import OrgManagement from '@/pages/OrgManagement/Page';
 
 export default function AppRouter() {
   return (
