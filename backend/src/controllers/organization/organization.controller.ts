@@ -13,13 +13,12 @@ export const getAllOrg = asyncHandler(async (req: Request, res: Response) => {
 
   const orgs = await getAllOrganizationService();
   if (!orgs || orgs.length === 0) {
-    logger.warning(`Orgnizaciones no encontradas`);
+    logger.warn(`Orgnizaciones no encontradas\n`);
     throw new ApiError(404, 'No organizations found');
   }
 
   logger.info(`Orgnizaciones encontradas -> ${JSON.stringify(orgs)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
-  logger.info('');
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: orgs });
 });
 
@@ -29,19 +28,18 @@ export const getOrg = asyncHandler(async (req: Request, res: Response) => {
 
   const id = req.params.id;
   if (!id) {
-    logger.warning(`ID no proporcionado`);
+    logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID required');
   }
 
   const org = await getOrganizationService(id);
   if (!org) {
-    logger.warning(`Orgnizacion no encontrada`);
+    logger.warn(`Orgnizacion no encontrada\n`);
     throw new ApiError(404, 'Organization not found');
   }
 
   logger.info(`Orgnizacion encontrada -> ${JSON.stringify(org)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
-  logger.info('');
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: org });
 });
 
@@ -53,13 +51,12 @@ export const createOrganization = asyncHandler(async (req: Request, res: Respons
   const createData: CreateOrganizationDto = req.body.content;
   const id = await createOrganizationService(createData, userRequest);
   if (!id) {
-    logger.warning(`Orgnizacion no creada`);
+    logger.warn(`Orgnizacion no creada\n`);
     throw new ApiError(404, 'Organization not created');
   }
 
   logger.info(`Orgnizacion creada -> ${JSON.stringify(id)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
-  logger.info('');
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: id });
 });
 
@@ -71,19 +68,18 @@ export const updateOrganization = asyncHandler(async (req: Request, res: Respons
   const userRequest = req.body.userRequest;
   const id = req.params.id;
   if (!id) {
-    logger.warning(`ID no proporcionado`);
+    logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID required');
   }
 
   const ok = await updateOrganizationService(id, dataUpdate, userRequest);
   if (!ok) {
-    logger.warning(`Organización no actualizada`);
+    logger.warn(`Organización no actualizada\n`);
     throw new ApiError(404, 'Organization not updated');
   }
 
   logger.info(`Organización actualizada -> ${JSON.stringify(id)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
-  logger.info('');
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ success: true });
 });
 
@@ -93,18 +89,18 @@ export const deleteOrganization = asyncHandler(async (req: Request, res: Respons
 
   const id = req.params.id;
   if (!id) {
-    logger.warning(`ID no proporcionado`);
+    logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID required');
   }
 
   const userRequest = req.body.userRequest;
   const ok = await deleteOrganizationService(id, userRequest);
   if (!ok) {
-    logger.warning(`Organizacion no eliminada`);
+    logger.warn(`Organizacion no eliminada\n`);
     throw new ApiError(404, 'Organization not found');
   }
 
   logger.info(`Orgnizacion eliminada -> ${JSON.stringify(id)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ success: true });
 });

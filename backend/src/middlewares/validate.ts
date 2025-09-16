@@ -25,7 +25,6 @@ export const validateBody =
         req.body.content = parsed.data;
         next();
       } finally {
-        logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
-        logger.info('');
+        logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
       }
     };

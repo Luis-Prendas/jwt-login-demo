@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import { getLogger } from "../../utils/logger";
 import asyncHandler from 'express-async-handler';
 import { createDepartmentService, deleteDepartmentService, getAllDepartmentsService, getDepartmentService, updateDepartmentService } from "../../services/department/department.services";
-import { TBL_Department, TBL_User } from "../../types/DataBase";
 import { ApiError } from "../../utils/ApiError";
 import { CreateDepartmentDto, UpdateDepartmentDto } from "../../routes/department.routes";
+import { PayloadJWT } from "../../types/jwt";
 
 const logger = getLogger("api/department");
 
@@ -61,7 +61,7 @@ export const createDepartment = asyncHandler(async (req: Request, res: Response)
   }
 
   const createData: CreateDepartmentDto = req.body.content;
-  const userRequest: TBL_User = req.body.userRequest;
+  const userRequest: PayloadJWT = req.body.userRequest;
   if (!createData?.name) {
     logger.warn(`Datos no proporcionados\n`);
     throw new ApiError(400, 'Datos no proporcionados');
@@ -89,7 +89,7 @@ export const updateDepartment = asyncHandler(async (req: Request, res: Response)
   }
 
   const dataUpdate: UpdateDepartmentDto = req.body.content;
-  const userRequest: TBL_User = req.body.userRequest;
+  const userRequest: PayloadJWT = req.body.userRequest;
   if (!dataUpdate?.name) {
     logger.warn(`Datos no proporcionados\n`);
     throw new ApiError(400, 'Datos no proporcionados');
@@ -114,7 +114,7 @@ export const deleteDepartment = asyncHandler(async (req: Request, res: Response)
     logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID no proporcionado');
   }
-  const userRequest: TBL_User = req.body.userRequest;
+  const userRequest: PayloadJWT = req.body.userRequest;
   const department = await deleteDepartmentService(id, userRequest);
   if (department.count === 0) {
     logger.warn(`No se pudo eliminar el departamento -> { ${id} }\n`);

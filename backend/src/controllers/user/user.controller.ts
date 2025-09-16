@@ -7,6 +7,7 @@ import { CreateUserDto, UpdateUserDto } from '../../routes/user.routes';
 
 const logger = getLogger('api-user');
 
+// GET ONE
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
   logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
   const id = req.params.id;
@@ -24,23 +25,25 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
   res.json({ user });
 });
 
+// GET ALL
 export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
   logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
   const orgId = req.params.orgId;
   if (!orgId) {
-    logger.warn('ID de organización no proporcionado');
+    logger.warn('ID de organización no proporcionado\n');
     throw new ApiError(400, 'ID de organización no proporcionado');
   }
   const users = await getAllUserService(orgId);
   if (!users || users.length === 0) {
-    logger.warn('No se encontraron usuarios');
+    logger.warn('No se encontraron usuarios\n');
     throw new ApiError(404, 'No se encontraron usuarios');
   }
   logger.info(`Usuarios encontrados: ${JSON.stringify(users)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ users });
 });
 
+// CREATE
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
   logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
   const id = req.params.id;
@@ -60,6 +63,7 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
   res.json({ data: user });
 });
 
+// UPDATE
 export const updateUser = asyncHandler(async (req: Request, res: Response) => {
   logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
   const id = req.params.id;
@@ -79,6 +83,7 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
   res.json({ data: user });
 });
 
+// DELETE
 export const userDelete = asyncHandler(async (req: Request, res: Response) => {
   logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
   const id = req.params.id;

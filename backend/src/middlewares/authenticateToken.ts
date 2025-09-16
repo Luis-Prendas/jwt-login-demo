@@ -29,8 +29,7 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
     logger.error('Error al verificar el token');
     return res.status(401).json({ error: 'Token inválido o expirado' });
   } finally {
-    logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
-    logger.info('');
+    logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   }
 }
 
