@@ -56,7 +56,7 @@ export const createUserSchema = z.object({
   phone: z.string().optional(),
   gender: GenderSchema,
   birthDate: z.coerce.date().optional(),
-  indentificationNumber: z.string().optional(),
+  identification: z.string().optional(),
   address: z.string().optional(),
   role: UserRoleSchema,
   organizationId: z.string().uuid(),

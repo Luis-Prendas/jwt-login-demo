@@ -40,7 +40,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     phone: user.phone,
     gender: user.gender,
     birthDate: user.birthDate,
-    indentificationNumber: user.indentificationNumber,
+    identificationNumber: user.identificationNumber,
     address: user.address,
     role: user.role,
     organizationId: user.organizationId,

@@ -14,7 +14,7 @@ export interface PayloadJWT {
   phone: string | null
   gender: Gender
   birthDate: Date | null
-  indentificationNumber: string | null
+  identificationNumber: string | null
   address: string | null
   role: UserRole
   organizationId: string

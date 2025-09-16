@@ -92,7 +92,7 @@ export interface TBL_User extends DescriptiveData {
   phone: string | null;
   gender: "F" | "M" | "N"; // Femenino, Masculino, Neutro
   birthDate: string | null; // ISO Date string
-  indentificationNumber: string | null; // Número de identificación oficial
+  identificationNumber: string | null; // Número de identificación oficial
   address: string | null;
   role: UserRole;
   organizationId: string; // FK -> Organization.id
