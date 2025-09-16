@@ -4,6 +4,7 @@ import sessionRouter from './routes/session.routes';
 import userRouter from './routes/user.routes';
 import organizationRouter from './routes/organization.routes';
 import departmentRouter from './routes/department.routes';
+import positionRouter from './routes/position.routes';
 
 const app = express();
 
@@ -18,8 +19,9 @@ app.get('/', (_req: Request, res: Response) => {
 
 // Rutas
 app.use('/api/session', sessionRouter);
-app.use('/api/user', userRouter);
 app.use('/api/organization', organizationRouter)
 app.use('/api/department', departmentRouter)
+app.use('/api/position', positionRouter)
+app.use('/api/user', userRouter);
 
 export default app;

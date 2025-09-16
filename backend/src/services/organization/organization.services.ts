@@ -1,4 +1,5 @@
 import prisma from '../../prisma/prisma';
+import { CreateOrganizationDto, UpdateOrganizationDto } from '../../routes/organization.routes';
 
 export async function getAllOrganizationService() {
   return prisma.organization.findMany({
@@ -12,43 +13,33 @@ export async function getOrganizationService(orgId: string) {
   });
 }
 
-export async function createOrganizationService(createData: {
-  corporateName: string,
-  displayName: string,
-  slogan?: string,
-  description?: string
-}, userRequest: { id: string }) {
+export async function createOrganizationService(createData: CreateOrganizationDto, userRequest: { id: string }) {
   const organizationCode = Math.floor(Math.random() * 9000 + 1000).toString();
-  const org = await prisma.organization.create({
+  return await prisma.organization.create({
     data: {
-      corporateName: createData.corporateName,
-      displayName: createData.displayName,
-      organizationCode,
-      logoUrl: null,
-      slogan: createData.slogan ?? null,
-      description: createData.description ?? null,
+      ...createData,
+      createdAt: new Date(),
       createdBy: userRequest.id,
+      updatedAt: new Date(),
       updatedBy: userRequest.id,
+      organizationCode,
     },
   });
-  return org.id;
 }
 
-export async function updateOrganizationService(orgId: string, dataUpdate: { corporateName: string, displayName: string, slogan?: string }, userRequest: { id: string }) {
-  const updated = await prisma.organization.updateMany({
+export async function updateOrganizationService(orgId: string, dataUpdate: UpdateOrganizationDto, userRequest: { id: string }) {
+  return await prisma.organization.updateMany({
     where: { id: orgId, isDeleted: false },
     data: {
-      corporateName: dataUpdate.corporateName,
-      displayName: dataUpdate.displayName,
-      slogan: dataUpdate.slogan ?? null,
-      updatedBy: userRequest.id
+      ...dataUpdate,
+      updatedAt: new Date(),
+      updatedBy: userRequest.id,
     }
   });
-  return updated.count > 0;
 }
 
 export async function deleteOrganizationService(orgId: string, userRequest: { id: string }) {
-  const updated = await prisma.organization.updateMany({
+  return await prisma.organization.updateMany({
     where: { id: orgId, isDeleted: false },
     data: {
       isDeleted: true,
@@ -56,5 +47,4 @@ export async function deleteOrganizationService(orgId: string, userRequest: { id
       deletedBy: userRequest.id,
     }
   });
-  return updated.count > 0;
 }

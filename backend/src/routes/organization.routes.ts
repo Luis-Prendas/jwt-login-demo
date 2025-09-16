@@ -3,26 +3,17 @@ import { validateBody } from '../middlewares/validate';
 import { createOrganization, deleteOrganization, getAllOrg, getOrg, updateOrganization } from '../controllers/organization/organization.controller';
 import { z } from 'zod';
 import { authenticateToken } from '../middlewares/authenticateToken';
+import { createOrganizationSchema, updateOrganizationSchema } from '../zod-schemas';
 
-export const createOrgSchema = z.object({
-  corporateName: z.string().min(1),
-  displayName: z.string().min(1),
-  slogan: z.string().optional(),
-  description: z.string().optional(),
-});
-export const updateOrgSchema = z.object({
-  corporateName: z.string().min(1),
-  displayName: z.string().min(1),
-  slogan: z.string().optional(),
-  description: z.string().optional(),
-});
+export type UpdateOrganizationDto = z.infer<typeof updateOrganizationSchema>;
+export type CreateOrganizationDto = z.infer<typeof createOrganizationSchema>
 
 const router = Router();
 
-router.get('/getAllOrg', authenticateToken, getAllOrg);
-router.get('/getOrg/:id', authenticateToken, getOrg);
-router.put('/update/:id', authenticateToken, validateBody(updateOrgSchema), updateOrganization);
-router.post('/create', authenticateToken, validateBody(createOrgSchema), createOrganization);
+router.get('/getAll', authenticateToken, getAllOrg);
+router.get('/get/:id', authenticateToken, getOrg);
+router.put('/update/:id', authenticateToken, validateBody(updateOrganizationSchema), updateOrganization);
+router.post('/create', authenticateToken, validateBody(createOrganizationSchema), createOrganization);
 router.delete('/delete/:id', authenticateToken, deleteOrganization);
 
 export default router;

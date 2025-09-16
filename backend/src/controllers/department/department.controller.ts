@@ -1,198 +1,115 @@
 import { Request, Response } from "express";
 import { getLogger } from "../../utils/logger";
-import { initDB } from "../../db/db";
-import {
-  createDepartmentService,
-  deleteDepartmentService,
-  getAllDepartmentsService,
-  getDepartmentService,
-  updateDepartmentService,
-} from "../../services/department/department.services";
+import asyncHandler from 'express-async-handler';
+import { createDepartmentService, deleteDepartmentService, getAllDepartmentsService, getDepartmentService, updateDepartmentService } from "../../services/department/department.services";
 import { TBL_Department, TBL_User } from "../../types/DataBase";
+import { ApiError } from "../../utils/ApiError";
 
-const logger = getLogger("api-department");
+const logger = getLogger("api/department");
 
-export const getAllDepartments = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
-  try {
-    const orgId = req.params.orgId;
-    if (!orgId) {
-      logger.warn("ID de la organización no proporcionado en la solicitud");
-      return res
-        .status(400)
-        .json({ error: "ID de la organización no proporcionado" });
-    }
-    logger.info(`Obteniendo departamentos de la organización -> { ${orgId} }`);
-    const db = await initDB();
-    const departments = await getAllDepartmentsService(db, orgId);
-    if (!departments || departments.length === 0) {
-      logger.warn(`No se encontraron departamentos para la organización -> { ${orgId} }`);
-      return res
-        .status(404)
-        .json({ error: "No se encontraron departamentos" });
-    }
-    logger.info(
-      `Departamentos encontrados para la organización -> { ${orgId} }`
-    );
-    return res.json({ data: departments });
-  } catch (err) {
-    logger.error("[getAllDepartments Error]:", err);
-    return res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    logger.info(
-      `------------ ${req.method} ${req.originalUrl} finalizado ------------`
-    );
-    logger.info("");
+// GET ALL
+export const getAllDepartments = asyncHandler(async (req: Request, res: Response) => {
+  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
+  const orgId = req.params.orgId;
+  if (!orgId) {
+    logger.warn(`ID no proporcionado\n`);
+    throw new ApiError(400, 'ID no proporcionado');
   }
-};
 
-export const getDepartment = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
-  try {
-    const id = req.params.id;
-    if (!id) {
-      logger.warn("ID del departamento no proporcionado en la solicitud");
-      return res
-        .status(400)
-        .json({ error: "ID del departamento no proporcionado" });
-    }
-    logger.info(`Obteniendo departamento -> { ${id} }`);
-    const db = await initDB();
-    const department = await getDepartmentService(db, id);
-    if (!department) {
-      logger.warn(`Departamento no encontrado -> { ${id} }`);
-      return res.status(404).json({ error: "Departamento no encontrado" });
-    }
-    logger.info(`Departamento encontrado -> { ${id} }`);
-    return res.json({ department });
-  } catch (err) {
-    logger.error("[getDepartment Error]:", err);
-    return res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    logger.info(
-      `------------ ${req.method} ${req.originalUrl} finalizado ------------`
-    );
-    logger.info("");
+  const departments = await getAllDepartmentsService(orgId);
+  if (!departments || departments.length === 0) {
+    logger.warn(`No se encontraron departamentos -> ${orgId}\n`);
+    throw new ApiError(400, 'No se encontraron departamentos');
   }
-};
 
-export const updateDepartment = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
-  try {
-    const id = req.params.id;
-    const dataUpdate: Pick<TBL_Department, "name" | "description"> = req.body.content;
-    const userRequest: TBL_User = req.body.userRequest;
-    if (!id || !dataUpdate?.name) {
-      logger.warn(
-        `ID de departamento o datos no proporcionados -> { ${id} | ${dataUpdate?.name ?? "null"} }`
-      );
-      return res
-        .status(400)
-        .json({ error: "ID de departamento o datos no proporcionados" });
-    }
-    logger.info(
-      `Actualizando departamento -> { ${id} | ${dataUpdate.name} }`
-    );
-    const db = await initDB();
-    const result = await updateDepartmentService(db, id, dataUpdate, userRequest);
-    if (!result) {
-      logger.warn(`No se pudo actualizar el departamento -> { ${id} }`);
-      return res
-        .status(404)
-        .json({ error: "No se pudo actualizar el departamento" });
-    }
-    logger.info(`Departamento actualizado con éxito -> { ${id} }`);
-    return res.json({ success: true });
-  } catch (err) {
-    logger.error("[updateDepartment Error]:", err);
-    return res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    logger.info(
-      `------------ ${req.method} ${req.originalUrl} finalizado ------------`
-    );
-    logger.info("");
-  }
-};
+  logger.info(`Departamentos encontrados -> ${JSON.stringify(departments)}`);
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
+  res.json({ data: departments });
+});
 
-export const createDepartment = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
-  try {
-    const orgId = req.params.orgId;
-    const userRequest: TBL_User = req.body.userRequest;
-    const createData: Pick<TBL_Department, "name" | "description"> = req.body.content;
-    if (!orgId || !createData?.name) {
-      logger.warn(
-        `Datos del departamento no proporcionados -> { ${orgId} | ${createData?.name ?? "null"} }`
-      );
-      return res
-        .status(400)
-        .json({ error: "Datos del departamento no proporcionados" });
-    }
-    logger.info(
-      `Creando departamento -> { ${createData.name} | orgId: ${orgId} }`
-    );
-    const db = await initDB();
-    const result = await createDepartmentService(db, orgId, createData, userRequest);
-    if (!result) {
-      logger.warn(
-        `No se pudo crear el departamento -> { ${createData.name} | orgId: ${orgId} }`
-      );
-      return res
-        .status(404)
-        .json({ error: "No se pudo crear el departamento" });
-    }
-    logger.info(
-      `Departamento creado con éxito -> { ${createData.name} | orgId: ${orgId} }`
-    );
-    return res.json({ departmentId: result });
-  } catch (err) {
-    logger.error("[createDepartment Error]:", err);
-    return res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    logger.info(
-      `------------ ${req.method} ${req.originalUrl} finalizado ------------`
-    );
-    logger.info("");
+// GET ONE
+export const getDepartment = asyncHandler(async (req: Request, res: Response) => {
+  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
+  const id = req.params.id;
+  if (!id) {
+    logger.warn(`ID no proporcionado\n`);
+    throw new ApiError(400, 'ID no proporcionado');
   }
-};
 
-export const deleteDepartment = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
-  try {
-    const userRequest: TBL_User = req.body.userRequest;
-    const id = req.params.id;
-    if (!id) {
-      logger.warn("ID del departamento no proporcionado en la solicitud");
-      return res
-        .status(400)
-        .json({ error: "ID del departamento no proporcionado" });
-    }
-    logger.info(`Eliminando departamento -> { ${id} }`);
-    const db = await initDB();
-    const result = await deleteDepartmentService(db, id, userRequest);
-    if (!result) {
-      logger.warn(`Departamento no encontrado -> { ${id} }`);
-      return res.status(404).json({ error: "Departamento no encontrado" });
-    }
-    logger.info(`Departamento eliminado -> { ${id} }`);
-    return res.json({ success: true });
-  } catch (err) {
-    logger.error("[deleteDepartment Error]:", err);
-    return res.status(500).json({ error: "Error interno del servidor" });
-  } finally {
-    logger.info(
-      `------------ ${req.method} ${req.originalUrl} finalizado ------------`
-    );
-    logger.info("");
+  const department = await getDepartmentService(id);
+  if (!department) {
+    logger.warn(`No se encontro el departamento -> ${id}\n`);
+    throw new ApiError(400, 'No se encontro el departamento');
   }
-};
+
+  logger.info(`Departamento encontrado -> ${JSON.stringify(department)}`);
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
+  res.json({ data: department });
+});
+
+// CREATE
+export const createDepartment = asyncHandler(async (req: Request, res: Response) => {
+  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
+  const orgId = req.params.orgId;
+  if (!orgId) {
+    logger.warn(`ID no proporcionado\n`);
+    throw new ApiError(400, 'ID no proporcionado');
+  }
+  const createData: Pick<TBL_Department, "name" | "description"> = req.body.content;
+  const userRequest: TBL_User = req.body.userRequest;
+  if (!createData?.name) {
+    logger.warn(`Datos no proporcionados\n`);
+    throw new ApiError(400, 'Datos no proporcionados');
+  }
+  const department = await createDepartmentService(orgId, createData, userRequest);
+  if (!department) {
+    logger.warn(`No se pudo crear el departamento -> ${orgId}\n`);
+    throw new ApiError(400, 'No se pudo crear el departamento');
+  }
+  logger.info(`Departamento creado con éxito -> ${JSON.stringify(department)}`);
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
+  res.json({ data: department });
+});
+
+// UPDATE
+export const updateDepartment = asyncHandler(async (req: Request, res: Response) => {
+  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
+  const id = req.params.id;
+  if (!id) {
+    logger.warn(`ID no proporcionado\n`);
+    throw new ApiError(400, 'ID no proporcionado');
+  }
+  const dataUpdate: Pick<TBL_Department, "name" | "description"> = req.body.content;
+  const userRequest: TBL_User = req.body.userRequest;
+  if (!dataUpdate?.name) {
+    logger.warn(`Datos no proporcionados\n`);
+    throw new ApiError(400, 'Datos no proporcionados');
+  }
+  const department = await updateDepartmentService(id, dataUpdate, userRequest);
+  if (!department) {
+    logger.warn(`No se pudo actualizar el departamento -> { ${id} }\n`);
+    throw new ApiError(400, 'No se pudo actualizar el departamento');
+  }
+  logger.info(`Departamento actualizado con éxito -> { ${id} }`);
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
+  res.json({ data: department });
+});
+
+// DELETE
+export const deleteDepartment = asyncHandler(async (req: Request, res: Response) => {
+  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
+  const id = req.params.id;
+  if (!id) {
+    logger.warn(`ID no proporcionado\n`);
+    throw new ApiError(400, 'ID no proporcionado');
+  }
+  const userRequest: TBL_User = req.body.userRequest;
+  const department = await deleteDepartmentService(id, userRequest);
+  if (department.count === 0) {
+    logger.warn(`No se pudo eliminar el departamento -> { ${id} }\n`);
+    throw new ApiError(400, 'No se pudo eliminar el departamento');
+  }
+  logger.info(`Departamento eliminado con éxito -> { ${id} }`);
+  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
+  res.json({ data: department });
+});

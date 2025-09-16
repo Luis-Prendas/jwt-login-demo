@@ -1,104 +1,63 @@
-import { Database } from "sqlite";
 import { TBL_Department, TBL_User } from "../../types/DataBase";
 import { v4 as uuidv4 } from "uuid";
+import prisma from "../../prisma/prisma";
 
-// ============ GET ALL ============
-export async function getAllDepartmentsService(
-  db: Database,
-  orgId: string
-): Promise<TBL_Department[] | undefined> {
-  return db.all<TBL_Department[]>(
-    `SELECT * FROM department WHERE organizationId = ? AND isDeleted = 0`,
-    [orgId]
-  );
+export async function getAllDepartmentsService(orgId: string) {
+  return prisma.department.findMany({
+    where: {
+      isDeleted: false,
+      organization: {
+        id: orgId,
+        isDeleted: false
+      }
+    },
+    include: {
+      organization: false
+    }
+  });
 }
 
-// ============ GET ONE ============
-export async function getDepartmentService(
-  db: Database,
-  deptId: string
-): Promise<TBL_Department | undefined> {
-  return db.get<TBL_Department>(
-    `SELECT * FROM department WHERE id = ? AND isDeleted = 0`,
-    [deptId]
-  );
+export async function getDepartmentService(deptId: string) {
+  return prisma.department.findUnique({
+    where: { id: deptId, isDeleted: false },
+  });
 }
 
-// ============ UPDATE ============
-export async function updateDepartmentService(
-  db: Database,
-  deptId: string,
-  dataUpdate: Pick<TBL_Department, "name" | "description">,
-  userRequest: TBL_User
-): Promise<boolean> {
-  const response = await db.run(
-    `
-    UPDATE department 
-    SET name = ?, 
-        description = ?, 
-        updatedAt = ?, 
-        updatedBy = ?
-    WHERE id = ? AND isDeleted = 0
-    `,
-    [
-      dataUpdate.name,
-      dataUpdate.description ?? null,
-      new Date().toISOString(),
-      userRequest.id,
-      deptId,
-    ]
-  );
-
-  return response.changes! > 0;
+export async function updateDepartmentService(deptId: string, dataUpdate: Pick<TBL_Department, "name" | "description">, userRequest: TBL_User) {
+  return prisma.department.update({
+    where: { id: deptId, isDeleted: false },
+    data: {
+      name: dataUpdate.name,
+      description: dataUpdate.description ?? null,
+      updatedBy: userRequest.id,
+      updatedAt: new Date()
+    }
+  });
 }
 
-// ============ CREATE ============
-export async function createDepartmentService(
-  db: Database,
-  orgId: string,
-  createData: Pick<TBL_Department, "name" | "description">,
-  userRequest: TBL_User
-) {
+export async function createDepartmentService(orgId: string, createData: Pick<TBL_Department, "name" | "description">, userRequest: TBL_User) {
   const newUuid = uuidv4();
-  const now = new Date().toISOString();
-
-  await db.run(
-    `
-    INSERT INTO department 
-    (id, organizationId, name, description, createdAt, createdBy, updatedAt, updatedBy, isDeleted) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0)
-    `,
-    [
-      newUuid,
-      orgId,
-      createData.name,
-      createData.description ?? null,
-      now,
-      userRequest.id,
-      now,
-      userRequest.id,
-    ]
-  );
-
-  return newUuid; // opcional, útil para devolver el ID creado
+  return prisma.department.create({
+    data: {
+      id: newUuid,
+      organizationId: orgId,
+      name: createData.name,
+      description: createData.description ?? null,
+      createdBy: userRequest.id,
+      updatedBy: userRequest.id,
+      updatedAt: new Date(),
+      createdAt: new Date()
+    },
+  });
 }
 
-// ============ DELETE (soft delete) ============
-export async function deleteDepartmentService(
-  db: Database,
-  deptId: string,
-  userRequest: TBL_User
-) {
-  const response = await db.run(
-    `
-    UPDATE department 
-    SET isDeleted = 1,
-        deletedAt = ?,
-        deletedBy = ?
-    WHERE id = ?
-    `,
-    [new Date().toISOString(), userRequest.id, deptId]
-  );
-
-  return response.changes! > 0;
+export async function deleteDepartmentService(deptId: string, userRequest: TBL_User) {
+  return prisma.department.updateMany({
+    where: { id: deptId, isDeleted: false },
+    data: {
+      isDeleted: true,
+      deletedAt: new Date(),
+      deletedBy: userRequest.id
+    }
+  });
 }
