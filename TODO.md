@@ -1,160 +1,354 @@
-## **1️⃣ Usuarios y Roles (Gestión de Identidad)**
+# **Sistema de Gestión Organizacional — Documento General**
 
-### **Funcionalidades clave**
+## **1️⃣ Organizaciones**
 
-* CRUD de usuarios: crear, editar, eliminar (soft-delete) usuarios.
-* Visualizar perfil de usuario: email, nickname, descripción, roles, organización, departamento, puestos asignados.
-* Asignar **roles y permisos** (`DEVELOPER`, `SUPERADMIN`, `ADMIN`, `MODERATOR`, `USER`).
-* Gestión de credenciales: contraseña, email, username.
-* Historial de auditoría: quién creó, modificó o eliminó el usuario y cuándo.
+### **Descripción para no desarrolladores**
 
-### **Pantallas sugeridas**
+El módulo de organizaciones representa las compañías o entidades que gestionará el sistema. Es la raíz de toda la estructura y permite agrupar departamentos, puestos y usuarios.
+Cada organización puede tener nombre, logo, slogan y descripción corporativa. Este módulo también permite realizar eliminaciones suaves (soft delete) y registrar quién hizo los cambios.
 
-1. Lista de usuarios con filtros (rol, organización, departamento).
+### **Funcionalidades principales**
+
+* Crear, editar y eliminar organizaciones.
+* Visualizar lista de organizaciones con información básica.
+* Información corporativa: logo, slogan, descripción.
+* Auditoría de cambios.
+
+### **Pantallas recomendadas**
+
+1. Lista de organizaciones.
+2. Formulario de creación/edición.
+3. Detalle de organización con lista de departamentos asociados.
+
+---
+
+## **2️⃣ Departamentos**
+
+### **Descripción para no desarrolladores**
+
+Los departamentos son divisiones dentro de cada organización. Permiten segmentar la estructura de la compañía y asociar puestos y usuarios de manera ordenada.
+
+### **Funcionalidades principales**
+
+* CRUD de departamentos.
+* Visualización jerárquica por organización.
+* Auditoría y soft delete.
+
+### **Pantallas recomendadas**
+
+1. Lista de departamentos por organización.
+2. Formulario de creación/edición.
+3. Detalle con lista de puestos y usuarios asignados.
+
+---
+
+## **3️⃣ Puestos (Positions)**
+
+### **Descripción para no desarrolladores**
+
+Los puestos definen roles internos dentro de un departamento. Permiten asignar usuarios y diferenciar género si es necesario (maleName/femaleName).
+
+### **Funcionalidades principales**
+
+* CRUD de puestos por departamento.
+* Asignación de usuarios a puestos.
+* Diferenciación de nombres por género.
+
+### **Pantallas recomendadas**
+
+1. Lista de puestos por departamento.
+2. Formulario de creación/edición.
+3. Vista de detalle con usuarios asignados.
+
+---
+
+## **4️⃣ Usuarios**
+
+### **Descripción para no desarrolladores**
+
+Los usuarios representan a las personas que interactúan con el sistema. Para existir, deben pertenecer a una organización y opcionalmente estar asignados a un puesto. Incluye información de contacto, credenciales y rol dentro del sistema.
+
+### **Funcionalidades principales**
+
+* Crear, editar y eliminar usuarios (soft delete).
+* Asignación a organización y puesto.
+* Gestión de roles y permisos: `SUPERADMIN`, `ADMIN`, `DEVELOPER`, `MANAGER`, `MODERATOR`, `EMPLOYEE`, `USER`.
+* Visualización de perfil y auditoría.
+
+### **Pantallas recomendadas**
+
+1. Lista de usuarios con filtros (por organización, departamento o rol).
 2. Formulario de usuario (crear/editar).
-3. Perfil de usuario con historial de cambios.
-4. Dashboard de roles con permisos asociados.
-
-### **Posibilidades extra**
-
-* Búsqueda global de usuarios.
-* Activación/desactivación de cuentas.
-* Importación/exportación de usuarios en CSV o Excel.
+3. Detalle de usuario con historial de cambios.
 
 ---
 
-## **2️⃣ Organizaciones y Departamentos (Estructura Organizativa)**
+## **5️⃣ Asignaciones de Puestos (UserPosition)**
 
-### **Funcionalidades clave**
+### **Descripción para no desarrolladores**
 
-* ✅ CRUD de organizaciones y departamentos.
-* Visualización jerárquica: organización → departamentos → puestos → usuarios.
-* ✅ Información corporativa: nombre, logo, slogan, descripción.
-* ✅ Soft delete con auditoría.
+Este módulo registra qué usuario ocupa qué puesto. Permite saber quién está asignado a qué rol dentro de un departamento y organización.
 
-### **Pantallas sugeridas**
+### **Funcionalidades principales**
 
-1. ✅ Lista de organizaciones.
-2. ✅ Formulario de organización (crear/editar).
-3. Detalle de organización con lista de departamentos.
-4. Detalle de departamento con lista de puestos y usuarios asignados.
+* CRUD de asignaciones.
+* Validación para evitar duplicados (un usuario no puede tener el mismo puesto varias veces).
 
-### **Posibilidades extra**
+### **Pantallas recomendadas**
 
-* Visualización tipo **árbol jerárquico**.
-* Multi-organización y cambio de contexto por usuario.
-* Estadísticas de usuarios por departamento u organización.
+1. Lista de asignaciones por departamento o usuario.
+2. Formulario de asignación.
 
 ---
 
-## **3️⃣ Puestos y Roles Internos**
+## **6️⃣ Horarios Laborales (Schedules)**
 
-### **Funcionalidades clave**
+### **Descripción para no desarrolladores**
 
-* CRUD de puestos dentro de un departamento.
-* Visualización de usuarios asignados a cada puesto (`userPositions`).
-* Diferenciar género en nombres de puesto (maleName/femaleName) si aplica.
-* Relación usuario ↔ puesto.
+Permite definir horarios para los usuarios o plantillas de horarios por organización. Cada horario incluye día de la semana, hora de inicio y fin, y descripción.
 
-### **Pantallas sugeridas**
+### **Funcionalidades principales**
 
-1. Lista de puestos con filtro por departamento.
-2. Formulario de puesto.
-3. Detalle de puesto con usuarios asignados.
-
-### **Posibilidades extra**
-
-* Gráfica de distribución de puestos por departamento.
-* Historial de cambios en los puestos y asignaciones.
+* CRUD de horarios.
+* Asignación de horarios a usuarios o a la organización.
+* Visualización tipo calendario.
 
 ---
 
-## **4️⃣ Horarios Laborales (Schedules)**
+## **7️⃣ Asistencia (Attendance)**
 
-### **Funcionalidades clave**
+### **Descripción para no desarrolladores**
 
-* Crear y asignar horarios a usuarios (`schedules`).
-* Definir día de la semana, hora de inicio y fin.
-* Visualización de calendario semanal/mensual por usuario o departamento.
+Permite registrar la entrada y salida de los usuarios, asociada a un horario. También se puede determinar el estado: puntual, tarde, ausente o excusado.
 
-### **Pantallas sugeridas**
+### **Funcionalidades principales**
 
-1. Lista de horarios por usuario.
-2. Formulario de horario.
-3. Vista tipo calendario para gestión de horarios.
-
-### **Posibilidades extra**
-
-* Copiar horarios de un usuario a otro.
-* Reglas recurrentes y excepciones (feriados, vacaciones).
+* Registrar clockIn y clockOut.
+* Asociar asistencia a horario.
+* Historial por usuario, departamento u organización.
+* Visualización de reportes de puntualidad y productividad.
 
 ---
 
-## **5️⃣ Asistencia y Control de Tiempo (Attendance)**
+## **8️⃣ Auditoría y Metadatos**
 
-### **Funcionalidades clave**
+### **Descripción para no desarrolladores**
 
-* Registrar asistencia: `clockIn` y `clockOut`.
-* Determinar estado (`status`) según puntualidad (`late`, `on-time`, etc.).
-* Asociar asistencia a un horario específico.
-* Historial de asistencia por usuario, departamento o organización.
-
-### **Pantallas sugeridas**
-
-1. Lista de asistencia con filtros por usuario, fecha o estado.
-2. Formulario de registro manual o automático de asistencia.
-3. Dashboard con reportes de puntualidad y ausencias.
-4. Gráficas de productividad y cumplimiento de horarios.
-
-### **Posibilidades extra**
-
-* Notificaciones de tardanzas.
-* Exportación de reportes.
-* Integración con biometría o RFID.
+Permite registrar todo cambio de estado dentro del sistema: creación, modificación o eliminación de registros. Esto aplica a todos los módulos anteriores y asegura trazabilidad.
 
 ---
 
-## **6️⃣ Auditoría y Metadatos (Control de Cambios)**
+## **9️⃣ Dashboard / Reportes**
 
-### **Funcionalidades clave**
+### **Descripción para no desarrolladores**
 
-* Visualizar historial de creación, modificación y eliminación de cualquier registro.
-* Gestión de soft delete (`isDeleted`, `deletedAt`).
-* Filtros por usuario que hizo cambios y por fecha.
+Ofrece una visión global del sistema para los administradores:
 
-### **Pantallas sugeridas**
-
-1. Dashboard de auditoría general.
-2. Historial por entidad (usuarios, departamentos, puestos, asistencia).
-
----
-
-## **7️⃣ Dashboard Principal (MVP)**
-
-Para un MVP, un dashboard podría incluir:
-
-* Resumen de usuarios activos por organización.
-* Resumen de asistencia de la semana.
+* Usuarios activos por organización.
+* Resumen de asistencia.
 * Cantidad de puestos y departamentos.
-* Usuarios con alertas (tardanzas, ausencias, cambios recientes).
-* Accesos rápidos a módulos clave (Usuarios, Departamentos, Horarios, Asistencia).
+* Alertas de ausencias o tardanzas.
+* Accesos rápidos a módulos clave.
 
 ---
 
-## **8️⃣ Extras que podrías agregar luego**
+# **Sistema de Gestión Organizacional — Documento Técnico**
 
-* Permisos finos por acción (CRUD específico según rol).
-* Integración con notificaciones por correo o Slack.
-* Reportes en PDF o Excel.
-* Exportación/importación masiva de datos.
-* Multi-idioma y nombres de puesto según género (ya tienes la base).
+## **1️⃣ Organizaciones (Organization)**
+
+### **Propósito técnico**
+
+La organización es el **nodo raíz** de todo el sistema. Todos los módulos dependen indirectamente de ella. Su correcto diseño y persistencia es crítico.
+
+### **Implementación**
+
+* Modelo Prisma: `Organization`.
+* Campos: `id (PK)`, `corporateName`, `displayName`, `organizationCode (unique)`, `logoUrl`, `slogan`, `description`, `createdAt`, `updatedAt`, `deletedAt`, `isDeleted`, `createdBy`, `updatedBy`, `deletedBy`.
+* Relaciones: `departments`, `users`, `schedules` (plantillas globales).
+* Auditoría: usar `createdAt/updatedAt` y `soft delete`.
+* Consideraciones: índices sobre `organizationCode` y `isDeleted` para optimizar consultas de filtrado.
+
+### **Tareas de desarrollo**
+
+1. CRUD completo con soft delete y auditoría.
+2. Validaciones de unicidad (`organizationCode`).
+3. Interfaces para listado, formulario y detalle jerárquico.
+4. Seed inicial de datos de prueba para desarrollo.
 
 ---
 
-💡 **Resumen general del MVP posible:**
+## **2️⃣ Departamentos (Department)**
 
-* Módulos: Usuarios, Organizaciones/Departamentos, Puestos, Horarios, Asistencia.
-* Funcionalidades mínimas: CRUD, asignación de roles y puestos, registro de asistencia, vista de calendarios, dashboard de resumen.
-* Extras: Auditoría completa, reportes, notificaciones, visualización jerárquica.
+### **Propósito técnico**
+
+Define divisiones dentro de cada organización. Sirve de contenedor para puestos y usuarios.
+
+### **Implementación**
+
+* Modelo Prisma: `Department`.
+* Campos: `id (PK)`, `organizationId (FK)`, `name`, `description`, auditoría.
+* Relaciones: `organization` (parent), `positions` (child).
+* Índices: `[organizationId]`, `[isDeleted]` para filtrado rápido.
+
+### **Tareas de desarrollo**
+
+1. CRUD con validación de existencia de `organizationId`.
+2. Interfaces para listado por organización, creación/edición.
+3. Integración con módulo de puestos (`Position`) para vista jerárquica.
+4. Soft delete propagable opcional (marcar puestos asociados como borrados lógicamente).
+
+---
+
+## **3️⃣ Puestos (Position)**
+
+### **Propósito técnico**
+
+Define roles internos dentro de un departamento, incluyendo nombres por género si aplica. Permite vincular usuarios.
+
+### **Implementación**
+
+* Modelo Prisma: `Position`.
+* Campos: `id (PK)`, `departmentId (FK)`, `maleName`, `femaleName`, `description`, auditoría.
+* Relaciones: `department`, `userPositions`.
+* Índices: `[departmentId]` para filtros y relaciones.
+
+### **Tareas de desarrollo**
+
+1. CRUD con validación de `departmentId`.
+2. Gestión de nombres por género para interfaz.
+3. Interfaces de listado y detalle, mostrando usuarios asignados mediante `UserPosition`.
+4. Historial de cambios y soft delete.
+
+---
+
+## **4️⃣ Usuarios (User)**
+
+### **Propósito técnico**
+
+Usuarios del sistema con credenciales, información personal, rol y asignación a organización/puestos. Dependientes de organización y eventualmente puestos.
+
+### **Implementación**
+
+* Modelo Prisma: `User`.
+* Campos: `id`, `email`, `username (unique)`, `password (hashed)`, `nickname`, `name`, `lastName`, `phone`, `gender`, `birthDate`, `identificationNumber`, `address`, `role`, `organizationId`, `description`, auditoría y `isDeleted`.
+* Relaciones: `organization`, `userPositions`, `schedules`, `attendance`.
+* Consideraciones: hash de contraseña, validación de email/username únicos, soft delete y auditoría.
+
+### **Tareas de desarrollo**
+
+1. CRUD de usuarios con validación de `organizationId`.
+2. Hashing de contraseñas y gestión de login.
+3. Gestión de roles y permisos para control de acceso a endpoints.
+4. Interfaces de listado, detalle y edición de perfil.
+5. Integración con `UserPosition` para asignación a puestos.
+6. Auditoría completa de cambios.
+
+---
+
+## **5️⃣ Asignaciones de Puestos (UserPosition)**
+
+### **Propósito técnico**
+
+Representa la relación entre un usuario y un puesto específico. Evita duplicados y permite mostrar la estructura de la organización.
+
+### **Implementación**
+
+* Modelo Prisma: `UserPosition`.
+* Campos: `id`, `userId (FK)`, `positionId (FK)`, auditoría y soft delete.
+* Restricciones: `@@unique([userId, positionId])`.
+* Relaciones: `user`, `position`.
+* Índices: `[userId]`, `[positionId]` para consultas rápidas.
+
+### **Tareas de desarrollo**
+
+1. CRUD con validación de existencia de `userId` y `positionId`.
+2. Interfaces de asignación y visualización jerárquica.
+3. Auditoría y soft delete implementados.
+4. Integración con módulos de horarios y reportes.
+
+---
+
+## **6️⃣ Horarios Laborales (Schedule)**
+
+### **Propósito técnico**
+
+Define horarios de trabajo, tanto por usuario como plantillas globales de organización.
+
+### **Implementación**
+
+* Modelo Prisma: `Schedule`.
+* Campos: `id`, `userId?`, `organizationId?`, `dayOfWeek`, `startTime ("HH:mm")`, `endTime ("HH:mm")`, `description`, auditoría, soft delete.
+* Relaciones: opcionales `user` y `organization`, `attendance`.
+* Índices: `[userId]`, `[organizationId]`, `[dayOfWeek]`.
+
+### **Tareas de desarrollo**
+
+1. CRUD con validación de `userId` o `organizationId`.
+2. Interfaz de calendario para gestión de horarios.
+3. Plantillas globales reutilizables por organización.
+4. Integración con asistencia (`Attendance`) para calcular cumplimiento.
+
+---
+
+## **7️⃣ Asistencia (Attendance)**
+
+### **Propósito técnico**
+
+Registra la entrada/salida de usuarios, vinculada a un horario específico. Estado controlado mediante enum `AttendanceStatus`.
+
+### **Implementación**
+
+* Modelo Prisma: `Attendance`.
+* Campos: `id`, `userId (FK)`, `scheduleId (FK)`, `dayOfWeek`, `date`, `clockIn`, `clockOut`, `status (enum)`, auditoría, soft delete.
+* Relaciones: `user`, `schedule`.
+* Índices: `[userId]`, `[scheduleId]`, `[date]`.
+
+### **Tareas de desarrollo**
+
+1. CRUD de asistencia manual o automático.
+2. Cálculo de estado según horario (`ON_TIME`, `LATE`, `ABSENT`).
+3. Visualización y filtrado por usuario, departamento o organización.
+4. Integración con dashboard y reportes.
+
+---
+
+## **8️⃣ Auditoría y Metadatos**
+
+### **Propósito técnico**
+
+Registro de cambios transversales para todas las entidades críticas.
+
+### **Implementación**
+
+* Auditoría en cada modelo: `createdAt`, `createdBy`, `updatedAt`, `updatedBy`, `deletedAt`, `deletedBy`, `isDeleted`.
+* Posible tabla agregada de logs globales si se requiere rastreo unificado.
+* Aplicar soft delete y filtros por `isDeleted`.
+
+---
+
+## **9️⃣ Dashboard y Reportes**
+
+### **Propósito técnico**
+
+Visualización de indicadores clave para administradores y supervisores.
+
+### **Implementación**
+
+* Agregaciones sobre `User`, `UserPosition`, `Schedule`, `Attendance`.
+* KPIs: asistencia por semana, usuarios activos, tardanzas, puestos y departamentos.
+* Generación de reportes PDF/Excel opcional.
+* Integración con notificaciones (email o Slack) si se implementa.
+
+---
+
+# **Notas técnicas generales**
+
+1. **Orden de desarrollo recomendado:**
+   `Organization → Department → Position → User → UserPosition → Schedule → Attendance → Auditoría → Dashboard`.
+2. **Soft delete y auditoría** son transversales.
+3. **Enums controlados** (`UserRole`, `AttendanceStatus`) para seguridad y consistencia.
+4. **Índices y unicidades** clave para rendimiento en consultas jerárquicas y filtros.
+5. **Formato de horarios**: `"HH:mm"` para recurrentes, `DateTime` para instancias concretas.
+6. **Migraciones**: cuidado al renombrar columnas (`identificationNumber`) y expandir enums.
 
 ---
