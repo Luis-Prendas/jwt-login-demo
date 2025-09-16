@@ -74,7 +74,6 @@ cd sigeor-workspace
 ### 2. Instalar dependencias del frontend
 
 ```bash
-cd ./frontend
 npm install
 ```
 
