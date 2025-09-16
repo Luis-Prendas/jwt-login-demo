@@ -1,16 +1,13 @@
 import { DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useState } from "react";
-import { BadgePlus } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useOrg } from "@/hooks/useOrg";
 import { useNavigate } from "react-router";
 
-export function AddOrganization() {
+export function DialogCreateOrganization({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
   const { createOrg } = useOrg();
 
   const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -23,18 +20,12 @@ export function AddOrganization() {
     const created = await createOrg({ corporateName, displayName, slogan })
 
     if (created) {
-      setOpen(false);
       navigate(0);
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="p-2">
-        <Button variant="outline">
-          <BadgePlus />
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[450px] p-0">
         <form onSubmit={handleSaveChanges} className="flex flex-col gap-4 p-4">
           <DialogHeader>
@@ -70,22 +61,3 @@ export function AddOrganization() {
     </Dialog>
   );
 }
-
-
-{/* <AlertDialog>
-  <AlertDialogTrigger asChild>
-    <Button variant="outline"><Trash /></Button>
-  </AlertDialogTrigger>
-  <AlertDialogContent className="p-4">
-    <AlertDialogHeader>
-      <AlertDialogTitle>¿Estás completamente seguro?</AlertDialogTitle>
-      <AlertDialogDescription>
-        Esta acción no se puede deshacer. Eliminará permanentemente los datos de nuestros servidores.
-      </AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction onClick={handleDelete}>Conninuar</AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog> */}
