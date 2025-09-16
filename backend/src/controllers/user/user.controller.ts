@@ -5,7 +5,7 @@ import { createUserService, deleteUserService, getAllUserService, getUserService
 import { ApiError } from '../../utils/ApiError';
 import { CreateUserDto, UpdateUserDto } from '../../routes/user.routes';
 
-const logger = getLogger('api-user');
+const logger = getLogger('api/user');
 
 // GET ONE
 export const getUser = asyncHandler(async (req: Request, res: Response) => {

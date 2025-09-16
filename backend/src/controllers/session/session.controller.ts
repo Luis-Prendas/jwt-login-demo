@@ -8,7 +8,7 @@ import { ApiError } from '../../utils/ApiError';
 import { PayloadJWT } from '../../types/jwt';
 import { getUserByUsernameAndOrgCodeService } from '../../services/user/user.services';
 
-const logger = getLogger('api/login');
+const logger = getLogger('api/session');
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
   logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
