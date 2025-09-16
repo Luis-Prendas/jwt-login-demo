@@ -7,19 +7,18 @@ import { z } from 'zod';
 export const GenderSchema = z.enum(["M", "F", "N"]);
 export const UserRoleSchema = z.enum(["ADMIN", "DEVELOPER", "MANAGER", "EMPLOYEE"]);
 
-// ======================
-// ORGANIZATION
+// ====================== 
+// ORGANIZATION 
 // ======================
 export const createOrganizationSchema = z.object({
   corporateName: z.string().min(1),
   displayName: z.string().min(1),
-  organizationCode: z.string().min(1),
   logoUrl: z.string().url().optional(),
   slogan: z.string().optional(),
   description: z.string().optional(),
 });
 
-export const updateOrganizationSchema = createOrganizationSchema.partial();
+export const updateOrganizationSchema = createOrganizationSchema.extend({ organizationCode: z.string().min(1) }).partial();
 
 // ======================
 // DEPARTMENT
@@ -30,7 +29,7 @@ export const createDepartmentSchema = z.object({
   description: z.string().optional(),
 });
 
-export const updateDepartmentSchema = createDepartmentSchema.partial();
+export const updateDepartmentSchema = createDepartmentSchema.omit({ organizationId: true }).partial();
 
 // ======================
 // POSITION
@@ -42,7 +41,7 @@ export const createPositionSchema = z.object({
   description: z.string().optional(),
 });
 
-export const updatePositionSchema = createPositionSchema.partial();
+export const updatePositionSchema = createPositionSchema.omit({ departmentId: true }).partial();
 
 // ======================
 // USER
@@ -64,7 +63,7 @@ export const createUserSchema = z.object({
   description: z.string().optional(),
 });
 
-export const updateUserSchema = createUserSchema.partial();
+export const updateUserSchema = createUserSchema.omit({ organizationId: true, password: true }).partial();
 
 // ======================
 // USER POSITION
@@ -82,7 +81,7 @@ export const updateUserPositionSchema = createUserPositionSchema.partial();
 export const createScheduleSchema = z.object({
   userId: z.string().uuid(),
   dayOfWeek: z.number().int().min(0).max(6),
-  startTime: z.string().min(1), // puedes usar regex tipo HH:mm si quieres
+  startTime: z.string().min(1),
   endTime: z.string().min(1),
   description: z.string().optional(),
 });

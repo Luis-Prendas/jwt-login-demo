@@ -6,6 +6,7 @@ export interface UpdateOrg {
   corporateName: string
   displayName: string
   slogan: string
+  organizationCode: string
 }
 
 export interface CreateData {
@@ -32,7 +33,7 @@ export function useOrg() {
     return response
   }
 
-  const updateOrg = async (dataUpdate: UpdateOrg, orgId: string) => {
+  const updateOrg = async (dataUpdate: UpdateOrg, orgId: string, ) => {
     setLoading(true)
     const response = updateOrgService(dataUpdate, orgId, token!)
     setLoading(false)

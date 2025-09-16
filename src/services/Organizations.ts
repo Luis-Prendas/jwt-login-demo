@@ -5,7 +5,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6969';
 
 export async function getOrgService(orgId: string, token: string): Promise<TBL_Organization | null> {
   try {
-    const response = await fetch(`${BASE_URL}/api/organization/getOrg/${orgId}`, {
+    const response = await fetch(`${BASE_URL}/api/organization/get/${orgId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export async function getOrgService(orgId: string, token: string): Promise<TBL_O
 
 export async function getAllOrgService(token: string): Promise<TBL_Organization[] | null> {
   try {
-    const response = await fetch(`${BASE_URL}/api/organization/getAllOrg`, {
+    const response = await fetch(`${BASE_URL}/api/organization/getAll`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

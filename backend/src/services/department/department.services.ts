@@ -1,6 +1,7 @@
 import { TBL_Department, TBL_User } from "../../types/DataBase";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "../../prisma/prisma";
+import { CreateDepartmentDto, UpdateDepartmentDto } from "../../routes/department.routes";
 
 export async function getAllDepartmentsService(orgId: string) {
   return prisma.department.findMany({
@@ -23,30 +24,24 @@ export async function getDepartmentService(deptId: string) {
   });
 }
 
-export async function updateDepartmentService(deptId: string, dataUpdate: Pick<TBL_Department, "name" | "description">, userRequest: TBL_User) {
+export async function updateDepartmentService(deptId: string, dataUpdate: UpdateDepartmentDto, userRequest: TBL_User) {
   return prisma.department.update({
     where: { id: deptId, isDeleted: false },
     data: {
-      name: dataUpdate.name,
-      description: dataUpdate.description ?? null,
+      ...dataUpdate,
       updatedBy: userRequest.id,
       updatedAt: new Date()
     }
   });
 }
 
-export async function createDepartmentService(orgId: string, createData: Pick<TBL_Department, "name" | "description">, userRequest: TBL_User) {
-  const newUuid = uuidv4();
+export async function createDepartmentService(orgId: string, createData: CreateDepartmentDto, userRequest: TBL_User) {
   return prisma.department.create({
     data: {
-      id: newUuid,
-      organizationId: orgId,
-      name: createData.name,
-      description: createData.description ?? null,
+      ...createData,
       createdBy: userRequest.id,
       updatedBy: userRequest.id,
-      updatedAt: new Date(),
-      createdAt: new Date()
+      organizationId: orgId,
     },
   });
 }

@@ -1,4 +1,6 @@
 import prisma from "../../prisma/prisma";
+import { CreateUserDto, UpdateUserDto } from "../../routes/user.routes";
+import bcrypt from "bcrypt";
 
 export async function getUserService(userId: string) {
   return prisma.user.findUnique({
@@ -23,6 +25,29 @@ export async function getAllUserService(orgId: string) {
     },
     include: {
       organization: false
+    }
+  });
+}
+
+export async function updateUserService(id: string, dataUpdate: UpdateUserDto, userRequest: { id: string }) {
+  return prisma.user.update({
+    where: { id: id, isDeleted: false },
+    data: {
+      ...dataUpdate,
+      updatedBy: userRequest.id,
+    }
+  });
+}
+
+export async function createUserService(id: string, createData: CreateUserDto, userRequest: { id: string }) {
+  const SALT_ROUNDS = 10;
+  const hashedPassword = await bcrypt.hash(createData.password, SALT_ROUNDS);
+  return prisma.user.create({
+    data: {
+      ...createData,
+      password: hashedPassword,
+      updatedBy: userRequest.id,
+      createdBy: userRequest.id,
     }
   });
 }

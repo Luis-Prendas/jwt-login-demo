@@ -16,8 +16,9 @@ export default function DialogEditOrganization({ data, setOpen }: { data: TBL_Or
     const corporateName = form.corporateName.value
     const displayName = form.displayName.value
     const slogan = form.slogan.value
+    const organizationCode = form.organizationCode.value
 
-    const updated = await updateOrg({ corporateName, displayName, slogan }, data?.id!)
+    const updated = await updateOrg({ corporateName, displayName, slogan, organizationCode }, data?.id!)
 
     if (updated) {
       setOpen(false);

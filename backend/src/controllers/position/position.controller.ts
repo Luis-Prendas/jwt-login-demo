@@ -3,6 +3,7 @@ import { ApiError } from "../../utils/ApiError";
 import asyncHandler from 'express-async-handler';
 import { Request, Response } from "express";
 import { getAllPositionsService, getPositionService, createPositionService, updatePositionService, deletePositionService } from "../../services/position/position.services";
+import { CreatePositionDto, UpdatePositionDto } from "../../routes/position.routes";
 
 const logger = getLogger('api/position');
 
@@ -47,7 +48,7 @@ export const createPosition = asyncHandler(async (req: Request, res: Response) =
     logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID no proporcionado');
   }
-  const createData = req.body.content;
+  const createData: CreatePositionDto = req.body.content;
   const userRequest = req.body.userRequest;
   if (!createData?.maleName || !createData?.femaleName) {
     logger.warn(`Datos no proporcionados\n`);
@@ -62,17 +63,15 @@ export const createPosition = asyncHandler(async (req: Request, res: Response) =
 
 export const updatePosition = asyncHandler(async (req: Request, res: Response) => {
   logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
+
   const id = req.params.id;
   if (!id) {
     logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID no proporcionado');
   }
-  const dataUpdate = req.body.content;
+
+  const dataUpdate: UpdatePositionDto = req.body.content;
   const userRequest = req.body.userRequest;
-  if (!dataUpdate?.maleName || !dataUpdate?.femaleName) {
-    logger.warn(`Datos no proporcionados\n`);
-    throw new ApiError(400, 'Datos no proporcionados');
-  }
   const position = await updatePositionService(id, dataUpdate, userRequest);
   if (!position) {
     logger.warn(`No se pudo actualizar el puesto -> ${id}\n`);

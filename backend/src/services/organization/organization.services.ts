@@ -18,9 +18,7 @@ export async function createOrganizationService(createData: CreateOrganizationDt
   return await prisma.organization.create({
     data: {
       ...createData,
-      createdAt: new Date(),
       createdBy: userRequest.id,
-      updatedAt: new Date(),
       updatedBy: userRequest.id,
       organizationCode,
     },

@@ -1,4 +1,5 @@
 import prisma from "../../prisma/prisma";
+import { CreatePositionDto, UpdatePositionDto } from "../../routes/position.routes";
 
 export async function getAllPositionsService(deptId: string) {
   return prisma.position.findMany({
@@ -21,30 +22,23 @@ export async function getPositionService(id: string) {
   });
 }
 
-export async function createPositionService(deptId: string, createData: { maleName: string, femaleName: string, description?: string }, userRequest: { id: string }) {
+export async function createPositionService(deptId: string, createData: CreatePositionDto, userRequest: { id: string }) {
   return prisma.position.create({
     data: {
-      maleName: createData.maleName,
-      femaleName: createData.femaleName,
-      description: createData.description ?? null,
-      departmentId: deptId,
+      ...createData,
       createdBy: userRequest.id,
       updatedBy: userRequest.id,
-      updatedAt: new Date(),
-      createdAt: new Date()
+      departmentId: deptId,
     },
   });
 }
 
-export async function updatePositionService(id: string, dataUpdate: { maleName: string, femaleName: string, description?: string }, userRequest: { id: string }) {
+export async function updatePositionService(id: string, dataUpdate: UpdatePositionDto, userRequest: { id: string }) {
   return prisma.position.update({
     where: { id, isDeleted: false },
     data: {
-      maleName: dataUpdate.maleName,
-      femaleName: dataUpdate.femaleName,
-      description: dataUpdate.description ?? null,
+      ...dataUpdate,
       updatedBy: userRequest.id,
-      updatedAt: new Date()
     },
   });
 }
