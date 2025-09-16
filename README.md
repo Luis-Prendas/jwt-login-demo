@@ -1,13 +1,3 @@
-Quedó muy bien 👌, ya con los cambios que metiste está bastante completo y listo para que cualquiera lo use o contribuya.
-Yo lo puliría en tres puntos para darle un acabado más profesional y claro:
-
-1. **Ordenar instalación** → separar frontend y backend desde el inicio, así no se mezclan pasos.
-2. **Consistencia** → ya que usas `cd ./backend`, conviene también aclarar el `cd ./frontend` (aunque esté en raíz).
-3. **Detalles extras** → añadir breve nota de prerequisitos (Node.js versión mínima) y aclarar que `reset:prisma` borra y recrea datos.
-
-Aquí te dejo una versión ajustada con esas mejoras:
-
-````markdown
 # 🏢 Sistema de Gestión Organizacional
 
 Este proyecto implementa una base de datos y estructura backend para gestionar **organizaciones, departamentos, puestos, usuarios y su relación jerárquica**, incluyendo control de horarios y asistencias.
