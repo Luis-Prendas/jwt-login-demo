@@ -24,7 +24,7 @@ export const updateOrganizationSchema = createOrganizationSchema.extend({ organi
 // DEPARTMENT
 // ======================
 export const createDepartmentSchema = z.object({
-  organizationId: z.string().uuid(),
+  organizationId: z.string().min(1),
   name: z.string().min(1),
   description: z.string().optional(),
 });

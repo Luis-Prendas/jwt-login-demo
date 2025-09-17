@@ -32,8 +32,8 @@ const items = [
   },
   {
     id: '3',
-    title: "Gestión de usuarios",
-    url: "/user-management",
+    title: "Gestión de departamentos",
+    url: "/department-management",
     icon: Settings,
     access: [UserRole.DEVELOPER.toString()]
   }

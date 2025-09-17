@@ -4,11 +4,11 @@ import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import Register from '../pages/Register';
-import UserManagement from '../pages/UserManagement/UserManagement';
 import { MainLayout } from '../components/MainLayout';
 import ProtectedAdminRoute from '../components/ProtectedAdminRoute';
 import Profile from '@/pages/profile/Profile';
-import OrgManagement from '@/pages/OrgManagement/Page';
+import DepartmentManagementPega from '@/pages/DeptManagement/Page';
+import OrganizationManagementPega from '@/pages/OrgManagement/Page';
 
 export default function AppRouter() {
   return (
@@ -26,8 +26,8 @@ export default function AppRouter() {
 
             {/* Administrativas (Requiere autenticación y rol de administrador) */}
             <Route element={<ProtectedAdminRoute />}>
-              <Route path="/user-management" element={<UserManagement />} />
-              <Route path="/organization-management" element={<OrgManagement />} />
+              <Route path="/organization-management" element={<OrganizationManagementPega />} />
+              <Route path="/department-management" element={<DepartmentManagementPega />} />
             </Route>
           </Route>
         </Route>
