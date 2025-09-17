@@ -6,7 +6,7 @@ import type { Organization } from "@/types";
 
 export type Payment = Organization;
 
-export const columns: ColumnDef<Payment>[] = [
+export const createColumns = (onSuccess?: () => void): ColumnDef<Organization>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -52,6 +52,13 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <DataTableRowActions id={row.original.id} />,
+    cell: ({ row }) => (
+      <DataTableRowActions 
+        org={row.original} 
+        onSuccess={onSuccess}
+      />
+    ),
   },
 ]
+
+export const columns: ColumnDef<Organization>[] = createColumns()

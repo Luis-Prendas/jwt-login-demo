@@ -3,12 +3,16 @@ import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useOrg } from "@/hooks/useOrg";
-import { useNavigate } from "react-router";
+import { useOrganizations } from "@/hooks/useOrganizations";
 
-export function DialogCreateOrganization({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
-  const navigate = useNavigate();
-  const { createOrg } = useOrg();
+type Props = {
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  onSuccess?: () => void
+}
+
+export function DialogCreateOrganization({ isOpen, setIsOpen, onSuccess }: Props) {
+  const { create, loading } = useOrganizations()
 
   const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,11 +21,22 @@ export function DialogCreateOrganization({ isOpen, setIsOpen }: { isOpen: boolea
     const displayName = form.displayName.value
     const slogan = form.slogan.value
 
-    const created = await createOrg({ corporateName, displayName, slogan })
-
-    if (created) {
-      navigate(0);
-    }
+    // Usar el método create unificado
+    await create(
+      {
+        corporateName,
+        displayName,
+        slogan
+      },
+      undefined, // sin parámetros para la URL
+      () => {
+        // Callback de éxito
+        console.log('✅ Departamento creado exitosamente')
+        setIsOpen(false)
+        form.reset() // Limpiar el formulario
+        onSuccess?.()
+      }
+    )
   }
 
   return (
@@ -30,12 +45,13 @@ export function DialogCreateOrganization({ isOpen, setIsOpen }: { isOpen: boolea
         <form onSubmit={handleSaveChanges} className="flex flex-col gap-4 p-4">
           <DialogHeader>
             <DialogTitle className="flex gap-4">
-              Crear Organización
+              Crear un Departamento
             </DialogTitle>
             <DialogDescription className="text-balance">
-              Crea una nueva organización. Haz clic en guardar cuando hayas terminado.
+              Crea un nuevo departamento. Haz clic en guardar cuando hayas terminado.
             </DialogDescription>
           </DialogHeader>
+
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="corporateName">Nombre corporativo *</Label>
@@ -50,11 +66,30 @@ export function DialogCreateOrganization({ isOpen, setIsOpen }: { isOpen: boolea
               <Input id="slogan" name="slogan" type="text" />
             </div>
           </div>
+
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline" type="button">Cancelar</Button>
+              <Button
+                variant="outline"
+                type="button"
+                disabled={loading}
+              >
+                Cancelar
+              </Button>
             </DialogClose>
-            <Button type="submit">Guardar</Button>
+            <Button
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Guardando...
+                </>
+              ) : (
+                'Guardar'
+              )}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

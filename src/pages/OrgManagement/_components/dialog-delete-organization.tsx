@@ -1,18 +1,32 @@
-import { useOrg } from "@/hooks/useOrg";
-import { useNavigate } from "react-router";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useOrganizations } from "@/hooks/useOrganizations";
 
-export function DialogDeleteOrganization({ isOpen, setIsOpen, orgId }: { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>, orgId: string }) {
-  const navigate = useNavigate();
-  const { deleteOrg } = useOrg();
+export function DialogDeleteOrganization({
+  isOpen,
+  setIsOpen,
+  id,
+  onSuccess
+}: {
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  id: string
+  onSuccess?: () => void
+}) {
+  // Hook unificado
+  const { remove, loading } = useOrganizations();
 
   const handleDelete = async () => {
-
-    const created = await deleteOrg(orgId)
-
-    if (created) {
-      navigate(0);
-    }
+    // Usar el método remove unificado
+    await remove(
+      id,
+      undefined, // sin parámetros adicionales
+      () => {
+        // Callback de éxito
+        console.log('✅ Departamento eliminado exitosamente')
+        setIsOpen(false)
+        onSuccess?.()
+      }
+    )
   }
 
   return (
@@ -21,12 +35,31 @@ export function DialogDeleteOrganization({ isOpen, setIsOpen, orgId }: { isOpen:
         <AlertDialogHeader>
           <AlertDialogTitle>¿Estás completamente seguro?</AlertDialogTitle>
           <AlertDialogDescription>
-            Esta acción no se puede deshacer. Eliminará permanentemente los datos de nuestros servidores.
+            Esta acción no se puede deshacer. Eliminará permanentemente el departamento 
+            <strong className="font-medium"> "{id}" </strong>
+            de nuestros servidores.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} >Conninuar</AlertDialogAction>
+          <AlertDialogCancel
+            disabled={loading}
+          >
+            Cancelar
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={handleDelete}
+            disabled={loading}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            {loading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Eliminando...
+              </>
+            ) : (
+              'Continuar'
+            )}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
