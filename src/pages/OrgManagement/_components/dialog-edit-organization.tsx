@@ -3,10 +3,10 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useOrg } from '@/hooks/useOrg';
-import type { TBL_Organization } from '@/types/UserManagement';
+import type { Organization } from '@/types';
 import { useNavigate } from 'react-router';
 
-export function DialogEditOrganization({ isOpen, setIsOpen, data }: { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>, data: TBL_Organization }) {
+export function DialogEditOrganization({ isOpen, setIsOpen, data }: { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>, data: Organization }) {
   const navigate = useNavigate();
   const { updateOrg } = useOrg();
 

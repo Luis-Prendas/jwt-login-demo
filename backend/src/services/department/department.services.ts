@@ -1,4 +1,3 @@
-import { TBL_Department, TBL_User } from "../../types/DataBase";
 import { v4 as uuidv4 } from "uuid";
 import prisma from "../../prisma/prisma";
 import { CreateDepartmentDto, UpdateDepartmentDto } from "../../routes/department.routes";

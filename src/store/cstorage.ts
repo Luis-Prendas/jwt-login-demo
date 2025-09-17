@@ -1,14 +1,13 @@
-import type { UserBasicData } from '@/types/UserManagement';
-import { decodeToken } from '@/utils/jwt';
+import { decodeToken, type PayloadJWT } from '@/utils/jwt';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface AuthState {
   token: string | null;
-  userData: UserBasicData | null;
+  userData: PayloadJWT | null;
   isAuthenticated: boolean;
   setToken: (token: string | null) => void;
-  setUserData: (userData: UserBasicData | null) => void;
+  setUserData: (userData: PayloadJWT | null) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
 }
 

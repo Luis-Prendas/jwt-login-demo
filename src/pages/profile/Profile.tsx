@@ -1,26 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
-import type { TBL_Badge, UserBasicData } from "@/types/UserManagement";
 import { Bookmark, EllipsisVertical } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import DialogEditUser from "../UserManagement/dataTables/DialogEditUser";
+import type { User } from "@/types";
 
 export default function Profile() {
   const [open, setOpen] = useState(false);
-  const [badges, setBadges] = useState<TBL_Badge[] | null>(null);
-  const [user, setUser] = useState<UserBasicData | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const { userId } = useParams<{ userId: string }>();
-  const { getUserBadges, getUser, userData } = useAuth();
+  const { getUser, userData } = useAuth();
 
   useEffect(() => {
     if (!userId) return;
 
     const fetchData = async () => {
-      const userBadges = await getUserBadges(userId);
       const userInfo = await getUser(userId);
-      setBadges(userBadges);
       setUser(userInfo);
     };
 
@@ -82,11 +79,6 @@ export default function Profile() {
           </div>
         </div>
         <div className="flex flex-col gap-2 justify-center items-center">
-          <ul className="flex gap-2">
-            {badges && badges.map((badge) => (
-              <li key={badge.id} title={badge.description!} className="bg-blue-100 text-blue-800 cursor-pointer text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">{badge.label}</li>
-            ))}
-          </ul>
           <span className="opacity-60 text-lg">{user?.email}</span>
           <span className="text-2xl font-semibold flex gap-2 justify-center items-center">{user?.nickname}<span className="text-xl font-normal opacity-50">@{user?.username}</span></span>
         </div>

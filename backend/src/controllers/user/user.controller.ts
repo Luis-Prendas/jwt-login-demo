@@ -22,7 +22,7 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
   }
   logger.info(`Usuario encontrado: ${JSON.stringify(user)}`);
   logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------`);
-  res.json({ user });
+  res.json({ data: user });
 });
 
 // GET ALL
@@ -40,22 +40,18 @@ export const getAllUsers = asyncHandler(async (req: Request, res: Response) => {
   }
   logger.info(`Usuarios encontrados: ${JSON.stringify(users)}`);
   logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
-  res.json({ users });
+  res.json({ data: users });
 });
 
 // CREATE
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
   logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
-  const id = req.params.id;
-  if (!id) {
-    logger.warn(`ID no proporcionado\n`);
-    throw new ApiError(400, 'ID no proporcionado');
-  }
+
   const createData: CreateUserDto = req.body;
   const userRequest = req.user!;
-  const user = await createUserService(id, createData, userRequest)
+  const user = await createUserService(createData, userRequest)
   if (!user) {
-    logger.warn(`No se pudo crear el puesto -> ${id}\n`);
+    logger.warn(`No se pudo crear el puesto -> ${JSON.stringify(createData)}\n`);
     throw new ApiError(400, 'No se pudo crear el puesto');
   }
   logger.info(`Puesto actualizado -> ${JSON.stringify(user)}`);

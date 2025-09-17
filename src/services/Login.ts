@@ -1,8 +1,12 @@
-import type { LoginResponse, LoginForm } from "../types/UserManagement";
-
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6969';
 
-export async function sessionLogin(data: LoginForm): Promise<LoginResponse> {
+export type LoginForm = {
+  username: string,
+  password: string,
+  organizationCode: string
+}
+
+export async function sessionLogin(data: LoginForm): Promise<string | null> {
   try {
     const response = await fetch(`${BASE_URL}/api/session/login`, {
       method: "POST",
@@ -12,15 +16,14 @@ export async function sessionLogin(data: LoginForm): Promise<LoginResponse> {
       body: JSON.stringify(data),
     });
 
-    const res: LoginResponse = await response.json();
-
-    if (res.error) {
-      throw new Error(res.error!);
+    if (!response.ok) {
+      throw new Error('Failed to login');
     }
 
-    return res
+    const res = await response.json();
+    return res.token
   } catch (error) {
     console.error(`❌ Error en userLogin: ${(error as Error).message}`);
-    return { token: null, error: (error as Error).message }
+    return null
   }
 }

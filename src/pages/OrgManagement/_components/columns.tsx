@@ -1,10 +1,10 @@
 import { type ColumnDef } from "@tanstack/react-table"
-import type { TBL_Organization } from "@/types/UserManagement";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { DataTableColumnHeader } from "./data-table-column-header";
+import type { Organization } from "@/types";
 
-export type Payment = TBL_Organization;
+export type Payment = Organization;
 
 export const columns: ColumnDef<Payment>[] = [
   {

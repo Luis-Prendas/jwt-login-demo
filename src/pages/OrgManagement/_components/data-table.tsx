@@ -6,15 +6,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, type ColumnFiltersState, type SortingState, type VisibilityState, } from '@tanstack/react-table';
 import { ChevronDown } from 'lucide-react';
 import { columns } from './columns';
-import type { TBL_Organization } from '@/types/UserManagement';
 import { useOrg } from '@/hooks/useOrg';
+import type { Organization } from '@/types';
 
 export function DataTable() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [data, setData] = useState<TBL_Organization[] | []>([])
+  const [data, setData] = useState<Organization[] | []>([])
   const { getAllOrg } = useOrg()
 
   useEffect(() => {

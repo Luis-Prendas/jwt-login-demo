@@ -1,9 +1,8 @@
-import { sessionLogin } from "@/services/Login";
+import { sessionLogin, type LoginForm } from "@/services/Login";
 import { useAuthStore } from "../store/cstorage";
-import type { LoginForm, UserBasicData } from "@/types/UserManagement";
 import { useState } from "react";
 import { decodeToken } from "@/utils/jwt";
-import { gerAllUsersService, getUserService, updateUserService } from "@/services/UserInformatio";
+import { gerAllUsersService, getUserService, updateUserService, type UpdateUserDto } from "@/services/UserInformatio";
 
 export function useAuth() {
   const {
@@ -20,11 +19,11 @@ export function useAuth() {
   const login = async (loginForm: LoginForm) => {
     setLoading(true);
     const response = await sessionLogin(loginForm);
-    if (response.token) {
-      setToken(response.token);
-      setIsAuthenticated(!!response.token);
-      cookieStore.set({ name: 'token', value: response.token || '', path: '/' });
-      setUserData(decodeToken(response.token!).user);
+    if (response) {
+      setToken(response);
+      setIsAuthenticated(!!response);
+      cookieStore.set({ name: 'token', value: response || '', path: '/' });
+      setUserData(decodeToken(response!).user);
     }
     setLoading(false);
     return response;
@@ -52,7 +51,7 @@ export function useAuth() {
     return response
   }
 
-  const updateUser = async (userData: UserBasicData, id: string) => {
+  const updateUser = async (userData: UpdateUserDto, id: string) => {
     setLoading(true)
     const response = await updateUserService(userData, token!, id)
     setLoading(false)

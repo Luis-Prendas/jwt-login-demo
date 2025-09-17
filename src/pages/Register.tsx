@@ -10,7 +10,7 @@ import { ModeToggle } from "@/components/mode-toggle"
 
 export default function Register({ className, ...props }: React.ComponentProps<"div">) {
   const navigate = useNavigate();
-  const { createUser, loading } = useAuth();
+  const { loading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -19,18 +19,18 @@ export default function Register({ className, ...props }: React.ComponentProps<"
     const username = form.loginUsername.value;
     const password = form.loginPassword.value;
 
-    const response = await createUser({ email, password, username });
-    if (!response.error && response.token) {
-      navigate('/dashboard');
-    } else {
-      toast("Error al crear cuenta", {
-        description: <span className="text-black/30 dark:text-white/30">{response.error}</span>,
-        action: {
-          label: "Cerrar",
-          onClick: () => { }
-        },
-      })
-    }
+    // const response = await createUser({ email, password, username });
+    // if (!response.error && response.token) {
+    //   navigate('/dashboard');
+    // } else {
+    //   toast("Error al crear cuenta", {
+    //     description: <span className="text-black/30 dark:text-white/30">{response.error}</span>,
+    //     action: {
+    //       label: "Cerrar",
+    //       onClick: () => { }
+    //     },
+    //   })
+    // }
   };
 
   return (

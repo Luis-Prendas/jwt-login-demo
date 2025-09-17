@@ -17,14 +17,14 @@ export default function Login({ className, ...props }: React.ComponentProps<"div
     const form = e.currentTarget;
     const username = form.loginUsername.value;
     const password = form.loginPassword.value;
-    const orgCode = form.loginOrgCode.value;
+    const organizationCode = form.loginOrgCode.value;
 
-    const response = await login({ username, password, orgCode });
-    if (!response.error && response.token) {
+    const response = await login({ username, password, organizationCode });
+    if (response) {
       navigate('/dashboard');
     } else {
       toast("Error al iniciar sesión", {
-        description: <span className="text-black/30 dark:text-white/30">{response.error}</span>,
+        description: <span className="text-black/30 dark:text-white/30">Error al iniciar sesion</span>,
         action: {
           label: "Cerrar",
           onClick: () => { }

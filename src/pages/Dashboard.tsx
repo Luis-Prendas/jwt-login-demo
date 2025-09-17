@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { ChartNoAxesColumn, Ellipsis, Heart, Image, List, ListStartIcon, MapPin, MessageCircle, Repeat2, Video } from "lucide-react";
+import { ChartNoAxesColumn, Ellipsis, Heart, Image, List, MapPin, MessageCircle, Repeat2, Video } from "lucide-react";
 
 export default function Dashboard() {
   const { userData } = useAuth();

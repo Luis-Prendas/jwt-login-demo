@@ -39,7 +39,7 @@ export async function updateUserService(id: string, dataUpdate: UpdateUserDto, u
   });
 }
 
-export async function createUserService(id: string, createData: CreateUserDto, userRequest: { id: string }) {
+export async function createUserService(createData: CreateUserDto, userRequest: { id: string }) {
   const SALT_ROUNDS = 10;
   const hashedPassword = await bcrypt.hash(createData.password, SALT_ROUNDS);
   return prisma.user.create({

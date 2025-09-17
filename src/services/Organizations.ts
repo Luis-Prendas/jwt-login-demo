@@ -1,9 +1,13 @@
-import type { CreateData, UpdateOrg } from "@/hooks/useOrg";
-import type { TBL_Organization } from "../types/UserManagement";
+import type { Organization } from "@/types";
+import type { createOrganizationSchema, updateOrganizationSchema } from "@/types/zod-schemas";
+import type z from "zod";
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6969';
 
-export async function getOrgService(orgId: string, token: string): Promise<TBL_Organization | null> {
+export type UpdateOrganizationDto = z.infer<typeof updateOrganizationSchema>
+export type CreateOrganizationDto = z.infer<typeof createOrganizationSchema>
+
+export async function getOrgService(orgId: string, token: string): Promise<Organization | null> {
   try {
     const response = await fetch(`${BASE_URL}/api/organization/get/${orgId}`, {
       method: 'GET',
@@ -25,7 +29,7 @@ export async function getOrgService(orgId: string, token: string): Promise<TBL_O
   }
 }
 
-export async function getAllOrgService(token: string): Promise<TBL_Organization[] | null> {
+export async function getAllOrgService(token: string): Promise<Organization[] | null> {
   try {
     const response = await fetch(`${BASE_URL}/api/organization/getAll`, {
       method: 'GET',
@@ -47,7 +51,7 @@ export async function getAllOrgService(token: string): Promise<TBL_Organization[
   }
 }
 
-export async function updateOrgService(dataUpdate: UpdateOrg, orgId: string, token: string): Promise<boolean | null> {
+export async function updateOrgService(dataUpdate: UpdateOrganizationDto, orgId: string, token: string): Promise<boolean | null> {
   try {
     const response = await fetch(`${BASE_URL}/api/organization/update/${orgId}`, {
       method: 'PUT',
@@ -69,7 +73,7 @@ export async function updateOrgService(dataUpdate: UpdateOrg, orgId: string, tok
   }
 }
 
-export async function createOrgService(createData: CreateData, token: string): Promise<boolean | null> {
+export async function createOrgService(createData: CreateOrganizationDto, token: string): Promise<boolean | null> {
   try {
     const response = await fetch(`${BASE_URL}/api/organization/create`, {
       method: 'POST',

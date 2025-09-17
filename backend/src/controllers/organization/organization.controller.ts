@@ -72,7 +72,7 @@ export const updateOrganization = asyncHandler(async (req: Request, res: Respons
   }
 
   logger.info(`Organización actualizada -> ${JSON.stringify(id)}`);
-  res.json({ success: true });
+  res.json({ data: ok });
 });
 
 // DELETE
@@ -92,5 +92,5 @@ export const deleteOrganization = asyncHandler(async (req: Request, res: Respons
   }
 
   logger.info(`Orgnizacion eliminada -> ${JSON.stringify(id)}`);
-  res.json({ success: true });
+  res.json({ data: ok });
 });

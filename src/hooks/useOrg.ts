@@ -1,19 +1,6 @@
-import { createOrgService, deleteOrgService, getAllOrgService, getOrgService, updateOrgService } from "@/services/Organizations";
+import { createOrgService, deleteOrgService, getAllOrgService, getOrgService, updateOrgService, type CreateOrganizationDto, type UpdateOrganizationDto } from "@/services/Organizations";
 import { useState } from "react";
 import { useAuth } from "./useAuth";
-
-export interface UpdateOrg {
-  corporateName: string
-  displayName: string
-  slogan: string
-  organizationCode: string
-}
-
-export interface CreateData {
-  corporateName: string
-  displayName: string
-  slogan: string
-}
 
 export function useOrg() {
   const { token } = useAuth()
@@ -33,14 +20,14 @@ export function useOrg() {
     return response
   }
 
-  const updateOrg = async (dataUpdate: UpdateOrg, orgId: string, ) => {
+  const updateOrg = async (dataUpdate: UpdateOrganizationDto, orgId: string, ) => {
     setLoading(true)
     const response = updateOrgService(dataUpdate, orgId, token!)
     setLoading(false)
     return response
   }
 
-  const createOrg = async (createData: CreateData) => {
+  const createOrg = async (createData: CreateOrganizationDto) => {
     setLoading(true)
     const response = createOrgService(createData, token!)
     setLoading(false)

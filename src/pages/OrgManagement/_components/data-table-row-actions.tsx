@@ -4,16 +4,16 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { MoreHorizontal } from 'lucide-react';
 import { DialogEditOrganization } from './dialog-edit-organization';
 import { useOrg } from '@/hooks/useOrg';
-import type { TBL_Organization } from '@/types/UserManagement';
 import { DialogCreateOrganization } from './dialog-create-organization';
 import { DialogDeleteOrganization } from './dialog-delete-organization';
+import type { Organization } from '@/types';
 
 export function DataTableRowActions({ id }: { id: string }) {
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
   const [isCreateOpen, setIsCreateOpen] = useState<boolean>(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false)
   const { getOrg } = useOrg()
-  const [data, setData] = useState<TBL_Organization | null>(null)
+  const [data, setData] = useState<Organization | null>(null)
 
   const handleClick = async () => {
     const response = await getOrg(id);

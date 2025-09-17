@@ -1,17 +1,38 @@
+import type { Gender, UserRole } from "@/types";
 import { jwtDecode } from "jwt-decode";
-import type { UserBasicData } from "../types/UserManagement";
 
-interface JwtPayload {
-  exp: number;
-  iat: number;
-  user: UserBasicData;
+/**
+ * Payload que se almacena en el JWT
+ */
+export interface PayloadJWT {
+  id: string
+  email: string
+  username: string
+  nickname: string
+  name: string
+  lastName: string
+  phone: string | null
+  gender: Gender
+  birthDate: Date | null
+  identificationNumber: string | null
+  address: string | null
+  role: UserRole
+  organizationId: string
+  description: string | null
+  isDeleted: Boolean
+}
+export interface JwtUserPayload {
+  user: PayloadJWT;
+  iat?: number;
+  exp?: number;
 }
 
-export const isTokenValid = (token: string): JwtPayload | false => {
+export const isTokenValid = (token: string): JwtUserPayload | false => {
   if (!token) return false;
 
   try {
-    const decoded = jwtDecode<JwtPayload>(token);
+    const decoded = jwtDecode<JwtUserPayload>(token);
+    if (!decoded.exp || !decoded.iat) return false
     const currentTime = Date.now() / 1000;
     return decoded.exp > currentTime ? decoded : false;
   } catch (err) {
@@ -19,6 +40,6 @@ export const isTokenValid = (token: string): JwtPayload | false => {
   }
 };
 
-export const decodeToken = (token: string): JwtPayload => {
-  return jwtDecode<JwtPayload>(token);
+export const decodeToken = (token: string): JwtUserPayload => {
+  return jwtDecode<JwtUserPayload>(token);
 };

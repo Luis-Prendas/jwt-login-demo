@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "../hooks/useAuth";
-import { USER_ROLES } from "@/types/UserManagement";
+import { UserRole } from "@/types";
 
-const PROTECTED_ACCESS = [USER_ROLES.DEVELOPER]
+const PROTECTED_ACCESS = [UserRole.DEVELOPER.toString(), UserRole.SUPERADMIN.toString()]
 
 export default function ProtectedAdminRoute() {
   const { userData } = useAuth();
