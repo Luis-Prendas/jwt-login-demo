@@ -25,3 +25,9 @@ dist-ssr
 .env
 database.sqlite
 /backend/prisma
+backend/.env
+.env
+*.sqlite
+*.db
+logs/
+*.log
