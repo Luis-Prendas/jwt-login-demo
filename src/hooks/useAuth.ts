@@ -1,8 +1,8 @@
+// hooks/useAuth.ts
 import { sessionLogin, type LoginForm } from "@/services/Login";
 import { useAuthStore } from "../store/cstorage";
 import { useState } from "react";
 import { decodeToken } from "@/utils/jwt";
-import { gerAllUsersService, getUserService, updateUserService, type UpdateUserDto } from "@/services/UserInformatio";
 
 export function useAuth() {
   const {
@@ -18,56 +18,67 @@ export function useAuth() {
 
   const login = async (loginForm: LoginForm) => {
     setLoading(true);
-    const response = await sessionLogin(loginForm);
-    if (response) {
-      setToken(response);
-      setIsAuthenticated(!!response);
-      cookieStore.set({ name: 'token', value: response || '', path: '/' });
-      setUserData(decodeToken(response!).user);
+    try {
+      const response = await sessionLogin(loginForm);
+      if (response) {
+        setToken(response);
+        setIsAuthenticated(!!response);
+        // ✨ MEJORADO: Usar localStorage en lugar de cookieStore para consistencia
+        localStorage.setItem('token', response);
+        setUserData(decodeToken(response).user);
+        console.log('✅ Login exitoso');
+      }
+      return response;
+    } catch (error) {
+      console.error('❌ Error en login:', error);
+      return null;
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-    return response;
   }
 
   const logout = () => {
     setLoading(true);
-    cookieStore.delete('token');
-    setToken(null);
-    setIsAuthenticated(false);
-    setLoading(false);
+    try {
+      // ✨ MEJORADO: Limpiar localStorage y store
+      localStorage.removeItem('token');
+      setToken(null);
+      setIsAuthenticated(false);
+      setUserData(null);
+      console.log('✅ Logout exitoso');
+    } catch (error) {
+      console.error('❌ Error en logout:', error);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  const getUser = async (id: string) => {
-    setLoading(true)
-    const response = await getUserService(id, token!)
-    setLoading(false)
-    return response
-  }
-
-  const getAllUsers = async () => {
-    setLoading(true)
-    const response = await gerAllUsersService(token!)
-    setLoading(false)
-    return response
-  }
-
-  const updateUser = async (userData: UpdateUserDto, id: string) => {
-    setLoading(true)
-    const response = await updateUserService(userData, token!, id)
-    setLoading(false)
-    return response
+  // ✨ NUEVO: Función para refrescar datos del usuario actual
+  const refreshUserData = () => {
+    if (token) {
+      try {
+        const decoded = decodeToken(token);
+        setUserData(decoded.user);
+      } catch (error) {
+        console.error('❌ Error refrescando datos del usuario:', error);
+        logout(); // Si el token es inválido, hacer logout
+      }
+    }
   }
 
   return {
+    // Estados
     token,
     isAuthenticated,
     loading,
     userData,
+    
+    // Métodos de autenticación
     login,
-    setToken,
     logout,
-    getAllUsers,
-    getUser,
-    updateUser,
+    refreshUserData,
+    
+    // ⚠️ DEPRECATED: Mantener setToken por compatibilidad, pero desalentar su uso
+    setToken,
   };
 }

@@ -2,13 +2,20 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useDept } from '@/hooks/useDept';
+// ✨ NUEVO: Hook unificado
+import { useDepartments } from '@/hooks/useDepartments';
 import type { Department } from '@/types';
-import { useNavigate } from 'react-router';
 
-export function DialogEditOrganization({ isOpen, setIsOpen, data }: { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>, data: Department }) {
-  const navigate = useNavigate();
-  const { updateDept } = useDept()
+type Props = {
+  isOpen: boolean,
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  data: Department,
+  onSuccess?: () => void
+}
+
+export function DialogEditOrganization({ isOpen, setIsOpen, data, onSuccess }: Props) {
+  // ✨ NUEVO: Hook unificado
+  const { update, loading } = useDepartments()
 
   const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,11 +23,21 @@ export function DialogEditOrganization({ isOpen, setIsOpen, data }: { isOpen: bo
     const deptName = form.deptName.value
     const deptDescription = form.deptDescription.value
 
-    const updated = await updateDept({ dataUpdate: { name: deptName, description: deptDescription }, id: data.id })
-
-    if (updated) {
-      navigate(0);
-    }
+    // ✨ NUEVO: Usar el método update unificado
+    await update(
+      data.id,
+      {
+        name: deptName,
+        description: deptDescription
+      },
+      undefined, // sin parámetros adicionales para la URL
+      () => {
+        // ✨ Callback de éxito
+        console.log('✅ Departamento actualizado exitosamente')
+        setIsOpen(false)
+        onSuccess?.()
+      }
+    )
   };
 
   return (
@@ -36,26 +53,61 @@ export function DialogEditOrganization({ isOpen, setIsOpen, data }: { isOpen: bo
                 Realiza cambios en el departamento. Haz clic en guardar cuando hayas terminado.
               </DialogDescription>
             </DialogHeader>
+
             <div className="grid gap-4">
               <div className="grid gap-3">
                 <Label htmlFor="deptName">Nombre del departamento *</Label>
-                <Input id="deptName" name="deptName" type="text" defaultValue={data?.name ?? ""} required />
+                <Input
+                  id="deptName"
+                  name="deptName"
+                  type="text"
+                  defaultValue={data.name}
+                  required
+                  disabled={loading}
+                />
               </div>
               <div className="grid gap-3">
                 <Label htmlFor="deptDescription">Descripción *</Label>
-                <Input id="deptDescription" name="deptDescription" type="text" defaultValue={data?.description ?? ""} required />
+                <Input
+                  id="deptDescription"
+                  name="deptDescription"
+                  type="text"
+                  defaultValue={data.description ? data.description : "Null"}
+                  required
+                  disabled={loading}
+                />
               </div>
             </div>
+
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline" type="button">Cancelar</Button>
+                <Button
+                  variant="outline"
+                  type="button"
+                  disabled={loading}
+                >
+                  Cancelar
+                </Button>
               </DialogClose>
-              <Button type="submit">Guardar cambios</Button>
+              <Button
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Guardando cambios...
+                  </>
+                ) : (
+                  'Guardar cambios'
+                )}
+              </Button>
             </DialogFooter>
           </form>
         ) : (
           <DialogHeader>
             <DialogTitle className="flex gap-4">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
               Cargando...
             </DialogTitle>
           </DialogHeader>

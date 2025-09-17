@@ -3,14 +3,21 @@ import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router";
-import { useDept } from "@/hooks/useDept";
+// ✨ NUEVO: Hooks unificados
+import { useDepartments } from "@/hooks/useDepartments";
 import { useAuth } from "@/hooks/useAuth";
 
-export function DialogCreateOrganization({ isOpen, setIsOpen, orgId }: { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>, orgId: string }) {
-  const navigate = useNavigate();
+type Props = {
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  orgId: string
+  onSuccess?: () => void
+}
+
+export function DialogCreateOrganization({ isOpen, setIsOpen, orgId, onSuccess }: Props) {
   const { userData } = useAuth()
-  const { createDept } = useDept()
+  // ✨ NUEVO: Hook unificado
+  const { create, loading } = useDepartments()
 
   const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,11 +25,22 @@ export function DialogCreateOrganization({ isOpen, setIsOpen, orgId }: { isOpen:
     const deptName = form.deptName.value
     const deptDescription = form.deptDescription.value
 
-    const created = await createDept({ createData: { name: deptName, description: deptDescription, organizationId: userData?.organizationId! }, orgId })
-
-    if (created) {
-      navigate(0);
-    }
+    // ✨ NUEVO: Usar el método create unificado
+    await create(
+      {
+        name: deptName,
+        description: deptDescription,
+        organizationId: userData?.organizationId!
+      },
+      { orgId }, // parámetros para la URL
+      () => {
+        // ✨ Callback de éxito
+        console.log('✅ Departamento creado exitosamente')
+        setIsOpen(false)
+        form.reset() // ✨ Limpiar el formulario
+        onSuccess?.()
+      }
+    )
   }
 
   return (
@@ -37,21 +55,55 @@ export function DialogCreateOrganization({ isOpen, setIsOpen, orgId }: { isOpen:
               Crea un nuevo departamento. Haz clic en guardar cuando hayas terminado.
             </DialogDescription>
           </DialogHeader>
+
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="deptName">Nombre del departamento *</Label>
-              <Input id="deptName" name="deptName" type="text" required />
+              <Input
+                id="deptName"
+                name="deptName"
+                type="text"
+                placeholder="Ej: Recursos Humanos"
+                required
+                disabled={loading}
+              />
             </div>
             <div className="grid gap-3">
               <Label htmlFor="deptDescription">Descripción *</Label>
-              <Input id="deptDescription" name="deptDescription" type="text" required />
+              <Input
+                id="deptDescription"
+                name="deptDescription"
+                type="text"
+                placeholder="Ej: Gestión del talento humano"
+                required
+                disabled={loading}
+              />
             </div>
           </div>
+
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline" type="button">Cancelar</Button>
+              <Button
+                variant="outline"
+                type="button"
+                disabled={loading}
+              >
+                Cancelar
+              </Button>
             </DialogClose>
-            <Button type="submit">Guardar</Button>
+            <Button
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Guardando...
+                </>
+              ) : (
+                'Guardar'
+              )}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

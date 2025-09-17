@@ -1,12 +1,10 @@
-import { type ColumnDef } from "@tanstack/react-table"
-import { Checkbox } from "@/components/ui/checkbox";
-import { DataTableRowActions } from "./data-table-row-actions";
-import { DataTableColumnHeader } from "./data-table-column-header";
-import type { Department } from "@/types";
+import { Checkbox } from '@/components/ui/checkbox';
+import type { ColumnDef } from '@tanstack/react-table';
+import { DataTableColumnHeader } from './data-table-column-header';
+import { DataTableRowActions } from './data-table-row-actions';
+import type { Department } from '@/types';
 
-export type Payment = Department;
-
-export const columns: ColumnDef<Payment>[] = [
+export const createColumns = (onSuccess?: () => void): ColumnDef<Department>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -32,20 +30,33 @@ export const columns: ColumnDef<Payment>[] = [
   {
     id: "Nombre del departamento",
     accessorKey: "name",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Nombre del departamento" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Nombre del departamento" />
+    ),
   },
   {
-    id: "Descripcion",
+    id: "Descripción",
     accessorKey: "description",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Descripcion" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Descripción" />
+    ),
   },
   {
     id: "ID Organizacional",
     accessorKey: "organizationId",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="ID Organizacional" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="ID Organizacional" />
+    ),
   },
   {
     id: 'actions',
-    cell: ({ row }) => <DataTableRowActions dept={row.original} />,
+    cell: ({ row }) => (
+      <DataTableRowActions 
+        dept={row.original} 
+        onSuccess={onSuccess}
+      />
+    ),
   },
 ]
+
+export const columns: ColumnDef<Department>[] = createColumns()

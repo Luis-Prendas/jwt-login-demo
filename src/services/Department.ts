@@ -1,118 +1,30 @@
-import type { Department } from "@/types";
-import type { createDepartmentSchema, updateDepartmentSchema } from "@/types/zod-schemas";
-import type z from "zod";
-
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6969';
+import type { Department } from '@/types'
+import type { createDepartmentSchema, updateDepartmentSchema } from '@/types/zod-schemas'
+import { BaseCrudService } from '@/utils/base-crud-service'
+import { httpClient } from '@/utils/http-client'
+import type z from 'zod'
 
 export type UpdateDepartmentDto = z.infer<typeof updateDepartmentSchema>
 export type CreateDepartmentDto = z.infer<typeof createDepartmentSchema>
 
-export async function getAllDeptService(orgId: string, token: string): Promise<Department[] | null> {
-  try {
-    const response = await fetch(`${BASE_URL}/api/department/getAll/${orgId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch all dept info');
-    }
-
-    const data = await response.json();
-    return data.data
-  } catch (error) {
-    console.error(`❌ Error en getAllDeptService: ${error}`);
-    return null;
-  }
-}
-
-export async function getDeptService(id: string, token: string): Promise<Department | null> {
-  try {
-    const response = await fetch(`${BASE_URL}/api/department/get/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch dept info');
-    }
-
-    const data = await response.json();
-    return data.data
-  } catch (error) {
-    console.error(`❌ Error en getDeptService: ${error}`);
-    return null;
-  }
-}
-
-export async function updateDeptService(dataUpdate: UpdateDepartmentDto, id: string, token: string): Promise<Department | null> {
-  try {
-    const response = await fetch(`${BASE_URL}/api/department/update/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(dataUpdate),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to update dept info');
-    }
-
-    const data = await response.json();
-    return data.data
-  } catch (error) {
-    console.error(`❌ Error en updateDeptService: ${error}`);
-    return null;
-  }
-}
-
-export async function createDeptService(createData: CreateDepartmentDto, orgId: string, token: string): Promise<boolean | null> {
-  try {
-    const response = await fetch(`${BASE_URL}/api/department/create/${orgId}`, {
-      method: 'POST',
-      body: JSON.stringify(createData),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
+export class DepartmentService extends BaseCrudService<Department, CreateDepartmentDto, UpdateDepartmentDto> {
+  constructor() {
+    super({
+      baseEndpoint: '/api/department',
+      paramEndpoints: {
+        getAll: '/getAll/:orgId',    // 👈 Override: necesita orgId
+        create: '/create/:orgId',    // 👈 Override: necesita orgId
+        update: '/update/:id',       // 👈 Default está bien
+        delete: '/delete/:id',       // 👈 Default está bien
+        getOne: '/get/:id',          // 👈 Default está bien
+      }
     })
+  }
 
-    if (!response.ok) {
-      throw new Error('Failed to create dept info');
-    }
-
-    return true;
-  } catch (error) {
-    console.error(`❌ Error en createOrgService: ${error}`);
-    return null;
+  // 🎯 Métodos específicos
+  async getDepartmentsByUserId(userId: string): Promise<Department[]> {
+    return httpClient.get<Department[]>(`${this.config.baseEndpoint}/by-user/${userId}`)
   }
 }
 
-export async function deleteDeptService(id: string, token: string) {
-  try {
-    const response = await fetch(`${BASE_URL}/api/department/delete/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-    })
-
-    if (!response.ok) {
-      throw new Error('Failed to delete user info');
-    }
-
-    return true;
-  } catch (error) {
-    console.error(`❌ Error en deleteDeptService: ${error}`);
-    return null;
-  }
-}
+export const departmentService = new DepartmentService()

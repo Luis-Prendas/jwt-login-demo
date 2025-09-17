@@ -26,7 +26,7 @@ export default function AppRouter() {
 
             {/* Administrativas (Requiere autenticación y rol de administrador) */}
             <Route element={<ProtectedAdminRoute />}>
-              <Route path="/organization-management" element={<OrganizationManagementPega />} />
+              {/* <Route path="/organization-management" element={<OrganizationManagementPega />} /> */}
               <Route path="/department-management" element={<DepartmentManagementPega />} />
             </Route>
           </Route>
