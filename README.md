@@ -1,149 +1,187 @@
-# 🏢 Sistema de Gestión Organizacional
+# 🏢 SIGEOR - Sistema de Gestión Organizacional
 
-Este proyecto implementa una base de datos y estructura backend para gestionar **organizaciones, departamentos, puestos, usuarios y su relación jerárquica**, incluyendo control de horarios y asistencias.
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=flat&logo=Prisma&logoColor=white)](https://prisma.io/)
+[![Express.js](https://img.shields.io/badge/Express.js-404D59?style=flat&logo=express)](https://expressjs.com/)
 
----
-
-## 📌 Objetivo
-
-El sistema busca centralizar la información organizacional de forma escalable y modular, permitiendo:
-
-- Registrar múltiples organizaciones.
-- Definir departamentos y puestos de trabajo.
-- Asignar usuarios a organizaciones y puestos.
-- Controlar roles, accesos y jerarquías.
-- Administrar horarios y asistencias.
+Sistema integral de gestión organizacional desarrollado con arquitectura full-stack moderna, diseñado para centralizar la administración de organizaciones, departamentos, usuarios y control de asistencias con escalabilidad empresarial.
 
 ---
 
-## 🏗️ Arquitectura de Datos
+## 📋 Descripción del Proyecto
 
-La estructura sigue un modelo jerárquico y dependiente:
+SIGEOR es una plataforma web que implementa un sistema completo de gestión organizacional con las siguientes capacidades:
 
-1. **Organizaciones (`Organization`)**  
-   Nodo raíz. Toda la estructura depende de la organización.  
-
-2. **Departamentos (`Department`)**  
-   Pertenecen a una organización. Agrupan puestos de trabajo.  
-
-3. **Puestos (`Position`)**  
-   Definidos dentro de un departamento. Representan el rol laboral.  
-
-4. **Usuarios (`User`)**  
-   Se asignan a una organización y pueden ocupar uno o más puestos.  
-
-5. **Relación Usuario ↔ Puesto (`UserPosition`)**  
-   Define qué usuario ocupa qué puesto.  
-
-6. **Horarios (`Schedule`)**  
-   Indican la planificación laboral de los usuarios.  
-
-7. **Asistencias (`Attendance`)**  
-   Registra entradas, salidas y estado de asistencia de los usuarios.  
+- **Gestión Multiorganizacional**: Soporte para múltiples organizaciones independientes
+- **Estructura Jerárquica**: Departamentos, posiciones y roles organizacionales
+- **Control de Acceso**: Sistema de autenticación JWT con roles diferenciados
+- **Gestión de Usuarios**: CRUD completo con asignación de posiciones
+- **Control de Asistencias**: Registro y seguimiento de horarios laborales
+- **Interface Moderna**: UI responsiva con soporte para temas claro/oscuro
 
 ---
 
-## 🛠️ Tecnologías
+## 🏗️ Arquitectura del Sistema
 
-- **Node.js** (Runtime)
-- **TypeScript** (Tipado estático)
-- **Prisma ORM** (Manejo de base de datos)
-- **Zod** (Validación de datos)
-- **SQLite** (Entorno local, puede migrarse a PostgreSQL)
-- **JWT** (Sistema de autenticación)
-- **React + Vite** (Frontend)
-- **Shadcn/UI** (Librería de componentes)
+### **Backend Architecture**
+```
+backend/
+├── src/
+│   ├── controllers/         # Controladores REST por entidad
+│   ├── services/           # Lógica de negocio y operaciones
+│   ├── routes/             # Definición de endpoints API
+│   ├── middlewares/        # Middleware personalizado (auth, logging, validation)
+│   ├── db/                 # Configuración de base de datos
+│   ├── types/              # Definiciones de tipos TypeScript
+│   └── utils/              # Utilidades y helpers
+├── prisma/                 # Esquemas, migraciones y seeds
+├── tests/                  # Suite de tests unitarios
+└── logs/                   # Sistema de logging estructurado
+```
+
+### **Frontend Architecture**
+```
+src/
+├── components/             # Componentes reutilizables
+│   ├── ui/                # Componentes base (shadcn/ui)
+│   └── generic/           # Componentes genéricos de negocio
+├── pages/                 # Páginas y vistas principales
+├── hooks/                 # Custom hooks para lógica compartida
+├── services/              # Servicios de comunicación con API
+├── store/                 # Gestión de estado global
+├── types/                 # Definiciones de tipos y schemas
+└── utils/                 # Utilidades y helpers del frontend
+```
+
+## 🛠️ Stack Tecnológico
+
+### **Backend**
+- **Runtime**: Node.js 20+ con TypeScript
+- **Framework**: Express.js con arquitectura REST
+- **ORM**: Prisma con SQLite (migrable a PostgreSQL)
+- **Autenticación**: JWT (JSON Web Tokens)
+- **Validación**: Zod schemas para type-safe validation
+- **Testing**: Jest para testing unitario
+- **Logging**: Sistema de logs estructurado por módulos
+
+### **Frontend**
+- **Framework**: React 18 con TypeScript
+- **Build Tool**: Vite para desarrollo y build optimizado
+- **UI Library**: shadcn/ui + Radix UI primitives
+- **Styling**: Tailwind CSS con CSS Variables
+- **Routing**: React Router v6 con rutas protegidas
+- **HTTP Client**: Axios con interceptors personalizados
+- **State Management**: Custom hooks + Context API
+
+### **DevOps & Tools**
+- **Database**: SQLite (desarrollo) / PostgreSQL (producción)
+- **Package Manager**: npm
+- **Code Quality**: ESLint + Prettier
+- **Version Control**: Git con conventional commits
 
 ---
 
 ## 📦 Prerrequisitos
 
-- Node.js **>= 20.x**
-- npm **>= 10.x**
+- **Node.js** >= 20.0.0
+- **npm** >= 10.0.0
+- **Git** >= 2.40.0
 
 ---
 
-## 🚀 Instalación y Uso
+## 🚀 Instalación y Configuración
 
-### 1. Clonar repositorio
+### 1. **Clonar el Repositorio**
 ```bash
 git clone https://github.com/Luis-Prendas/sigeor-workspace.git
 cd sigeor-workspace
-````
+```
 
-### 2. Instalar dependencias del frontend
-
+### 2. **Configuración del Backend**
 ```bash
+cd backend
 npm install
 ```
 
-### 3. Instalar dependencias del backend
-
+**Configurar variables de entorno:**
 ```bash
-cd ./backend
+cp .env.example .env
+```
+
+```env
+# Backend Environment Variables
+SECRET_KEY="your-super-secret-jwt-key-here"
+PORT="3001"
+DATABASE_URL="file:./database.sqlite"
+NODE_ENV="development"
+```
+
+### 3. **Configuración del Frontend**
+```bash
+cd ../
 npm install
 ```
 
-### 4. Configurar variables de entorno
-
-Crear un archivo `.env` en cada carpeta, siguiendo el ejemplo de `.env.example`.
-
-**Frontend**
-
-```env
-VITE_API_URL=""
-VITE_SOCKET_URL=""
-VITE_SITE_URL=""
-```
-
-**Backend**
-
-```env
-SECRET_KEY=""
-PORT=""
-DATABASE_URL=""
-```
-
-### 5. Ejecutar migraciones y cargar datos iniciales
-
-> ⚠️ Este paso borra y recrea toda la información en la base de datos.
-
+**Configurar variables de entorno:**
 ```bash
-cd ./backend
+cp .env.example .env
+```
+
+```env
+# Frontend Environment Variables
+VITE_API_URL="http://localhost:3001/api"
+VITE_SOCKET_URL="http://localhost:3001"
+VITE_SITE_URL="http://localhost:5173"
+```
+
+### 4. **Inicialización de la Base de Datos**
+```bash
+cd backend
 npm run reset:prisma
 ```
 
-### 6. Iniciar los servidores
+> ⚠️ **Advertencia**: Este comando resetea completamente la base de datos y carga datos de prueba.
 
-**Frontend**
+### 5. **Ejecutar la Aplicación**
 
+**Terminal 1 - Backend:**
+```bash
+cd backend
+npm run dev
+```
+
+**Terminal 2 - Frontend:**
 ```bash
 npm run dev
 ```
 
-**Backend**
-
-```bash
-cd ./backend
-npm run dev
-```
-
----
-
-## 📜 Scripts disponibles
-
-### Frontend
-
-* `npm run dev` → Inicia la app en modo desarrollo.
-* `npm run build` → Compila el proyecto.
-
-### Backend
-
-* `npm run dev` → Inicia el servidor en modo desarrollo.
-* `npm run reset:prisma` → Resetea la base de datos (migraciones + seed).
+La aplicación estará disponible en:
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:3001
+- **API Documentation**: http://localhost:3001/api-docs (si está configurado)
 
 ---
 
 ## 📄 Licencia
 
-MIT © 2025
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+
+---
+
+## 👥 Autores
+
+- **Luis Prendas** - *Desarrollo Principal* - [@Luis-Prendas](https://github.com/Luis-Prendas)
+
+---
+
+
+- [Prisma](https://prisma.io/) por el excelente ORM
+- [shadcn/ui](https://ui.shadcn.com/) por los componentes de UI
+- [Vite](https://vitejs.dev/) por la herramienta de build ultrarrápida
+- Comunidad de TypeScript por el ecosistema robusto
+
+---
+
+**¿Encontraste un bug o tienes una sugerencia?** [Abre un issue](https://github.com/Luis-Prendas/sigeor-workspace/issues)
