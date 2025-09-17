@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 import { useDept } from "@/hooks/useDept";
 import { useAuth } from "@/hooks/useAuth";
 
-export function DialogCreateOrganization({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+export function DialogCreateOrganization({ isOpen, setIsOpen, orgId }: { isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>, orgId: string }) {
   const navigate = useNavigate();
   const { userData } = useAuth()
   const { createDept } = useDept()
@@ -18,7 +18,7 @@ export function DialogCreateOrganization({ isOpen, setIsOpen }: { isOpen: boolea
     const deptName = form.deptName.value
     const deptDescription = form.deptDescription.value
 
-    const created = await createDept({ createData: { name: deptName, description: deptDescription, organizationId: userData?.organizationId! }, orgId: userData?.organizationId! })
+    const created = await createDept({ createData: { name: deptName, description: deptDescription, organizationId: userData?.organizationId! }, orgId })
 
     if (created) {
       navigate(0);

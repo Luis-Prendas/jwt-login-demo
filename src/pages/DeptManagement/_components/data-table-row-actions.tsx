@@ -8,7 +8,7 @@ import { DialogDeleteOrganization } from './dialog-delete-organization';
 import type { Department } from '@/types';
 import { useDept } from '@/hooks/useDept';
 
-export function DataTableRowActions({ id }: { id: string }) {
+export function DataTableRowActions({ dept }: { dept: Department }) {
   const [isEditOpen, setIsEditOpen] = useState<boolean>(false);
   const [isCreateOpen, setIsCreateOpen] = useState<boolean>(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState<boolean>(false)
@@ -16,7 +16,7 @@ export function DataTableRowActions({ id }: { id: string }) {
   const { getDept } = useDept()
 
   const handleClick = async () => {
-    const response = await getDept({ id })
+    const response = await getDept({ id: dept.id })
     setData(response);
     setIsEditOpen(true)
   };
@@ -24,8 +24,8 @@ export function DataTableRowActions({ id }: { id: string }) {
   return (
     <>
       {data && <DialogEditOrganization isOpen={isEditOpen} setIsOpen={setIsEditOpen} data={data} />}
-      <DialogCreateOrganization isOpen={isCreateOpen} setIsOpen={setIsCreateOpen} />
-      <DialogDeleteOrganization isOpen={isDeleteOpen} setIsOpen={setIsDeleteOpen} id={id} />
+      <DialogCreateOrganization isOpen={isCreateOpen} setIsOpen={setIsCreateOpen} orgId={dept.organizationId} />
+      <DialogDeleteOrganization isOpen={isDeleteOpen} setIsOpen={setIsDeleteOpen} id={dept.id} />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

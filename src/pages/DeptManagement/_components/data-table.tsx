@@ -1,31 +1,44 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, type ColumnFiltersState, type SortingState, type VisibilityState, } from '@tanstack/react-table';
 import { ChevronDown } from 'lucide-react';
 import { columns } from './columns';
-import type { Department } from '@/types';
+import type { Department, Organization } from '@/types';
 import { useDept } from '@/hooks/useDept';
-import { useAuth } from '@/hooks/useAuth';
+import { useOrg } from '@/hooks/useOrg';
 
 export function DataTable() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [orgOptions, setOrgOptions] = useState<Organization[] | null>(null)
+  const [position, setPosition] = useState('')
   const [data, setData] = useState<Department[] | []>([])
   const { getAllDept } = useDept()
-  const { userData } = useAuth()
+  const { getAllOrg } = useOrg()
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await getAllDept({ orgId: userData?.organizationId! })
-      setData(response ? response : [])
+      const responseOrg = await getAllOrg()
+      setOrgOptions(responseOrg)
+      setPosition(responseOrg ? responseOrg[0].displayName : '')
     }
     fetch()
   }, [])
+
+  useEffect(() => {
+    if (!orgOptions || !position) return
+    const fetch = async () => {
+      const orgId = orgOptions?.find((e) => e.displayName === position)
+      const responseDept = await getAllDept({ orgId: orgId?.id! })
+      setData(responseDept ? responseDept : [])
+    }
+    fetch()
+  }, [position])
 
   const table = useReactTable({
     data: data ? data : [],
@@ -48,7 +61,7 @@ export function DataTable() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Search..."
           value={(table.getColumn("Nombre del departamento")?.getFilterValue() as string) ?? ''}
@@ -57,32 +70,50 @@ export function DataTable() {
           }
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className='flex gap-4'>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Organizaciones <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Organizaciones</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+                {orgOptions && orgOptions.map(option => (
+                  <DropdownMenuRadioItem key={option.id} value={option.displayName}>{option.displayName}</DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

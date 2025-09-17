@@ -46,6 +46,6 @@ export const columns: ColumnDef<Payment>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <DataTableRowActions id={row.original.id} />,
+    cell: ({ row }) => <DataTableRowActions dept={row.original} />,
   },
 ]
