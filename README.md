@@ -166,7 +166,12 @@ La aplicación estará disponible en:
 
 ## 📄 Licencia
 
-Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto está licenciado bajo la **MIT No-Commercial License (MIT-NC)**.  
+Puedes usar, modificar y compartir el código libremente con fines personales, educativos o experimentales.  
+
+⚠️ **No se permite el uso con fines comerciales**, incluyendo venta, SaaS, monetización directa o indirecta.  
+
+Consulta el archivo [LICENSE](LICENSE) para más detalles.
 
 ---
 
