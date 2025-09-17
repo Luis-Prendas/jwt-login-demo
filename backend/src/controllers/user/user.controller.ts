@@ -51,8 +51,8 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
     logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID no proporcionado');
   }
-  const createData: CreateUserDto = req.body.content;
-  const userRequest = req.body.userRequest;
+  const createData: CreateUserDto = req.body;
+  const userRequest = req.user!;
   const user = await createUserService(id, createData, userRequest)
   if (!user) {
     logger.warn(`No se pudo crear el puesto -> ${id}\n`);
@@ -71,8 +71,8 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
     logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID no proporcionado');
   }
-  const dataUpdate: UpdateUserDto = req.body.content;
-  const userRequest = req.body.userRequest;
+  const dataUpdate: UpdateUserDto = req.body;
+  const userRequest = req.user!;
   const user = await updateUserService(id, dataUpdate, userRequest)
   if (!user) {
     logger.warn(`No se pudo actualizar el puesto -> ${id}\n`);
@@ -91,7 +91,7 @@ export const userDelete = asyncHandler(async (req: Request, res: Response) => {
     logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID no proporcionado');
   }
-  const userRequest = req.body.userRequest;
+  const userRequest = req.user!;
   const user = await deleteUserService(id, userRequest);
   if (!user) {
     logger.warn(`No se pudo eliminar el puesto -> ${id}\n`);

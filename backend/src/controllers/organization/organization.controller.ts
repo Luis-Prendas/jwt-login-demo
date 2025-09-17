@@ -9,7 +9,6 @@ const logger = getLogger('api/organization');
 
 // GET ALL
 export const getAllOrg = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
 
   const orgs = await getAllOrganizationService();
   if (!orgs || orgs.length === 0) {
@@ -18,13 +17,11 @@ export const getAllOrg = asyncHandler(async (req: Request, res: Response) => {
   }
 
   logger.info(`Orgnizaciones encontradas -> ${JSON.stringify(orgs)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: orgs });
 });
 
 // GET ONE
 export const getOrg = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
 
   const id = req.params.id;
   if (!id) {
@@ -39,16 +36,14 @@ export const getOrg = asyncHandler(async (req: Request, res: Response) => {
   }
 
   logger.info(`Orgnizacion encontrada -> ${JSON.stringify(org)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: org });
 });
 
 // CREATE
 export const createOrganization = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
 
-  const userRequest = req.body.userRequest;
-  const createData: CreateOrganizationDto = req.body.content;
+  const userRequest = req.user!;
+  const createData: CreateOrganizationDto = req.body;
   const id = await createOrganizationService(createData, userRequest);
   if (!id) {
     logger.warn(`Orgnizacion no creada\n`);
@@ -56,16 +51,14 @@ export const createOrganization = asyncHandler(async (req: Request, res: Respons
   }
 
   logger.info(`Orgnizacion creada -> ${JSON.stringify(id)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: id });
 });
 
 // UPDATE
 export const updateOrganization = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
 
-  const dataUpdate: UpdateOrganizationDto = req.body.content;
-  const userRequest = req.body.userRequest;
+  const dataUpdate: UpdateOrganizationDto = req.body;
+  const userRequest = req.user!;
   const id = req.params.id;
   if (!id) {
     logger.warn(`ID no proporcionado\n`);
@@ -79,13 +72,11 @@ export const updateOrganization = asyncHandler(async (req: Request, res: Respons
   }
 
   logger.info(`Organización actualizada -> ${JSON.stringify(id)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ success: true });
 });
 
 // DELETE
 export const deleteOrganization = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
 
   const id = req.params.id;
   if (!id) {
@@ -93,7 +84,7 @@ export const deleteOrganization = asyncHandler(async (req: Request, res: Respons
     throw new ApiError(400, 'ID required');
   }
 
-  const userRequest = req.body.userRequest;
+  const userRequest = req.user!;
   const ok = await deleteOrganizationService(id, userRequest);
   if (!ok) {
     logger.warn(`Organizacion no eliminada\n`);
@@ -101,6 +92,5 @@ export const deleteOrganization = asyncHandler(async (req: Request, res: Respons
   }
 
   logger.info(`Orgnizacion eliminada -> ${JSON.stringify(id)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ success: true });
 });

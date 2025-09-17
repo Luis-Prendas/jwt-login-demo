@@ -1,7 +1,10 @@
 export class ApiError extends Error {
-  status: number;
-  constructor(status: number, message: string) {
+  statusCode: number;
+  details?: object;
+
+  constructor(statusCode: number, message: string, details?: object) {
     super(message);
-    this.status = status;
+    this.statusCode = statusCode;
+    this.details = details;
   }
 }

@@ -1,5 +1,6 @@
 import prisma from '../../prisma/prisma';
 import { CreateOrganizationDto, UpdateOrganizationDto } from '../../routes/organization.routes';
+import { PayloadJWT } from '../../types/jwt';
 
 export async function getAllOrganizationService() {
   return prisma.organization.findMany({
@@ -25,7 +26,7 @@ export async function createOrganizationService(createData: CreateOrganizationDt
   });
 }
 
-export async function updateOrganizationService(orgId: string, dataUpdate: UpdateOrganizationDto, userRequest: { id: string }) {
+export async function updateOrganizationService(orgId: string, dataUpdate: UpdateOrganizationDto, userRequest: PayloadJWT) {
   return await prisma.organization.updateMany({
     where: { id: orgId, isDeleted: false },
     data: {

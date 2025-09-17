@@ -352,3 +352,31 @@ Visualización de indicadores clave para administradores y supervisores.
 6. **Migraciones**: cuidado al renombrar columnas (`identificationNumber`) y expandir enums.
 
 ---
+
+## 🛣️ Roadmap
+
+### ✅ MVP (ya implementado / en curso)
+- [x] Modelo de datos con Prisma (Organizaciones, Departamentos, Puestos, Usuarios, Horarios, Asistencias).
+- [x] Autenticación con JWT.
+- [x] Validación de datos con Zod.
+- [x] Soft delete con campos de auditoría (`isDeleted`, `createdBy`, `updatedBy`, etc.).
+- [x] Frontend inicial con React + Vite.
+- [x] Configuración de migraciones y seed automáticas.
+
+### 🔜 Próximos pasos
+- [ ] **Dashboard general** con métricas (usuarios activos, asistencias de la semana, puestos por departamento).
+- [ ] **Roles y permisos avanzados** (control granular de accesos por módulo/acción).
+- [ ] **Reportes** exportables (CSV, Excel, PDF).
+- [ ] **Visualización jerárquica** de la organización (estructura tipo árbol).
+- [ ] **Gestión de horarios avanzados** (feriados, excepciones, reglas recurrentes).
+- [ ] **Notificaciones** (correo o integración con Slack/Teams).
+- [ ] **Internacionalización (i18n)** para soporte multi-idioma.
+- [ ] **Integración biométrica/RFID** para asistencia (opcional).
+
+### 🚀 Futuro
+- [ ] Soporte para múltiples bases de datos (PostgreSQL, MySQL).
+- [ ] Sistema multi-tenant avanzado (aislar datos entre organizaciones).
+- [ ] API pública con tokens de acceso por cliente.
+- [ ] Integraciones externas (ERP/HR, proveedores de nómina).
+
+---

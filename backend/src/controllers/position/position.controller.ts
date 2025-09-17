@@ -9,7 +9,6 @@ const logger = getLogger('api/position');
 
 // GET ALL
 export const getAllPositions = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
   const deptId = req.params.deptId;
   if (!deptId) {
     logger.warn(`ID no proporcionado\n`);
@@ -21,13 +20,11 @@ export const getAllPositions = asyncHandler(async (req: Request, res: Response) 
     throw new ApiError(400, 'No se encontraron puestos');
   }
   logger.info(`Puestos encontrados -> ${JSON.stringify(positions)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: positions });
 });
 
 // GET ONE
 export const getPosition = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
   const id = req.params.id;
   if (!id) {
     logger.warn(`ID no proporcionado\n`);
@@ -39,17 +36,15 @@ export const getPosition = asyncHandler(async (req: Request, res: Response) => {
     throw new ApiError(400, 'No se encontro el puesto');
   }
   logger.info(`Puesto encontrado -> ${JSON.stringify(position)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: position });
 });
 
 // CREATE
 export const createPosition = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
 
   const deptId = req.params.deptId;
-  const createData: CreatePositionDto = req.body.content;
-  const userRequest = req.body.userRequest;
+  const createData: CreatePositionDto = req.body;
+  const userRequest = req.user!;
   const position = await createPositionService(deptId, createData, userRequest);
   if (!position) {
     logger.warn(`No se pudo crear el puesto -> ${deptId}\n`);
@@ -57,47 +52,41 @@ export const createPosition = asyncHandler(async (req: Request, res: Response) =
   }
 
   logger.info(`Puesto creado -> ${JSON.stringify(position)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: position });
 });
 
 // UPDATE
 export const updatePosition = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
-
   const id = req.params.id;
   if (!id) {
     logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID no proporcionado');
   }
 
-  const dataUpdate: UpdatePositionDto = req.body.content;
-  const userRequest = req.body.userRequest;
+  const dataUpdate: UpdatePositionDto = req.body;
+  const userRequest = req.user!;
   const position = await updatePositionService(id, dataUpdate, userRequest);
   if (!position) {
     logger.warn(`No se pudo actualizar el puesto -> ${id}\n`);
     throw new ApiError(400, 'No se pudo actualizar el puesto');
   }
   logger.info(`Puesto actualizado -> ${JSON.stringify(position)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: position });
 });
 
 // DELETE
 export const deletePosition = asyncHandler(async (req: Request, res: Response) => {
-  logger.info(`------------ ${req.method} ${req.originalUrl} Iniciado ------------`);
   const id = req.params.id;
   if (!id) {
     logger.warn(`ID no proporcionado\n`);
     throw new ApiError(400, 'ID no proporcionado');
   }
-  const userRequest = req.body.userRequest;
+  const userRequest = req.user!;
   const position = await deletePositionService(id, userRequest);
   if (!position) {
     logger.warn(`No se pudo eliminar el puesto -> ${id}\n`);
     throw new ApiError(400, 'No se pudo eliminar el puesto');
   }
   logger.info(`Puesto eliminado -> ${JSON.stringify(position)}`);
-  logger.info(`------------ ${req.method} ${req.originalUrl} Finalizado ------------\n`);
   res.json({ data: position });
 });
