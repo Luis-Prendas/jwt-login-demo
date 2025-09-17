@@ -2,7 +2,7 @@ import { Outlet } from 'react-router';
 import { SidebarProvider, SidebarTrigger } from './ui/sidebar';
 import { AppSidebar } from './app-sidebar';
 import { useAuth } from '@/hooks/useAuth';
-import { UserRole } from '@/types';
+import { UserRole } from '@/types/enums';
 
 export function MainLayout() {
   const { userData } = useAuth();

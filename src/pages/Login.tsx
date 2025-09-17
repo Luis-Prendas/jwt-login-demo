@@ -17,9 +17,9 @@ export default function Login({ className, ...props }: React.ComponentProps<"div
     const form = e.currentTarget;
     const username = form.loginUsername.value;
     const password = form.loginPassword.value;
-    const organizationCode = form.loginOrgCode.value;
+    const orgCode = form.loginOrgCode.value;
 
-    const response = await login({ username, password, organizationCode });
+    const response = await login({ username, password, orgCode });
     if (response) {
       navigate('/dashboard');
     } else {

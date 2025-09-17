@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "../hooks/useAuth";
-import { UserRole } from "@/types";
+import { UserRole } from "@/types/enums";
 
 const PROTECTED_ACCESS = [UserRole.DEVELOPER.toString(), UserRole.SUPERADMIN.toString()]
 

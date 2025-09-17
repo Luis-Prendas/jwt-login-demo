@@ -13,7 +13,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 import { useAuth } from "@/hooks/useAuth"
 import { Link, useNavigate } from "react-router"
-import { UserRole } from "@/types"
+import { UserRole } from "@/types/enums"
 
 const items = [
   {

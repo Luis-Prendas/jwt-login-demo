@@ -3,7 +3,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:6969';
 export type LoginForm = {
   username: string,
   password: string,
-  organizationCode: string
+  orgCode: string
 }
 
 export async function sessionLogin(data: LoginForm): Promise<string | null> {
