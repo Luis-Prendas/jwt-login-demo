@@ -6,9 +6,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, type ColumnFiltersState, type SortingState, type VisibilityState, } from '@tanstack/react-table';
 import { ChevronDown, PlusIcon } from 'lucide-react';
 import { createColumns } from './columns';
-import type { Position, Department } from '@/types';
+import type { Position, Department, Organization } from '@/types';
 import { usePositions } from '@/hooks/usePositions';
 import { useDepartments } from '@/hooks/useDepartments';
+import { useOrganizations } from '@/hooks/useOrganizations';
 import { DialogCreate } from './dialog-create';
 
 export function DataTable() {
@@ -17,49 +18,73 @@ export function DataTable() {
   const [isCreateOpen, setIsCreateOpen] = useState<boolean>(false)
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [orgOptions, setOrgOptions] = useState<Organization[] | null>(null)
   const [deptOptions, setDeptOptions] = useState<Department[] | null>(null)
+  const [selectedOrg, setSelectedOrg] = useState('')
   const [selectedDept, setSelectedDept] = useState('')
   const [positions, setPositions] = useState<Position[]>([])
-  
+
   const { getAll: getAllPositions, loading: postsLoading, error: postsError } = usePositions()
   const { getAll: getAllDepartments, loading: deptsLoading, error: deptsError } = useDepartments()
+  const { getAll: getAllOrganizations, loading: orgsLoading, error: orgsError } = useOrganizations()
 
-  // Función para refrescar departamentos
+  // Función para refrescar posiciones
   const refreshPositions = useCallback(async () => {
     if (!selectedDept || !deptOptions) return
-    
+
     const selectedDeptData = deptOptions.find(dept => dept.name === selectedDept)
-    
+
     if (selectedDeptData) {
-      // Usar el hook unificado con callback
       await getAllPositions(
-        { deptId: selectedDeptData.id }, // parámetros
+        { deptId: selectedDeptData.id },
         (data) => {
-          setPositions(data || []) // callback de éxito
+          setPositions(data || [])
         }
       )
     }
   }, [selectedDept, deptOptions, getAllPositions])
 
+  // Función para cargar departamentos cuando cambie la organización
+  const loadDepartments = useCallback(async (orgId: string) => {
+    await getAllDepartments(
+      { orgId },
+      (data) => {
+        setDeptOptions(data || [])
+        setSelectedDept(data?.[0]?.name || '')
+        setPositions([]) // Limpiar posiciones al cambiar organización
+      }
+    )
+  }, [getAllDepartments])
+
   // Crear columnas con callback de refresh
   const columns = useMemo(() => createColumns(refreshPositions), [refreshPositions])
 
-  // Cargar deptanizaciones con el hook unificado
+  // Cargar organizaciones al inicio
   useEffect(() => {
-    const loadDepartments = async () => {
-      await getAllDepartments(
-        undefined, // sin parámetros adicionales
-        (depts) => {
-          setDeptOptions(depts || [])
-          setSelectedDept(depts?.[0]?.name || '')
+    const loadOrganizations = async () => {
+      await getAllOrganizations(
+        undefined,
+        (orgs) => {
+          setOrgOptions(orgs || [])
+          setSelectedOrg(orgs?.[0]?.displayName || '')
         }
       )
     }
-    
-    loadDepartments()
-  }, [getAllDepartments])
 
-  // Cargar departamentos cuando cambie la dept2anización seleccionada
+    loadOrganizations()
+  }, [getAllOrganizations])
+
+  // Cargar departamentos cuando cambie la organización seleccionada
+  useEffect(() => {
+    if (selectedOrg && orgOptions) {
+      const selectedOrgData = orgOptions.find(org => org.displayName === selectedOrg)
+      if (selectedOrgData) {
+        loadDepartments(selectedOrgData.id)
+      }
+    }
+  }, [selectedOrg, orgOptions, loadDepartments])
+
+  // Cargar posiciones cuando cambie el departamento seleccionado
   useEffect(() => {
     if (selectedDept && deptOptions) {
       refreshPositions()
@@ -86,52 +111,80 @@ export function DataTable() {
   });
 
   // Loading state mejorado
-  const isLoading = postsLoading || deptsLoading
-  const hasError = postsError || deptsError
+  const isLoading = postsLoading || deptsLoading || orgsLoading
+  const hasError = postsError || deptsError || orgsError
 
   return (
     <div className="w-full">
       {hasError && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
           <p className="text-red-800">
-            Error: {postsError || deptsError}
+            Error: {postsError || deptsError || orgsError}
           </p>
         </div>
       )}
 
       <div className="flex items-center justify-between py-4">
         <Input
-          placeholder="Buscar departamentos..."
+          placeholder="Buscar posiciones..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
-          disabled={isLoading} // Deshabilitar durante carga
+          disabled={isLoading}
         />
-        
+
         <div className='flex gap-4'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="ml-auto"
-                disabled={isLoading || !deptOptions?.length} // Deshabilitar si está cargando
+                disabled={isLoading || !orgOptions?.length}
               >
-                {deptsLoading ? 'Cargando...' : 'Deptanizaciones'} 
+                {orgsLoading ? 'Cargando...' : 'Organizaciones'}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>Deptanizaciones</DropdownMenuLabel>
+              <DropdownMenuLabel>Organizaciones</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup value={selectedDept} onValueChange={setSelectedDept}>
-                {deptOptions?.map(option => (
-                  <DropdownMenuRadioItem key={option.id} value={option.name}>
-                    {option.name}
+              <DropdownMenuRadioGroup value={selectedOrg} onValueChange={setSelectedOrg}>
+                {orgOptions?.map(option => (
+                  <DropdownMenuRadioItem key={option.id} value={option.displayName}>
+                    {option.displayName}
                   </DropdownMenuRadioItem>
                 ))}
               </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="ml-auto"
+                disabled={isLoading || !deptOptions?.length}
+              >
+                {deptsLoading ? 'Cargando...' : 'Departamentos'}
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Departamentos</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {deptOptions ? (
+                <DropdownMenuRadioGroup value={selectedDept} onValueChange={setSelectedDept}>
+                  {deptOptions?.map(option => (
+                    <DropdownMenuRadioItem key={option.id} value={option.name}>
+                      {option.name}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              ) : (
+                <DropdownMenuLabel>Departamentos</DropdownMenuLabel>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -177,13 +230,12 @@ export function DataTable() {
             ))}
           </TableHeader>
           <TableBody>
-            {/* Loading state en la tabla */}
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
                   <div className="flex justify-center items-center gap-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-                    <span>Cargando departamentos...</span>
+                    <span>Cargando posiciones...</span>
                   </div>
                 </TableCell>
               </TableRow>
@@ -204,13 +256,13 @@ export function DataTable() {
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
                   <div className='flex flex-col justify-center items-center p-4 gap-2'>
-                    <span>Sin departamentos disponibles.</span>
-                    <Button 
-                      onClick={() => setIsCreateOpen(true)} 
+                    <span>Sin posiciones disponibles.</span>
+                    <Button
+                      onClick={() => setIsCreateOpen(true)}
                       variant='outline'
-                      disabled={!selectedDept} // Solo habilitar si hay dept2 seleccionada
+                      disabled={!selectedDept}
                     >
-                      <PlusIcon /> Crear departamento
+                      <PlusIcon /> Crear posición
                     </Button>
                   </div>
                 </TableCell>
@@ -220,12 +272,11 @@ export function DataTable() {
         </Table>
       </div>
 
-      {/* Pasar datos más específicos al diálogo */}
       <DialogCreate
         isOpen={isCreateOpen}
         setIsOpen={setIsCreateOpen}
         deptId={deptOptions?.find(dept => dept.name === selectedDept)?.id || ''}
-        onSuccess={refreshPositions} // Callback específico
+        onSuccess={refreshPositions}
       />
     </div>
   );

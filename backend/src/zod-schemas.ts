@@ -35,7 +35,7 @@ export const updateDepartmentSchema = createDepartmentSchema.omit({ organization
 // POSITION
 // ======================
 export const createPositionSchema = z.object({
-  departmentId: z.string().uuid(),
+  departmentId: z.string().min(1),
   maleName: z.string().min(1),
   femaleName: z.string().min(1),
   description: z.string().optional(),

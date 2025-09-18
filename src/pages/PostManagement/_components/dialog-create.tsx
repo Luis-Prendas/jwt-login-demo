@@ -3,9 +3,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-// ✨ NUEVO: Hooks unificados
-import { useDepartments } from "@/hooks/useDepartments";
-import { useAuth } from "@/hooks/useAuth";
+import { usePositions } from "@/hooks/usePositions";
 
 type Props = {
   isOpen: boolean
@@ -15,29 +13,27 @@ type Props = {
 }
 
 export function DialogCreate({ isOpen, setIsOpen, deptId, onSuccess }: Props) {
-  const { userData } = useAuth()
-  // ✨ NUEVO: Hook unificado
-  const { create, loading } = useDepartments()
+  const { create, loading } = usePositions()
 
   const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
-    const deptName = form.deptName.value
-    const deptDescription = form.deptDescription.value
+    const postFemaleName = form.postFemaleName.value
+    const postMaleName = form.postMaleName.value
+    const postDescription = form.postDescription.value
 
-    // ✨ NUEVO: Usar el método create unificado
     await create(
       {
-        name: deptName,
-        description: deptDescription,
-        organizationId: userData?.organizationId!
+        femaleName: postFemaleName,
+        maleName: postMaleName,
+        description: postDescription,
+        departmentId: deptId
       },
       { deptId }, // parámetros para la URL
       () => {
-        // ✨ Callback de éxito
         console.log('✅ Departamento creado exitosamente')
         setIsOpen(false)
-        form.reset() // ✨ Limpiar el formulario
+        form.reset()
         onSuccess?.()
       }
     )
@@ -49,32 +45,40 @@ export function DialogCreate({ isOpen, setIsOpen, deptId, onSuccess }: Props) {
         <form onSubmit={handleSaveChanges} className="flex flex-col gap-4 p-4">
           <DialogHeader>
             <DialogTitle className="flex gap-4">
-              Crear un Departamento
+              Crear un Puesto
             </DialogTitle>
             <DialogDescription className="text-balance">
-              Crea un nuevo departamento. Haz clic en guardar cuando hayas terminado.
+              Crea un nuevo puesto. Haz clic en guardar cuando hayas terminado.
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label htmlFor="deptName">Nombre del departamento *</Label>
+              <Label htmlFor="postMaleName">Nombre del puesto masculino *</Label>
               <Input
-                id="deptName"
-                name="deptName"
+                id="postMaleName"
+                name="postMaleName"
                 type="text"
-                placeholder="Ej: Recursos Humanos"
                 required
                 disabled={loading}
               />
             </div>
             <div className="grid gap-3">
-              <Label htmlFor="deptDescription">Descripción *</Label>
+              <Label htmlFor="postFemaleName">Nombre del puesto femenino *</Label>
               <Input
-                id="deptDescription"
-                name="deptDescription"
+                id="postFemaleName"
+                name="postFemaleName"
                 type="text"
-                placeholder="Ej: Gestión del talento humano"
+                required
+                disabled={loading}
+              />
+            </div>
+            <div className="grid gap-3">
+              <Label htmlFor="postDescription">Descripción *</Label>
+              <Input
+                id="postDescription"
+                name="postDescription"
+                type="text"
                 required
                 disabled={loading}
               />

@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-// ✨ NUEVO: Hook unificado
 import { usePositions } from '@/hooks/usePositions';
 import type { Position } from '@/types';
 
@@ -14,7 +13,6 @@ type Props = {
 }
 
 export function DialogEdit({ isOpen, setIsOpen, data, onSuccess }: Props) {
-  // ✨ NUEVO: Hook unificado
   const { update, loading } = usePositions()
 
   const handleSaveChanges = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,7 +22,6 @@ export function DialogEdit({ isOpen, setIsOpen, data, onSuccess }: Props) {
     const postMaleName = form.postMaleName.value
     const postDescription = form.postDescription.value
 
-    // ✨ NUEVO: Usar el método update unificado
     await update(
       data.id,
       {
@@ -34,7 +31,6 @@ export function DialogEdit({ isOpen, setIsOpen, data, onSuccess }: Props) {
       },
       undefined, // sin parámetros adicionales para la URL
       () => {
-        // ✨ Callback de éxito
         console.log('✅ Departamento actualizado exitosamente')
         setIsOpen(false)
         onSuccess?.()
@@ -49,10 +45,10 @@ export function DialogEdit({ isOpen, setIsOpen, data, onSuccess }: Props) {
           <form onSubmit={handleSaveChanges} className="flex flex-col gap-4 p-4">
             <DialogHeader>
               <DialogTitle className="flex gap-4">
-                Editar Departamento
+                Editar Puesto
               </DialogTitle>
               <DialogDescription className="text-balance">
-                Realiza cambios en el departamento. Haz clic en guardar cuando hayas terminado.
+                Realiza cambios en el puesto. Haz clic en guardar cuando hayas terminado.
               </DialogDescription>
             </DialogHeader>
 

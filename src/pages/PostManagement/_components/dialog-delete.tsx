@@ -1,6 +1,5 @@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-// ✨ NUEVO: Hook unificado
-import { useDepartments } from "@/hooks/useDepartments";
+import { usePositions } from "@/hooks/usePositions";
 
 export function DialogDelete({
   isOpen,
@@ -13,16 +12,13 @@ export function DialogDelete({
   id: string
   onSuccess?: () => void
 }) {
-  // ✨ NUEVO: Hook unificado
-  const { remove, loading } = useDepartments();
+  const { remove, loading } = usePositions();
 
   const handleDelete = async () => {
-    // ✨ NUEVO: Usar el método remove unificado
     await remove(
       id,
       undefined, // sin parámetros adicionales
       () => {
-        // ✨ Callback de éxito
         console.log('✅ Departamento eliminado exitosamente')
         setIsOpen(false)
         onSuccess?.()
