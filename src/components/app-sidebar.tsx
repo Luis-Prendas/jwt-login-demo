@@ -36,6 +36,13 @@ const items = [
     url: "/department-management",
     icon: Settings,
     access: [UserRole.DEVELOPER.toString()]
+  },
+  {
+    id: '4',
+    title: "Gestión de posiciones",
+    url: "/position-management",
+    icon: Settings,
+    access: [UserRole.DEVELOPER.toString(), UserRole.MODERATOR.toString()]
   }
 ]
 

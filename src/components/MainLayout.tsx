@@ -6,14 +6,20 @@ import { UserRole } from '@/types/enums';
 
 export function MainLayout() {
   const { userData } = useAuth();
-  const isDeveloper = userData && userData.role === UserRole.DEVELOPER.toString();
+  const isDeveloper = () => {
+    if (!userData) return false
+
+    if (userData.role === UserRole.DEVELOPER || userData.role === UserRole.MODERATOR) return true
+
+    return false
+  }
 
   return (
     <SidebarProvider defaultOpen={false}>
-      {isDeveloper && <AppSidebar />}
+      {isDeveloper() && <AppSidebar />}
       <main className="w-full min-h-screen flex justify-center items-center relative">
         <div className='absolute left-2 top-2'>
-          {isDeveloper && (
+          {isDeveloper() && (
             <>
               {/* <ModeToggle /> */}
               <SidebarTrigger />

@@ -1,5 +1,5 @@
 // hooks/useAuth.ts
-import { sessionLogin, type LoginForm } from "@/services/Login";
+import { sessionLogin, type LoginForm } from "@/services/Login.service";
 import { useAuthStore } from "../store/cstorage";
 import { useState } from "react";
 import { decodeToken } from "@/utils/jwt";

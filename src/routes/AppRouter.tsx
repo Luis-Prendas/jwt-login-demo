@@ -9,6 +9,7 @@ import ProtectedAdminRoute from '../components/ProtectedAdminRoute';
 import Profile from '@/pages/profile/Profile';
 import DepartmentManagementPega from '@/pages/DeptManagement/Page';
 import OrganizationManagementPega from '@/pages/OrgManagement/Page';
+import PositionManagementPega from '@/pages/PostManagement/Page';
 
 export default function AppRouter() {
   return (
@@ -28,6 +29,7 @@ export default function AppRouter() {
             <Route element={<ProtectedAdminRoute />}>
               <Route path="/organization-management" element={<OrganizationManagementPega />} />
               <Route path="/department-management" element={<DepartmentManagementPega />} />
+              <Route path="/position-management" element={<PositionManagementPega />} />
             </Route>
           </Route>
         </Route>
