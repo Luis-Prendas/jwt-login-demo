@@ -31,3 +31,4 @@ backend/.env
 *.db
 logs/
 *.log
+file.md
