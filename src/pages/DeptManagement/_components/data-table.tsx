@@ -20,24 +20,28 @@ export function DataTable() {
   const [orgOptions, setOrgOptions] = useState<Organization[] | null>(null)
   const [selectedOrg, setSelectedOrg] = useState('')
   const [departments, setDepartments] = useState<Department[]>([])
-  
+
   const { getAll: getAllDepartments, loading: deptsLoading, error: deptsError } = useDepartments()
   const { getAll: getAllOrganizations, loading: orgsLoading, error: orgsError } = useOrganizations()
 
   // Función para refrescar departamentos
   const refreshDepartments = useCallback(async () => {
     if (!selectedOrg || !orgOptions) return
-    
+
     const selectedOrgData = orgOptions.find(org => org.displayName === selectedOrg)
-    
+
     if (selectedOrgData) {
       // Usar el hook unificado con callback
-      await getAllDepartments(
+      const response = await getAllDepartments(
         { orgId: selectedOrgData.id }, // parámetros
         (data) => {
           setDepartments(data || []) // callback de éxito
         }
       )
+
+      if (!response) {
+        setDepartments([])
+      }
     }
   }, [selectedOrg, orgOptions, getAllDepartments])
 
@@ -55,7 +59,7 @@ export function DataTable() {
         }
       )
     }
-    
+
     loadOrganizations()
   }, [getAllOrganizations])
 
@@ -102,23 +106,23 @@ export function DataTable() {
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Buscar departamentos..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ''}
+          value={(table.getColumn("Nombre del departamento")?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("Nombre del departamento")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
           disabled={isLoading} // Deshabilitar durante carga
         />
-        
+
         <div className='flex gap-4'>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="ml-auto"
                 disabled={isLoading || !orgOptions?.length} // Deshabilitar si está cargando
               >
-                {orgsLoading ? 'Cargando...' : 'Organizaciones'} 
+                {orgsLoading ? 'Cargando...' : 'Organizaciones'}
                 <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -205,8 +209,8 @@ export function DataTable() {
                 <TableCell colSpan={columns.length} className="h-24 text-center">
                   <div className='flex flex-col justify-center items-center p-4 gap-2'>
                     <span>Sin departamentos disponibles.</span>
-                    <Button 
-                      onClick={() => setIsCreateOpen(true)} 
+                    <Button
+                      onClick={() => setIsCreateOpen(true)}
                       variant='outline'
                       disabled={!selectedOrg} // Solo habilitar si hay org seleccionada
                     >

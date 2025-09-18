@@ -26,7 +26,8 @@ app.use(cors({ origin: process.env.CORS_ORIGIN || '*' }));
 // 2. Rate Limiting
 // ========================
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
+  // windowMs: 15 * 60 * 1000, // 15 minutos
+  windowMs: 10000, // 10 segundos
   max: 100, // Límite por IP
   message: 'Demasiadas solicitudes desde esta IP, inténtalo de nuevo más tarde.'
 });

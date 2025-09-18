@@ -11,6 +11,7 @@ import { usePositions } from '@/hooks/usePositions';
 import { useDepartments } from '@/hooks/useDepartments';
 import { useOrganizations } from '@/hooks/useOrganizations';
 import { DialogCreate } from './dialog-create';
+import { Link } from 'react-router';
 
 export function DataTable() {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -23,6 +24,7 @@ export function DataTable() {
   const [selectedOrg, setSelectedOrg] = useState('')
   const [selectedDept, setSelectedDept] = useState('')
   const [positions, setPositions] = useState<Position[]>([])
+  const [needDept, setNeedDept] = useState<Boolean>(false)
 
   const { getAll: getAllPositions, loading: postsLoading, error: postsError } = usePositions()
   const { getAll: getAllDepartments, loading: deptsLoading, error: deptsError } = useDepartments()
@@ -35,18 +37,23 @@ export function DataTable() {
     const selectedDeptData = deptOptions.find(dept => dept.name === selectedDept)
 
     if (selectedDeptData) {
-      await getAllPositions(
+      const response = await getAllPositions(
         { deptId: selectedDeptData.id },
         (data) => {
           setPositions(data || [])
         }
       )
+
+      if (!response) {
+        setPositions([])
+        setNeedDept(false)
+      }
     }
   }, [selectedDept, deptOptions, getAllPositions])
 
   // Función para cargar departamentos cuando cambie la organización
   const loadDepartments = useCallback(async (orgId: string) => {
-    await getAllDepartments(
+    const response = await getAllDepartments(
       { orgId },
       (data) => {
         setDeptOptions(data || [])
@@ -54,6 +61,12 @@ export function DataTable() {
         setPositions([]) // Limpiar posiciones al cambiar organización
       }
     )
+
+    if (!response) {
+      setDeptOptions(null)
+      setPositions([])
+      setNeedDept(true)
+    }
   }, [getAllDepartments])
 
   // Crear columnas con callback de refresh
@@ -127,9 +140,9 @@ export function DataTable() {
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder="Buscar posiciones..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ''}
+          value={(table.getColumn("Nombre del puesto masculino")?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("Nombre del puesto masculino")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
           disabled={isLoading}
@@ -252,6 +265,19 @@ export function DataTable() {
                   ))}
                 </TableRow>
               ))
+            ) : deptOptions === null || needDept === true ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <div className='flex flex-col justify-center items-center p-4 gap-2'>
+                    <span>Sin departamentos disponibles.</span>
+                    <Link to='/department-management'>
+                      <Button variant='outline'>
+                        <PlusIcon /> Crear departamento
+                      </Button>
+                    </Link>
+                  </div>
+                </TableCell>
+              </TableRow>
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
